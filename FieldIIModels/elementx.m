@@ -76,8 +76,8 @@ end
 		
 % Rotation goes here
 % do the rotation about the yaxis
-%rot = makeyrotform(angle);
-rot =1;
+rot = makeyrotform(angle);
+
 % apply the rotation
 for i=1:num_elem
     invec = [x1(i), y1(i), z1(i), 0]';
