@@ -22,12 +22,12 @@ set_field('att', alpha);
 
 ROC = 80; %mm
 AngExtent = 70 / 360 * 2 * pi;
-no_elements = 64;  %number of physical elements.
+no_elements = 32;  %number of physical elements.
 P = AngExtent * ROC / no_elements; %pitch (mm)
 element_W = 1.5; %width (mm)
-Nx = 8; %number of mathematical subelements in x
-Ny = 8; %number of mathematical subelements in y
-Tx = concave_focused_array(no_elements, ROC, AngExtent, P, element_W, Rfocus, focus, Nx, Ny);
+Nx = 4; %number of mathematical subelements in x
+Ny = 4; %number of mathematical subelements in y
+Tx = concave_focused_array(no_elements, ROC, P, element_W, Rfocus, focal_point, Nx, Ny);
 
 %Show the transducer array in 3D
 if visualize_transducer
@@ -94,7 +94,7 @@ switch plane
         txfield = reshape(txfield, length(x), length(z));
         txfield = txfield'; %flip the z coordinate for proper orientation
 end
-txfielddb = db(txfield./max(max(txfield))); %convert to dB
+txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
 
 switch plane
     case 'xy'
