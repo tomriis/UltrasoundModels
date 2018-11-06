@@ -27,7 +27,7 @@ P = AngExtent * ROC / no_elements; %pitch (mm)
 element_W = 1.5; %width (mm)
 Nx = 4; %number of mathematical subelements in x
 Ny = 4; %number of mathematical subelements in y
-Tx = concave_focused_array(no_elements, ROC, P, element_W, Rfocus, focal_point, Nx, Ny);
+Tx = concave_focused_array(no_elements, ROC/1000, P/1000, element_W/1000, Rfocus/1000, focal_point/1000, Nx, Ny);
 
 %Show the transducer array in 3D
 if visualize_transducer

@@ -43,5 +43,5 @@ zlabel('z [mm] (Axial)')
 grid
 axis('image')
 hold off
-view([90,0]);
+view([90, 90, 90]);  
 
