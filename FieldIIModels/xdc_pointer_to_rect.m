@@ -1,4 +1,4 @@
-function [rect] = xdc_pointer2rect(Th)
+function [rect] = xdc_pointer_to_rect(Th)
     % Converts the xdc info to a form for xdc_rectangles
     data = xdc_get(Th,'rect');
     N_elements = size(data,2);

@@ -26,9 +26,9 @@ no_elements = 64;  %number of physical elements.
 P = AngExtent * ROC / no_elements; %pitch (mm)
 W = 5.5; %width (mm)
 ElH = 12; %elevation height (mm)
-ElF = 0; %elevation focus (mm)
-Nx = 1; %number of mathematical subelements in x
-Ny = 1; %number of mathematical subelements in y
+ElF = .2; %elevation focus (mm)
+Nx = 2; %number of mathematical subelements in x
+Ny = 8; %number of mathematical subelements in y
 Tx = xdc_concaveArray(no_elements, ROC, AngExtent, ElH, ElF, W, P, Nx, Ny);
 
 %Show the transducer array in 3D
