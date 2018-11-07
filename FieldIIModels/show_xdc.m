@@ -22,13 +22,13 @@ figure;
 %X = [data(11,:),data(20,:),data(14,:),data(17,:)]*1000;
 minimum = 0;
 maximum = 0;
-if varargin{1} == 'fast'
-        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
-        y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
-        z=[data(13,:), data(22,:); data(16,:), data(19,:)]*1000;
-  surf(x,y,z)
-  hold on
-else
+%if varargin{1} == 'fast'
+%        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
+%        y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
+%        z=[data(13,:), data(22,:); data(16,:), data(19,:)]*1000;
+%  surf(x,y,z)
+%  hold on
+%else
 for i=1:M
   x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
   y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
@@ -37,7 +37,7 @@ for i=1:M
   surf(x,y,z,c)
   hold on
   end
-end
+%end
 %  Put som axis legends on
 
 % Hc = colorbar;
