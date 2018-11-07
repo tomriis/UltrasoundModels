@@ -1,11 +1,12 @@
-function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, Rfocus, focus, Nx, Ny, type)
+function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, Rfocus, Nx, Ny, type)
     % All dimensions in meters
     len_x = P * n_elements_x; %arc length
     AngExtent_x = len_x / ROC_x;
     angle_inc_x = (AngExtent_x)/n_elements_x; 					
     index_x = -n_elements_x/2 + 0.5 : n_elements_x/2 - 0.5;
     angle_x = index_x*angle_inc_x;
-
+    %Place the static focus at the center of rotation
+    focus = [0, 0, -ROC_x];
     % Generate array 
     rectangles=[];
     for i = 1:length(index_x)
