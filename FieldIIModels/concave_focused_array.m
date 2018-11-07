@@ -13,7 +13,7 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, Rfocus,
         if strcmp(type,"focused")
             % Focused
             Th = xdc_focused_array(1, element_W, element_W, 0, Rfocus, Nx, Ny, focus);
-        elseif strcmp(type,"sphere")
+        elseif strcmp(type,"spherical")
             % Spherical
             Th = xdc_concave(element_W, Rfocus, element_W/Nx);
         else

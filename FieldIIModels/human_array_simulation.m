@@ -1,8 +1,28 @@
-function human_array_simulation()
+function human_array_simulation(varargin)
+
+default_element_W = 1.5;
+expectedGeometries = {'focused','spherical','flat'};
+
+p = inputParser;
+addRequired(p,'n_elements', @(x) isnumeric(x));
+addRequired(p,'ROC', @(x) isnumeric(x));
+addRequired(p,'element_W', @(x) isnumeric(x));
+addRequired(p, 'focal_point');
+addOptional(p, 'AngleOfExtent', 0, @(x) isnumeric(x));
+addOptional(p, 'P', default_element_W, @(x) isnumeric(x));
+addOptional(p, 'element_geometry', 'flat', @(x) any(validatestring(x,expectedGeometries)));
+addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
+addOptional(p, 'Nx', 4);
+addOptional(p, 'Ny', 4);
+parse(p, varargin{:})
+
+disp(p.Results.element_geometry);
+
+
 
 %% Parameters to vary in this exercise
 visualize_transducer = true;
-focal_point = [0, 0, 80]; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
+focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
 plane = 'xy'; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
 %% Initialize Field II:
@@ -20,18 +40,24 @@ set_field('att', alpha);
 
 %% Linear concave array
 
-ROC = 80; %mm
-AngExtent = 70 / 360 * 2 * pi;
-no_elements = 32;  %number of physical elements.
-P = AngExtent * ROC / no_elements; %pitch (mm)
-element_W = 1.5; %width (mm)
-Nx = 4; %number of mathematical subelements in x
-Ny = 4; %number of mathematical subelements in y
-Tx = concave_focused_array(no_elements, ROC/1000, P/1000, element_W/1000, Rfocus/1000, focal_point/1000, Nx, Ny);
+ROC = p.Results.ROC; %mm
+n_elements = p.Results.n_elements;  %number of physical elements.
+AngExtent = p.Results.AngleOfExtent;
+if AngExtent ~= 0 
+    P = AngExtent * ROC / n_elements; %pitch (mm)
+else
+    P = p.Results.P;
+end
+element_W = p.Results.element_W; %width (mm)
+Nx = p.Results.Nx; %number of mathematical subelements in x
+Ny = p.Results.Ny; %number of mathematical subelements in y
+element_geometry = p.Results.element_geometry;
+R_focus = p.Results.R_focus;
+Tx = concave_focused_array(n_elements, ROC/1000, P/1000, element_W/1000, R_focus/1000, focal_point/1000, Nx, Ny, element_geometry);
 
 %Show the transducer array in 3D
 if visualize_transducer
-    show_xdc(Tx);
+    show_xdc(Tx,'fast');
     view([90, 90, 90]);    
     return;
 end
