@@ -14,6 +14,7 @@ addOptional(p, 'element_geometry', 'flat', @(x) any(validatestring(x,expectedGeo
 addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
 addOptional(p, 'Nx', 4);
 addOptional(p, 'Ny', 4);
+addOptional(p,'visualize_transducer',false);
 parse(p, varargin{:})
 
 disp(p.Results.element_geometry);
@@ -21,7 +22,7 @@ disp(p.Results.element_geometry);
 
 
 %% Parameters to vary in this exercise
-visualize_transducer = true;
+visualize_transducer = p.Results.visualize_transducer;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
 plane = 'xy'; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
