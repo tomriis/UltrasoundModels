@@ -1,4 +1,4 @@
-function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, Rfocus, Nx, Ny, type)
+function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, R_focus, Nx, Ny, type)
     % All dimensions in meters
     len_x = P * n_elements_x; %arc length
     AngExtent_x = len_x / ROC_x;
@@ -11,10 +11,10 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, Rfocus,
     % Create transducer
         if strcmp(type,"focused")
             % Focused
-            Th = xdc_focused_array(1, element_W, element_W, 0, Rfocus, Nx, Ny, [0,0,0]);
+            Th = xdc_focused_array(1, element_W, element_W, 0, R_focus, Nx, Ny, [0,0,0]);
         elseif strcmp(type,"spherical")
             % Spherical
-            Th = xdc_concave(element_W, Rfocus, element_W/Nx);
+            Th = xdc_concave(element_W, R_focus, element_W/Nx);
         else
             % Flat
             x = [-element_W/2 element_W/2]; y = [-element_W/2 element_W/2]; z = [0,0];
