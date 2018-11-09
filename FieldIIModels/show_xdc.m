@@ -29,6 +29,7 @@ maximum = 0;
 %  surf(x,y,z)
 %  hold on
 %else
+
 for i=1:M
   x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
   y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
@@ -38,6 +39,8 @@ for i=1:M
   hold on
   end
 %end
+
+show_skull_space(-100);
 %  Put som axis legends on
 
 % Hc = colorbar;
@@ -50,4 +53,27 @@ grid
 axis('image')
 hold off
 view([90, 90, 90]);  
+end
 
+function show_skull_space(center_z)
+    % Define cube size of human head
+    alpha = 0.75;
+    color = 'yellow';
+    median_head_length = 176;
+    median_head_width = 145;
+    head_height = 100;
+    y = -median_head_length/2 * [1,1;-1,-1];
+    x = -median_head_width/2 * [-1,1;-1,1];
+    z = head_height/2*[1,1;1,1];
+    surf(x,y,z+center_z,'FaceColor',color,'FaceAlpha',alpha);
+    hold on;
+    surf(x,y,-z+center_z,'FaceColor',color,'FaceAlpha',alpha);
+    hold on;
+    surf(-median_head_width/2*[1,1;1,1],-median_head_length/2*[-1,1;-1,1],head_height/2*[1,1;-1,-1]+center_z,'FaceColor',color,'FaceAlpha',alpha);
+    hold on;
+    surf(-median_head_width/2*[-1,-1;-1,-1],-median_head_length/2*[-1,1;-1,1],head_height/2*[1,1;-1,-1]+center_z,'FaceColor',color,'FaceAlpha',alpha);
+    hold on;
+    surf(-median_head_width/2*[1,1;-1,-1],-median_head_length/2*[1,1;1,1],head_height/2*[-1,1;-1,1]+center_z,'FaceColor',color,'FaceAlpha',alpha);
+    hold on;
+    surf(-median_head_width/2*[1,1;-1,-1],median_head_length/2*[1,1;1,1],head_height/2*[-1,1;-1,1]+center_z,'FaceColor',color,'FaceAlpha',alpha);
+end

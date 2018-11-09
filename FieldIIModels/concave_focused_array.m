@@ -38,7 +38,6 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, element_W, R_focus
     % Subtract maximal z from all so that the top-most element's center is
     % positioned at z = 0:
     mv = max(rectangles(end,:));
-    disp(num2str(mv))
     rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:) - mv;
     % Place the static focus at the center of rotation
     focus = [0, 0, -ROC_x];

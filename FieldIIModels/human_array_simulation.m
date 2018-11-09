@@ -14,7 +14,7 @@ addOptional(p, 'element_geometry', 'flat', @(x) any(validatestring(x,expectedGeo
 addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
 addOptional(p, 'Nx', 4);
 addOptional(p, 'Ny', 4);
-addOptional(p,'visualize_transducer',true);
+addOptional(p,'visualize_transducer',false);
 parse(p, varargin{:})
 
 disp(p.Results.element_geometry);
@@ -95,7 +95,7 @@ switch plane
     case 'xy'
         x = (-60 : 0.5 : 60)*1e-3;
         y = x;
-        z = 80e-3;
+        z = -80e-3;
     case 'xz'
         x = (-60 : 0.5 : 60)*1e-3;
         y = 0;
