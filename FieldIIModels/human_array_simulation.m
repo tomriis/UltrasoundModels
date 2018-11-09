@@ -54,11 +54,11 @@ Nx = p.Results.Nx; %number of mathematical subelements in x
 Ny = p.Results.Ny; %number of mathematical subelements in y
 element_geometry = p.Results.element_geometry;
 R_focus = p.Results.R_focus;
-Tx = concave_focused_array(n_elements, ROC/1000, P/1000, element_W/1000, R_focus/1000, focal_point/1000, Nx, Ny, element_geometry);
+Tx = concave_focused_array(n_elements, ROC/1000, P/1000, element_W/1000, R_focus/1000, Nx, Ny, element_geometry);
 
 %Show the transducer array in 3D
 if visualize_transducer
-    show_xdc(Tx,'fast');
+    show_xdc(Tx,'notfast');
     view([90, 90, 90]);    
     return;
 end
@@ -95,7 +95,7 @@ switch plane
     case 'xy'
         x = (-60 : 0.5 : 60)*1e-3;
         y = x;
-        z = 80e-3;
+        z = -80e-3;
     case 'xz'
         x = (-60 : 0.5 : 60)*1e-3;
         y = 0;
