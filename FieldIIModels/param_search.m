@@ -1,11 +1,11 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
 outfile = "./param_search.mat";
-n_elements = [32,48,64]; 
-element_W_x = [2.0,2.3,3.0,3.9,5.0];
-element_W_y = [4,6,8];
-focus = [20,30,40];
-ROC = [80,90,100];
+n_elements = 32;%[32,48,64]; 
+element_W_x = 2.0;%[2.0,2.3,3.0,3.9,5.0];
+element_W_y = 4;%[4,6,8];
+focus = [20,30];%[20,30,40];
+ROC = 80;%[80,90,100];
 data = struct();
 for f = 1:length(focus)
     focusx = focus(f);
@@ -24,10 +24,14 @@ for y = 1:length(element_W_y)
     element_Wy = element_W_y(y);
     
  
-txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,'element_geometry','flat','R_focus',1);
+txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,...
+    'element_geometry','flat','visualize_transducer',false,'visualize_output',false);
+
 runstring = strcat('N',num2str(n_elementsx),'ROC',num2str(ROCx),'X',num2str(element_Wx),...
 'Y',num2str(element_Wy),'F',num2str(focusx),'P',num2str(P));
-data.(runstring) = txfeilddb;
+fname = split(runstring,'.');
+fname = strcat(fname{:});
+data.(fname) = txfeilddb;
 
 end
 end

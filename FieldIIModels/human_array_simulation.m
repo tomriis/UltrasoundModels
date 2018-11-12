@@ -6,7 +6,7 @@ expectedGeometries = {'focused','spherical','flat'};
 p = inputParser;
 addRequired(p,'n_elements', @(x) isnumeric(x));
 addRequired(p,'ROC', @(x) isnumeric(x));
-addRequired(p,'element_W', @(x) isnumeric(x));
+addRequired(p,'D');
 addRequired(p, 'focal_point');
 addOptional(p, 'AngleOfExtent', 0, @(x) isnumeric(x));
 addOptional(p, 'P', default_element_W, @(x) isnumeric(x));
@@ -15,9 +15,8 @@ addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
 addOptional(p, 'Nx', 4);
 addOptional(p, 'Ny', 4);
 addOptional(p,'visualize_transducer',false);
+addOptional(p,'visualize_output',true);
 parse(p, varargin{:})
-
-disp(p.Results.element_geometry);
 
 
 
@@ -49,12 +48,12 @@ if AngExtent ~= 0
 else
     P = p.Results.P;
 end
-element_W = p.Results.element_W; %width (mm)
+D = p.Results.D; %Diameter, width, and length of element (mm)
 Nx = p.Results.Nx; %number of mathematical subelements in x
 Ny = p.Results.Ny; %number of mathematical subelements in y
 element_geometry = p.Results.element_geometry;
 R_focus = p.Results.R_focus;
-Tx = concave_focused_array(n_elements, ROC/1000, P/1000, element_W/1000, R_focus/1000, Nx, Ny, element_geometry);
+Tx = concave_focused_array(n_elements, ROC/1000, P/1000, D/1000, R_focus/1000, Nx, Ny, element_geometry);
 
 %Show the transducer array in 3D
 if visualize_transducer
@@ -125,29 +124,32 @@ switch plane
 end
 txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
 
-switch plane
-    case 'xy'
-        imagesc(x*1e3, y*1e3, txfielddb);
-        axis equal tight;
-        xlabel('x (mm)');
-        ylabel('y (mm)');
-        ch = colorbar; ylabel(ch, 'dB'); 
-        set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-        figure;
-        XL = 60; plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); xlim([-XL XL]); hold on; plot([-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
-        xlabel('x (mm)');
-    case 'xz'
-        imagesc(x*1e3, z*1e3, txfielddb); colorbar;
-        xlabel('x (mm)');
-        ylabel('z (mm)');
-        ch = colorbar; ylabel(ch, 'dB');        
-        set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-        figure;
-        ZL1 = 0; ZL2 = 120; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
-        xlabel('z (mm)');
+if p.Results.visualize_output
+    figure;
+    switch plane
+        case 'xy'
+            imagesc(x*1e3, y*1e3, txfielddb);
+            axis equal tight;
+            xlabel('x (mm)');
+            ylabel('y (mm)');
+            ch = colorbar; ylabel(ch, 'dB'); 
+            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
+            figure;
+            XL = 60; plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); xlim([-XL XL]); hold on; plot([-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
+            xlabel('x (mm)');
+        case 'xz'
+            imagesc(x*1e3, z*1e3, txfielddb); colorbar;
+            xlabel('x (mm)');
+            ylabel('z (mm)');
+            ch = colorbar; ylabel(ch, 'dB');        
+            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
+            figure;
+            ZL1 = 0; ZL2 = 120; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
+            xlabel('z (mm)');
+    end
+    ylabel('Pressure (dB)');
+    set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
 end
-ylabel('Pressure (dB)');
-set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
 
 %% Terminate Field II
 field_end();
