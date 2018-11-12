@@ -1,4 +1,4 @@
-function human_array_simulation(varargin)
+function [txfielddb]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
 expectedGeometries = {'focused','spherical','flat'};
@@ -85,10 +85,12 @@ xdc_excitation(Tx, excitation);
 
 %% Set focal point
 focus = focal_point * 1e-3;  %(m)
-delays = compute_delays(focus, c); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
+delays = compute_delays(Tx, focus, c); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
-ele_delay(Tx, 1, delays'); %set the delays
-
+%ele_delay(Tx, (1:n_elements)', delays); %set the delays
+xdc_center_focus(Tx, [0,0,focus(3)]);
+xdc_focus(Tx, 0, focus);
+%xdc_focus_times (Tx, 0, delays');
 
 %% Set measurement points
 switch plane
@@ -132,7 +134,7 @@ switch plane
         ch = colorbar; ylabel(ch, 'dB'); 
         set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
         figure;
-        XL = 40; plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); xlim([-XL XL]); hold on; plot([-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
+        XL = 60; plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); xlim([-XL XL]); hold on; plot([-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
         xlabel('x (mm)');
     case 'xz'
         imagesc(x*1e3, z*1e3, txfielddb); colorbar;
