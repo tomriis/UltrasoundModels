@@ -96,7 +96,7 @@ switch plane
     case 'xy'
         x = (-60 : 0.5 : 60)*1e-3;
         y = x;
-        z = -80e-3;
+        z = focus(3);
     case 'xz'
         x = (-60 : 0.5 : 60)*1e-3;
         y = 0;
