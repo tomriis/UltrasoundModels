@@ -1,11 +1,11 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
 outfile = "./param_search.mat";
-n_elements = 32;%[32,48,64]; 
-element_W_x = 2.0;%[2.0,2.3,3.0,3.9,5.0];
-element_W_y = 4;%[4,6,8];
-focus = [20,30];%[20,30,40];
-ROC = 80;%[80,90,100];
+n_elements = [32,48,64]; 
+element_W_x = [2.0,2.3,3.0,3.9,5.0];
+element_W_y = [4,6,8];
+focus = [25,35,45];
+ROC = [80,90,100];
 data = struct();
 for f = 1:length(focus)
     focusx = focus(f);
