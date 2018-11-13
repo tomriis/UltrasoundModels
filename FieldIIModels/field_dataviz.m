@@ -22,7 +22,7 @@ function varargout = field_dataviz(varargin)
 
 % Edit the above text to modify the response to help field_dataviz
 
-% Last Modified by GUIDE v2.5 12-Nov-2018 20:36:13
+% Last Modified by GUIDE v2.5 12-Nov-2018 22:06:44
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -53,9 +53,13 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 
 % Choose default command line output for field_dataviz
-handles.output = hObject;
-
+axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
+axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
+contour(axes1,peaks(20));
+contour(axes2,peaks(20));
 % Update handles structure
+handles.axes1 = axes1;
+handles.axes2 = axes2;
 guidata(hObject, handles);
 
 % UIWAIT makes field_dataviz wait for user response (see UIRESUME)
@@ -70,7 +74,7 @@ function varargout = field_dataviz_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+%varargout{1} = handles.output;
 
 
 % --- Executes on slider movement.
