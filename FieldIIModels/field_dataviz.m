@@ -177,10 +177,7 @@ function slider3_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-value = handles.parameters.X(int16(get(hObject,'Value')));
-caption = sprintf('X: %.2f (mm)', value);
-set(handles.text4, 'String', caption);
-handles.current_params.X = value;
+handles = width_pitch_callback(hObject,handles);
 guidata(hObject, handles);
 if handles.plot_flag
     fname = fieldname_from_params(handles.current_params);
@@ -270,10 +267,7 @@ function slider6_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'Value') returns position of slider
 %        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-value = handles.parameters.P(int16(get(hObject,'Value')));
-caption = sprintf('Pitch: %.3f (mm)', value);
-set(handles.text7, 'String', caption);
-handles.current_params.P = value;
+handles = width_pitch_callback(hObject,handles);
 guidata(hObject, handles);
 if handles.plot_flag
     fname = fieldname_from_params(handles.current_params);
