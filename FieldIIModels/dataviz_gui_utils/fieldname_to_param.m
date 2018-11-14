@@ -10,7 +10,13 @@ function [params] = fieldname_to_param(fieldname)
     k_P = strfind(fieldname,'P');
     params.N = str2double(fieldname(k_N+1:k_ROC-1));
     params.ROC = str2double(fieldname(k_ROC+3:k_X-1));
-    params.X = str2double(fieldname(k_X+1:k_Y-1));
+    xname = fieldname(k_X+1:k_Y-1);
+    try 
+        params.X = str2double(strcat(xname(1),'.',xname(2:end)));
+    catch
+        params.X = str2double(xname(1));
+    end
+    
     params.Y = str2double(fieldname(k_Y+1:k_F-1));
     params.F = str2double(fieldname(k_F+1:k_P-1));
     try
