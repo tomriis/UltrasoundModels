@@ -1,4 +1,10 @@
-function [] = plot_xyplane_and_ypeaks(axes1,axes2,txfielddb)
+function [] = plot_xyplane_and_ypeaks(axes1,axes2,data, fieldname)
+        try
+            txfielddb = data.(fieldname);
+        catch
+            disp(strcat("CANT FIND ",fieldname));
+            return
+        end
         x = (-60 : 0.5 : 60)*1e-3;
         y = x;
         imagesc(axes1, x*1e3, y*1e3, txfielddb);
@@ -9,6 +15,8 @@ function [] = plot_xyplane_and_ypeaks(axes1,axes2,txfielddb)
         set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
         XL = 60; 
         plot(axes2, x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
-        xlim(axes2,[-XL XL]); hold on; plot(axes2, [-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
+        xlim(axes2,[-XL XL]); hold on; 
+        plot(axes2, [-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
         xlabel(axes2,'x (mm)');
+        hold off;
 end
