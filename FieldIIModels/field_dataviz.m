@@ -64,8 +64,9 @@ handles.axes2 = axes2;
 handles.parameters = parameters;
 % Set slider values
 field = fieldnames(parameters);
+% Copy the parameters structure
+handles.current_params = cell2struct(cell(length(field),1),g);
 for i =1:length(field)
-    
     sl = handles.(strcat('slider',num2str(i)));
     numSteps = length(parameters.(field{i}));
     set(sl, 'Min', 1);
@@ -110,6 +111,12 @@ function slider1_Callback(hObject, eventdata, handles)
 value = handles.parameters.N(int16(get(hObject,'Value')));
 caption = sprintf('N Elements: %d', value);
 set(handles.text2, 'String', caption);
+handles.current_params.N = value;
+if handles.plot_flag
+    fname = fieldname_from_param(handles.current_params);
+    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.data.(fname));
+end
+
 
 
 % --- Executes during object creation, after setting all properties.
@@ -135,6 +142,7 @@ function slider2_Callback(hObject, eventdata, handles)
 value = handles.parameters.ROC(int16(get(hObject,'Value')));
 caption = sprintf('ROC: %d (mm)', value);
 set(handles.text3, 'String', caption);
+handles.current_params.ROC = value;
 
 
 % --- Executes during object creation, after setting all properties.
@@ -160,6 +168,7 @@ function slider3_Callback(hObject, eventdata, handles)
 value = handles.parameters.X(int16(get(hObject,'Value')));
 caption = sprintf('X: %.2f (mm)', value);
 set(handles.text4, 'String', caption);
+handles.current_params.X = value;
 
 
 % --- Executes during object creation, after setting all properties.
@@ -185,6 +194,7 @@ function slider4_Callback(hObject, eventdata, handles)
 value = handles.parameters.Y(int16(get(hObject,'Value')));
 caption = sprintf('Y: %.2f (mm)', value);
 set(handles.text5, 'String', caption);
+handles.current_params.Y = value;
 
 
 % --- Executes during object creation, after setting all properties.
@@ -210,6 +220,7 @@ function slider5_Callback(hObject, eventdata, handles)
 value = handles.parameters.F(int16(get(hObject,'Value')));
 caption = sprintf('Focus: [%d, 0, -ROC] (mm)', value);
 set(handles.text6, 'String', caption);
+handles.current_params.F = value;
 
 
 % --- Executes during object creation, after setting all properties.
@@ -235,6 +246,7 @@ function slider6_Callback(hObject, eventdata, handles)
 value = handles.parameters.P(int16(get(hObject,'Value')));
 caption = sprintf('Pitch: %.3f (mm)', value);
 set(handles.text7, 'String', caption);
+handles.current_params.P = value;
 
 
 % --- Executes during object creation, after setting all properties.

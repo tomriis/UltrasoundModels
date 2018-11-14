@@ -27,10 +27,8 @@ for y = 1:length(element_W_y)
 txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,...
     'element_geometry','flat','visualize_transducer',false,'visualize_output',false);
 
-runstring = strcat('N',num2str(n_elementsx),'ROC',num2str(ROCx),'X',num2str(element_Wx),...
-'Y',num2str(element_Wy),'F',num2str(focusx),'P',num2str(P));
-fname = split(runstring,'.');
-fname = strcat(fname{:});
+fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P);
+
 data.(fname) = txfeilddb;
 
 end
