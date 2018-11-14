@@ -35,7 +35,6 @@ gui_State = struct('gui_Name',       mfilename, ...
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
-
 if nargout
     [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
 else
@@ -53,6 +52,8 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 
 % Choose default command line output for field_dataviz
+data = varargin{1};
+
 axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
 axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
 contour(axes1,peaks(20));
