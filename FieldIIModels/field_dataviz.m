@@ -298,7 +298,7 @@ function slider7_Callback(hObject, eventdata, handles)
 value = handles.parameters.ElGeo(int16(get(hObject,'Value')));
 name_map = {'Flat','Focused','Spherical'};
 caption = sprintf('Element Geometry: %s', name_map{value});
-set(handles.text8, 'String', caption);
+set(handles.text9, 'String', caption);
 handles.current_params.ElGeo = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
