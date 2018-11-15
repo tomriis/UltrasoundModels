@@ -31,10 +31,8 @@ for ro = 1:length(R_focus)
 txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,...
    'Nx',2,'Ny',5, 'R_focus',R_focusx,'element_geometry','focused','visualize_transducer',false,'visualize_output',false);
 
-runstring = strcat('ElGeo2','N',num2str(n_elementsx),'ROC',num2str(ROCx),'X',num2str(element_Wx),...
-'Y',num2str(element_Wy),'F',num2str(focusx),'P',num2str(P),'Ro',num2str(R_focusx));
-fname = split(runstring,'.');
-fname = strcat(fname{:});
+fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P);
+
 data.(fname) = txfeilddb;
 end
 end
