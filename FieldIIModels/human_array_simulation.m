@@ -88,8 +88,8 @@ delays = compute_delays(Tx, focus, c); %(s) The delay within which the ultrasoun
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 %ele_delay(Tx, (1:n_elements)', delays); %set the delays
 %xdc_center_focus(Tx, [0,0,focus(3)]);
-xdc_focus(Tx, 0, focus);
-%xdc_focus_times (Tx, 0, delays');
+%xdc_focus(Tx, 0, focus);
+xdc_focus_times (Tx, 0, delays');
 
 %% Set measurement points
 switch plane
