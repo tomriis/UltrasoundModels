@@ -1,10 +1,4 @@
-function [] = plot_xyplane_and_ypeaks(axes1,axes2,data, fieldname)
-        try
-            txfielddb = data.(fieldname);
-        catch
-            disp(strcat("CANT FIND ",fieldname));
-            return
-        end
+function [] = plot_xyplane_and_ypeaks(axes1,axes2,txfielddb)
         x = (-60 : 0.5 : 60)*1e-3;
         y = x;
         imagesc(axes1, x*1e3, y*1e3, txfielddb);

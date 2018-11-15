@@ -5,7 +5,9 @@ function [handles] = find_params_in_data(handles)
         handles.plot_flag = true;
     catch
         % Check if angle of extent is too large, if so dont plot
-        
+        disp('-----------------------------------')
+        disp(strcat('Cant find simulation: ',fname))
+        handles.plot_flag = false;
         % Check if 
     end
 end
