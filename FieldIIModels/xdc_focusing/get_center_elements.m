@@ -6,7 +6,7 @@ function [center_elements] = get_center_elements(rect)
         element = rect(:,ind);
         centers = element(end-2:end,:);
         u = mean(centers,2);
-        [~,center_element] = min(sum(abs(centers-u)));
-        center_elements(:,x) = element(:,center_element);
+        %[~,center_element] = min(sum(abs(centers-u)));
+        center_elements(end-2:end,x) = u;%element(:,center_element);
     end 
 end
