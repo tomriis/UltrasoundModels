@@ -1,4 +1,4 @@
-function [txfielddb]=human_array_simulation(varargin)
+function [Tx]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
 expectedGeometries = {'focused','spherical','flat'};
@@ -26,7 +26,7 @@ focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to
 plane = 'xy'; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
 %% Initialize Field II:
-field_init(-1);
+%field_init(-1);
 
 %% Set up medium & simulation:
 c = 1500;  %(m/s) global speed of sound in medium
@@ -152,4 +152,4 @@ if p.Results.visualize_output
 end
 
 %% Terminate Field II
-field_end();
+%field_end();

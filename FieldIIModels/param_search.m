@@ -31,7 +31,7 @@ for ro = 1:length(R_focus)
 txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,...
    'Nx',2,'Ny',5, 'R_focus',R_focusx,'element_geometry','focused','visualize_transducer',false,'visualize_output',false);
 
-fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P);
+fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P,R_focusx,2);
 
 data.(fname) = txfeilddb;
 end

@@ -5,7 +5,7 @@ if isstruct(varargin{1})
     ElGeo = s.ElGeo; R_focus = s.Ro;
 else
     n_elements=varargin{1}; ROC=varargin{2}; X=varargin{3}; Y=varargin{4}; 
-    focus=varargin{5}; P=varargin{6};
+    focus=varargin{5}; P=varargin{6}; R_focus = varargin{7}; ElGeo=varargin{8};
 end
 %returns txt field from params
 if ElGeo == 1
