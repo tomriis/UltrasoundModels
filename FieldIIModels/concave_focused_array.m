@@ -14,7 +14,7 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
             Th = xdc_focused_array(1, D(1), D(2), 0, R_focus, Nx, Ny, [0,0,0]);
         elseif strcmp(type,"spherical")
             % Spherical
-            Th = xdc_concave(element_W, R_focus, D(1)/Nx);
+            Th = xdc_concave(D(1), R_focus, D(1)/Nx);
         else
             % Flat
             x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];
