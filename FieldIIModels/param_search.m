@@ -29,7 +29,7 @@ for y = 1:length(element_W_y)
     
  
 txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,...
-   'Nx',2,'Ny',5, 'R_focus',R_focusx,'element_geometry','flat','visualize_transducer',false,'visualize_output',false);
+   'Nx',6,'Ny',8, 'R_focus',R_focusx,'element_geometry','flat','visualize_transducer',false,'visualize_output',false);
 
 fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P,R_focusx,1);
 
