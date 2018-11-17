@@ -1,29 +1,4 @@
 function varargout = field_dataviz(varargin)
-% FIELD_DATAVIZ MATLAB code for field_dataviz.fig
-%      FIELD_DATAVIZ, by itself, creates a new FIELD_DATAVIZ or raises the existing
-%      singleton*.
-%
-%      H = FIELD_DATAVIZ returns the handle to a new FIELD_DATAVIZ or the handle to
-%      the existing singleton*.
-%
-%      FIELD_DATAVIZ('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in FIELD_DATAVIZ.M with the given input arguments.
-%
-%      FIELD_DATAVIZ('Property','Value',...) creates a new FIELD_DATAVIZ or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before field_dataviz_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to field_dataviz_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help field_dataviz
-
-% Last Modified by GUIDE v2.5 15-Nov-2018 12:25:55
-
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
@@ -52,16 +27,11 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 
 % Choose default command line output for field_dataviz
-data = varargin{1};
-axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
-axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
-contour(axes1,peaks(20));
-contour(axes2,peaks(20));
-% Update handles structure
-handles.axes1 = axes1;
-handles.axes2 = axes2;
-handles.parameters = unique_vals_from_mat(data);
-handles.data = data;
+handles.data = matfile(varargin{1});
+handles.axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
+handles.axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
+handles.parameters = unique_vals_from_mat(handles.data);
+
 % Set slider values
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
