@@ -103,7 +103,7 @@ handles.current_params.N = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 
@@ -139,7 +139,7 @@ handles.current_params.ROC = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 
@@ -159,7 +159,7 @@ handles = width_pitch_callback(hObject,handles);
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -189,7 +189,7 @@ handles.current_params.Y = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 
@@ -220,7 +220,7 @@ handles.current_params.F = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 
@@ -245,7 +245,7 @@ handles = width_pitch_callback(hObject,handles);
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -271,7 +271,7 @@ handles.current_params.ElGeo = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 % --- Executes during object creation, after setting all properties.
@@ -291,7 +291,7 @@ handles.current_params.Ro = value;
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
 if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles.axes1,handles.axes2,handles.txfielddb);
+    plot_xyplane_and_ypeaks(handles);
 end
 
 
@@ -305,3 +305,24 @@ function slider8_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in radiobutton1.
+function radiobutton1_Callback(hObject, eventdata, handles)
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes on button press in radiobutton2.
+function radiobutton2_Callback(hObject, eventdata, handles)
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes on button press in radiobutton3.
+function radiobutton3_Callback(hObject, eventdata, handles)
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
