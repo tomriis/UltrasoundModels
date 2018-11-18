@@ -26,7 +26,6 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 
-% Choose default command line output for field_dataviz
 handles.filename = varargin{1};
 handles.data = matfile(handles.filename);
 handles.axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
@@ -57,6 +56,7 @@ handles.ROC_equals_R_focus = true;
 if handles.ROC_equals_R_focus
     set(handles.slider8,'Visible',false);
 end
+% Initialize all silders
 handles.plot_flag = false;
 slider1_Callback(handles.slider1, eventdata,handles);
 handles=guidata(hObject);
@@ -76,11 +76,7 @@ handles.plot_flag = true;
 slider8_Callback(handles.slider8, eventdata,handles);
 handles=guidata(hObject);
 
-    
 guidata(hObject, handles);
-
-% UIWAIT makes field_dataviz wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
@@ -94,138 +90,96 @@ function varargout = field_dataviz_OutputFcn(hObject, eventdata, handles)
 %varargout{1} = handles.output;
 
 
-% --- Executes on slider movement.
-function slider1_Callback(hObject, eventdata, handles)
-value = handles.parameters.N(int16(get(hObject,'Value')));
-caption = sprintf('N Elements: %d', value);
-set(handles.text2, 'String', caption);
-handles.current_params.N = value;
-handles = find_params_in_data(handles);
-guidata(hObject, handles);
-if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles);
-end
+function slider1_Callback(hObject, ~, handles)
+    value = handles.parameters.N(int16(get(hObject,'Value')));
+    caption = sprintf('N Elements: %d', value);
+    set(handles.text2, 'String', caption);
+    handles.current_params.N = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 
-
-% --- Executes during object creation, after setting all properties.
-function slider1_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-% Hint: slider controls usually have a light gray background.
-
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+function slider1_CreateFcn(hObject, ~, ~)
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
 
 
-% --- Executes on slider movement.
-function slider2_Callback(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-slider_val = int16(get(hObject,'Value'));
-if handles.ROC_equals_R_focus
-    value = handles.parameters.Ro(int16(get(hObject,'Value')));
-    caption = sprintf('R Focus: %d (mm)', value);
-    set(handles.text8, 'String', caption);
-    handles.current_params.Ro = value;
-end
-value = handles.parameters.ROC(slider_val);
-caption = sprintf('ROC: %d (mm)', value);
-set(handles.text3, 'String', caption);
-handles.current_params.ROC = value;
-handles = find_params_in_data(handles);
-guidata(hObject, handles);
-if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles);
-end
+function slider2_Callback(hObject, ~, handles)
+    slider_val = int16(get(hObject,'Value'));
+    if handles.ROC_equals_R_focus
+        value = handles.parameters.Ro(int16(get(hObject,'Value')));
+        caption = sprintf('R Focus: %d (mm)', value);
+        set(handles.text8, 'String', caption);
+        handles.current_params.Ro = value;
+    end
+    value = handles.parameters.ROC(slider_val);
+    caption = sprintf('ROC: %d (mm)', value);
+    set(handles.text3, 'String', caption);
+    handles.current_params.ROC = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 
-% --- Executes during object creation, after setting all properties.
-function slider2_CreateFcn(hObject, eventdata, handles)
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+function slider2_CreateFcn(hObject, ~, ~)
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
 
 
-% --- Executes on slider movement.
-function slider3_Callback(hObject, eventdata, handles)
-% hObject    handle to slider3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-handles = width_pitch_callback(hObject,handles);
-handles = find_params_in_data(handles);
-guidata(hObject, handles);
-if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles);
-end
-
-% --- Executes during object creation, after setting all properties.
-function slider3_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider3 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
+function slider3_Callback(hObject, ~, handles)
+    handles = width_pitch_callback(hObject,handles);
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 
-% --- Executes on slider movement.
-function slider4_Callback(hObject, eventdata, handles)
-% hObject    handle to slider4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+function slider3_CreateFcn(hObject, ~, ~)
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
 
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-value = handles.parameters.Y(int16(get(hObject,'Value')));
-caption = sprintf('Y: %.2f (mm)', value);
-set(handles.text5, 'String', caption);
-handles.current_params.Y = value;
-handles = find_params_in_data(handles);
-guidata(hObject, handles);
-if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles);
-end
+
+function slider4_Callback(hObject, ~, handles)
+    value = handles.parameters.Y(int16(get(hObject,'Value')));
+    caption = sprintf('Y: %.2f (mm)', value);
+    set(handles.text5, 'String', caption);
+    handles.current_params.Y = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+function slider4_CreateFcn(hObject, ~, ~)
+    if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+        set(hObject,'BackgroundColor',[.9 .9 .9]);
+    end
+
+
+function slider5_Callback(hObject, ~, handles)
+    value = handles.parameters.F(int16(get(hObject,'Value')));
+    caption = sprintf('Focus: [%d, 0, -ROC] (mm)', value);
+    set(handles.text6, 'String', caption);
+    handles.current_params.F = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 
 % --- Executes during object creation, after setting all properties.
-function slider4_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider4 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
-if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor',[.9 .9 .9]);
-end
-
-
-% --- Executes on slider movement.
-function slider5_Callback(hObject, eventdata, handles)
-% hObject    handle to slider5 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-value = handles.parameters.F(int16(get(hObject,'Value')));
-caption = sprintf('Focus: [%d, 0, -ROC] (mm)', value);
-set(handles.text6, 'String', caption);
-handles.current_params.F = value;
-handles = find_params_in_data(handles);
-guidata(hObject, handles);
-if handles.plot_flag
-    plot_xyplane_and_ypeaks(handles);
-end
-
-
-% --- Executes during object creation, after setting all properties.
-function slider5_CreateFcn(hObject, eventdata, handles)
+function slider5_CreateFcn(hObject, ~, ~)
 % hObject    handle to slider5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -237,7 +191,7 @@ end
 
 
 % --- Executes on slider movement.
-function slider6_Callback(hObject, eventdata, handles)
+function slider6_Callback(hObject, ~, handles)
 % hObject    handle to slider6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -249,7 +203,7 @@ if handles.plot_flag
 end
 
 % --- Executes during object creation, after setting all properties.
-function slider6_CreateFcn(hObject, eventdata, handles)
+function slider6_CreateFcn(hObject, ~, ~)
 % hObject    handle to slider6 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -259,7 +213,7 @@ if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColo
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 % --- Executes on slider movement.
-function slider7_Callback(hObject, eventdata, handles)
+function slider7_Callback(hObject, ~, handles)
 % hObject    handle to slider8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -275,12 +229,12 @@ if handles.plot_flag
 end
 
 % --- Executes during object creation, after setting all properties.
-function slider7_CreateFcn(hObject, eventdata, handles)
+function slider7_CreateFcn(hObject, ~, ~)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 % --- Executes on slider movement.
-function slider8_Callback(hObject, eventdata, handles)
+function slider8_Callback(hObject, ~, handles)
 % hObject    handle to slider8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -296,7 +250,7 @@ end
 
 
 % --- Executes during object creation, after setting all properties.
-function slider8_CreateFcn(hObject, eventdata, handles)
+function slider8_CreateFcn(hObject, ~, ~)
 % hObject    handle to slider8 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
