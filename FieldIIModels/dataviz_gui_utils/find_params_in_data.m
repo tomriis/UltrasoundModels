@@ -13,8 +13,6 @@ function [handles] = find_params_in_data(handles)
                 num2str(AngleOfExtent)," > 3.14 rad");
         end
         set(handles.text10,'String',str);
-        disp('-----------------------------------')
-        disp(strcat('Cant find simulation: ',fname))
         handles.plot_flag = false;
         % Check if 
     end

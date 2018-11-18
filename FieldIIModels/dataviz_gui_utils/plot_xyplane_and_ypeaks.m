@@ -1,23 +1,25 @@
 function [] = plot_xyplane_and_ypeaks(axes1,axes2,txfielddb)
-        %axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
-        
         x = (-60 : 0.5 : 60);
         y = x;
-        im=imagesc(axes1, x, y, txfielddb); 
-        cRange = caxis(axes1); hold on; 
-        %contour(axes1,x,y,find_6dB(txfielddb,-16.1,-5.8),'LineColor','bl'); 
-        caxis(axes1,cRange);
-        axis equal tight;
+        axes(axes1);
+        h=imagesc(x, y, txfielddb);
+        hold on;
+        idx1 = find_6dB(txfielddb,-4.31,0);
+        D = get(h,'CData'); %image data
+        
+        [~,idx] = histc(D,linspace(min(min(D)),max(max(D)),10)); %bin it
+        contour(x,y,txfielddb,[-6,-6],'LineColor','k','LineWidth',0.5)
+       
         xlabel(axes1,'x (mm)');
         ylabel(axes1,'y (mm)');
+        
         originalSize1 = get(axes1, 'Position');
         ch = colorbar(axes1);
         ylabel(ch,'dB');
         set(axes1,'Position',originalSize1);
         hold off;
-        %set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-        %, 'r', 'Linewidth', 3); hold off;
-        %axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
+
+        axes(axes2);
         XL = 60;
         YLimLower = -45;
         YLimUpper = 0.5;
