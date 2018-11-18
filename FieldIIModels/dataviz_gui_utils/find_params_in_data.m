@@ -3,8 +3,16 @@ function [handles] = find_params_in_data(handles)
     try 
         handles.txfielddb = handles.data.(fname);
         handles.plot_flag = true;
+        set(handles.text10, 'String', "");
     catch
         % Check if angle of extent is too large, if so dont plot
+        str = sprintf("Current parameters not in %s \n \n",handles.filename);
+        AngleOfExtent = handles.current_params.P * handles.current_params.N/handles.current_params.ROC;
+        if AngleOfExtent > pi
+            str=strcat(str, " Angle of Extent: ",...
+                num2str(AngleOfExtent)," > 3.14 rad");
+        end
+        set(handles.text10,'String',str);
         disp('-----------------------------------')
         disp(strcat('Cant find simulation: ',fname))
         handles.plot_flag = false;

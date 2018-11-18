@@ -27,7 +27,8 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 
 % Choose default command line output for field_dataviz
-handles.data = matfile(varargin{1});
+handles.filename = varargin{1};
+handles.data = matfile(handles.filename);
 handles.axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
 handles.axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
 handles.parameters = unique_vals_from_mat(handles.data);
@@ -51,6 +52,11 @@ for i =1:length(field)
         set(sl, 'Visible',false);
     end
 end
+% Hack for when data is such that ROC = R_focus
+handles.ROC_equals_R_focus = true;
+if handles.ROC_equals_R_focus
+    set(handles.slider8,'Visible',false);
+end
 handles.plot_flag = false;
 slider1_Callback(handles.slider1, eventdata,handles);
 handles=guidata(hObject);
@@ -69,6 +75,8 @@ handles=guidata(hObject);
 handles.plot_flag = true;
 slider8_Callback(handles.slider8, eventdata,handles);
 handles=guidata(hObject);
+
+    
 guidata(hObject, handles);
 
 % UIWAIT makes field_dataviz wait for user response (see UIRESUME)
@@ -88,12 +96,6 @@ function varargout = field_dataviz_OutputFcn(hObject, eventdata, handles)
 
 % --- Executes on slider movement.
 function slider1_Callback(hObject, eventdata, handles)
-% hObject    handle to slider1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 value = handles.parameters.N(int16(get(hObject,'Value')));
 caption = sprintf('N Elements: %d', value);
 set(handles.text2, 'String', caption);
@@ -123,10 +125,14 @@ function slider2_Callback(hObject, eventdata, handles)
 % hObject    handle to slider2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
-value = handles.parameters.ROC(int16(get(hObject,'Value')));
+slider_val = int16(get(hObject,'Value'));
+if handles.ROC_equals_R_focus
+    value = handles.parameters.Ro(int16(get(hObject,'Value')));
+    caption = sprintf('R Focus: %d (mm)', value);
+    set(handles.text8, 'String', caption);
+    handles.current_params.Ro = value;
+end
+value = handles.parameters.ROC(slider_val);
 caption = sprintf('ROC: %d (mm)', value);
 set(handles.text3, 'String', caption);
 handles.current_params.ROC = value;
@@ -139,11 +145,6 @@ end
 
 % --- Executes during object creation, after setting all properties.
 function slider2_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider2 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -154,9 +155,6 @@ function slider3_Callback(hObject, eventdata, handles)
 % hObject    handle to slider3 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'Value') returns position of slider
-%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
 handles = width_pitch_callback(hObject,handles);
 handles = find_params_in_data(handles);
 guidata(hObject, handles);
