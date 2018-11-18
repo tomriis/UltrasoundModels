@@ -1,7 +1,7 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
-outfile = "./param_search_flat.mat";
-n_elements = [64,128,256]; 
+outfile = "./param_search_spherical1.mat";
+n_elements = [96]; 
 element_W_x = [1.0,2.0,3.0,4.0,5.0];
 element_W_y = [20,40,60,80];
 focus = [25,35,45];
@@ -29,9 +29,9 @@ for y = 1:length(element_W_y)
     
  
 txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],'P', P,...
-   'Nx',6,'Ny',8, 'R_focus',R_focusx,'element_geometry','flat','visualize_transducer',false,'visualize_output',false);
+   'Nx',6,'Ny',8, 'R_focus',R_focusx,'element_geometry','spherical','visualize_transducer',false,'visualize_output',false);
 
-fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P,R_focusx,1);
+fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P,R_focusx,3);
 
 data.(fname) = txfeilddb;
 
