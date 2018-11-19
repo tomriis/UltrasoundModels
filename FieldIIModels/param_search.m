@@ -1,7 +1,7 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
-outfile = "./param_search_spherical1.mat";
-n_elements = [96]; 
+outfile = "./param_search_spherical.mat";
+n_elements = [64,96,128,192,256]; 
 element_W_x = [1.0,2.0,3.0,4.0,5.0];
 element_W_y = [20,40,60,80];
 focus = [25,35,45];
