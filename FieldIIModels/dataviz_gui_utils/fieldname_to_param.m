@@ -10,6 +10,7 @@ function [params] = fieldname_to_param(fieldname)
     k_F = strfind(fieldname,'F');
     k_P = strfind(fieldname,'P');
     k_Ro = strfind(fieldname,'Ro');
+    k_Slice = strfind(fieldname,'Slice_');
     params.N = str2double(fieldname(k_N+1:k_ROC-1));
     params.ROC = str2double(fieldname(k_ROC+3:k_X-1));
     params.X = get_param_decimal(fieldname, k_X+1,k_Y-1);
@@ -31,6 +32,7 @@ function [params] = fieldname_to_param(fieldname)
         params.Ro = str2double(fieldname(k_Ro+2:end));
     end
 end
+
 
 function [par] = get_param_decimal(fieldname, k_start, endpoint)
     try

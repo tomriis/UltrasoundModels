@@ -16,6 +16,7 @@ addOptional(p, 'Nx', 4);
 addOptional(p, 'Ny', 4);
 addOptional(p,'visualize_transducer',false);
 addOptional(p,'visualize_output',true);
+addOptional(p,'Slice','xy');
 parse(p, varargin{:})
 
 
@@ -23,7 +24,7 @@ parse(p, varargin{:})
 %% Parameters to vary in this exercise
 visualize_transducer = p.Results.visualize_transducer;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
-plane = 'xy'; %('xy' or 'xz'); the plane within which we visualize the pressure field
+plane = p.Results.Slice; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
 %% Initialize Field II:
 field_init(-1);
@@ -103,7 +104,11 @@ switch plane
     case 'xz'
         x = (-60 : 0.5 : 60)*1e-3;
         y = 0;
-        z = (0 : 0.5 : 120)*1e-3;
+        z = focus(3)+(-60 : 0.5 : 60)*1e-3;
+    case 'yz'
+        x = 0;
+        y = (-60 : 0.5 : 60)*1e-3;
+        z = focus(3)+(-60 : 0.5 : 60)*1e-3;
 end
 %create all individual x, y, z points within the above ranges
 [xv, yv, zv] = meshgrid(x, y, z);
