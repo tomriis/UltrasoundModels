@@ -18,7 +18,7 @@ function [params] = fieldname_to_param(fieldname)
     params.Y = str2double(fieldname(k_Y+1:k_F-1));
     params.F = str2double(fieldname(k_F+1:k_P-1));
     
-    % Handle the optional ElGeo and Ro
+    % Handle the optional ElGeo and Ro and Slice
     if isempty(k_ElGeo)
         params.ElGeo = 1;
     else
@@ -27,9 +27,14 @@ function [params] = fieldname_to_param(fieldname)
     if isempty(k_Ro)
         params.P = get_param_decimal(fieldname, k_P+1,length(fieldname));
         params.Ro = inf;
-    else
+    elseif isempty(k_Ro)  && isempthy(k_Slice)
         params.P = get_param_decimal(fieldname, k_P+1,k_Ro-1);
         params.Ro = str2double(fieldname(k_Ro+2:end));
+    end
+    if isempty(k_Slice)
+        params.Slice = 'xy';
+    else
+        params.Slice = fieldname(k_Slice+6:k_Slice+8);
     end
 end
 

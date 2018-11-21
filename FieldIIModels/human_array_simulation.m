@@ -129,6 +129,9 @@ switch plane
     case 'xz'
         txfield = reshape(txfield, length(x), length(z));
         txfield = txfield'; %flip the z coordinate for proper orientation
+    case 'yz'
+        txfield = reshape(txfield, length(y), length(z));
+        txfield = txfield'; %flip the z coordinate for proper orientation
 end
 txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
 
