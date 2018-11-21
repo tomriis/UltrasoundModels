@@ -30,11 +30,14 @@ function [params] = fieldname_to_param(fieldname)
     elseif isempty(k_Ro)  && isempthy(k_Slice)
         params.P = get_param_decimal(fieldname, k_P+1,k_Ro-1);
         params.Ro = str2double(fieldname(k_Ro+2:end));
+    else
+        params.P = get_param_decimal(fieldname, k_P+1,k_Ro-1);
+        params.Ro = str2double(fieldname(k_Ro+2:k_Slice-1));
     end
     if isempty(k_Slice)
         params.Slice = 'xy';
     else
-        params.Slice = fieldname(k_Slice+6:k_Slice+8);
+        params.Slice = fieldname(k_Slice+6:k_Slice+7);
     end
 end
 

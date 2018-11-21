@@ -72,8 +72,10 @@ slider6_Callback(handles.slider6, eventdata,handles);
 handles=guidata(hObject);
 slider7_Callback(handles.slider7, eventdata,handles);
 handles=guidata(hObject);
-handles.plot_flag = true;
 slider8_Callback(handles.slider8, eventdata,handles);
+handles=guidata(hObject); 
+handles.plot_flag = true;
+slider9_Callback(handles.slider9, eventdata,handles);
 handles=guidata(hObject);
 
 guidata(hObject, handles);
@@ -280,3 +282,30 @@ function radiobutton3_Callback(hObject, eventdata, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
+
+
+% --- Executes on slider movement.
+function slider9_Callback(hObject, ~, handles)
+    value = handles.parameters.Slice{int16(get(hObject,'Value'))};
+    caption = sprintf('Plane: %s', value);
+    set(handles.text10, 'String', caption);
+    handles.current_params.Slice = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes during object creation, after setting all properties.
+function slider9_CreateFcn(hObject, ~, ~)
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in pushbutton1.
+function pushbutton1_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
