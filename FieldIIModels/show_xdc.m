@@ -2,46 +2,56 @@
 %
 %  Calling: show_xdc(Th)
 %
-%  Argument: Th - Transducer handle
+%  Argument: Varargin could either be transducer pointer or data directly
 %
 %  Return:   Plot of the transducer surface on the current figure
 %
 %  Note this version onlys shows the defined rectangles
-%
-%  Version 1.2, August 4, 1999, JAJ
 
-function res = show_xdc (Th,varargin)
+
+function show_xdc (Th,varargin)
 
 %  Do it for the rectangular elements
+p = inputParser;
+addOptional(p,'Th', -1);
+addOptional(p,'data',0);
+addOptional(p, 'fast',false);
+addOptional(p, 'show_skull',false);
+parse(p, varargin{:});
+if p.Results.Th > 0
+    data = xdc_get(Th,'rect');
+elseif p.Results.data
+    data = p.Results.data;
+else
+    return
+end
 
-data = xdc_get(Th,'rect');
-[N,M]=size(data);
+[~,M]=size(data);
 
 %  Do the actual display:
 figure;
 %X = [data(11,:),data(20,:),data(14,:),data(17,:)]*1000;
-minimum = 0;
-maximum = 0;
-%if varargin{1} == 'fast'
-%        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
-%        y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
-%        z=[data(13,:), data(22,:); data(16,:), data(19,:)]*1000;
-%  surf(x,y,z)
-%  hold on
-%else
 
-for i=1:M
-  x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
-  y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
-  z=[data(13,i), data(22,i); data(16,i), data(19,i)]*1000;
-  c=data(5,i)*ones(2,2);
-  surf(x,y,z,c)
-  hold on
-  end
-%end
-
-show_skull_space(-100);
-%  Put som axis legends on
+if p.Results.fast
+       x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
+       y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
+       z=[data(13,:), data(22,:); data(16,:), data(19,:)]*1000;
+ surf(x,y,z)
+ hold on
+else
+    for i=1:M
+      x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
+      y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
+      z=[data(13,i), data(22,i); data(16,i), data(19,i)]*1000;
+      c=data(5,i)*ones(2,2);
+      surf(x,y,z,c)
+      hold on
+    end
+end
+if p.Results.show_skull
+    show_skull_space(-100);
+end
+%  Put some axis legends on
 
 % Hc = colorbar;
 colormap(cool(128));
