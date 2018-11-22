@@ -155,7 +155,7 @@ if p.Results.visualize_output
             ch = colorbar; ylabel(ch, 'dB');        
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
-            ZL1 = 0; ZL2 = 120; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
+            ZL1 = min(z); ZL2 = max(z); plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
             xlabel('z (mm)');
     end
     ylabel('Pressure (dB)');

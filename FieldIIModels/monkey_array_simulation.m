@@ -1,9 +1,9 @@
 function monkey_array_simulation()
 
 %% Parameters to vary in this exercise
-visualize_transducer = true;
+visualize_transducer = false;
 focal_point = [0, 0, 14]; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
-plane = 'xy'; %('xy' or 'xz'); the plane within which we visualize the pressure field
+plane = 'xz'; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
 %% Initialize Field II:
 field_init(-1);
@@ -22,7 +22,7 @@ set_field('att', alpha);
 
 ROC = 40; %mm
 AngExtent = 70 / 360 * 2 * pi;
-no_elements = 64;  %number of physical elements.
+no_elements = 32;  %number of physical elements.
 P = AngExtent * ROC / no_elements; %pitch (mm)
 W = 5.5; %width (mm)
 ElH = 12; %elevation height (mm)
