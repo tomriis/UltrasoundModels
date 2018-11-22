@@ -25,9 +25,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
                 ax1ylabel = 'y (mm)';
                 ax2xlabel = 'x (mm)';
         end
-        xlabel(axes1,ax1xlabel);
-        ylabel(axes1,ax1ylabel);
-        xlabel(axes2,ax2xlabel);      
+     
         axes(axes1);
         
         h=imagesc(x, y, txfielddb);
@@ -54,21 +52,22 @@ function [] = plot_xyplane_and_ypeaks(handles)
             axes1.YGrid = 'off';
         end       
        
-        
-        
         originalSize1 = get(axes1, 'Position');
         ch = colorbar(axes1);
         ylabel(ch,'dB');
         set(axes1,'Position',originalSize1);
+        xlabel(axes1,ax1xlabel);
+        ylabel(axes1,ax1ylabel);
         hold off;
-
+        
         axes(axes2);
        
         plot(axes2, x, txfielddb(round(length(txfielddb) / 2), :)); 
         xlim(axes2,[-XL XL]); hold on; 
         ylim(axes2,[YLimLower,YLimUpper]); hold on;
         plot(axes2, [-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
-        ylabel(axes2,'Pressure (dB)');        
+        xlabel(axes2,ax2xlabel); 
+        ylabel(axes2,'Pressure (dB)');      
         xticks(axes2,field_space_ticks);
         yticks(axes2,round(linspace(YLimLower, YLimUpper, (YLimUpper-YLimLower)/6+1)));
         hold off;
