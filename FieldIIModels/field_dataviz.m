@@ -264,21 +264,21 @@ end
 
 
 % --- Executes on button press in radiobutton1.
-function radiobutton1_Callback(hObject, eventdata, handles)
+function radiobutton1_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
 
 % --- Executes on button press in radiobutton2.
-function radiobutton2_Callback(hObject, eventdata, handles)
+function radiobutton2_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
 
 % --- Executes on button press in radiobutton3.
-function radiobutton3_Callback(hObject, eventdata, handles)
+function radiobutton3_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
@@ -305,7 +305,19 @@ end
 
 
 % --- Executes on button press in pushbutton1.
-function pushbutton1_Callback(hObject, eventdata, handles)
-% hObject    handle to pushbutton1 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+function pushbutton1_Callback(hObject, ~, handles)
+    set(hObject, 'Enable','off');
+
+    fname = fieldname_from_params(handles.current_params);
+    try
+        handles.xdc_geometry = handles.data(strcat('G_',fname(1:end-8)));
+        handles.plot_geo_flag = true;
+    catch
+        set(handles.text10,'String',strcat(fname(1:end-8),sprintf('\n Geometry not available')));
+        handles.plot_geo_flag = false;
+    end
+    if handles.plot_geo_flag
+        show_transducer('data',handles.xdc_geometry);
+    end
+    set(hObject,'Enable','on');
+    

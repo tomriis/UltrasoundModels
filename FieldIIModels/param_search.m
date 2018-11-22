@@ -33,13 +33,15 @@ for s =1:length(Slice)
 
     
  
-txfeilddb = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],...,
+[txfeilddb, xdc_data] = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],...,
     'P', P,'Nx',6,'Ny',8, 'R_focus',R_focusx,'element_geometry',elGeox,'Slice',slicex,...,
     'visualize_transducer',false,'visualize_output',false);
 
 fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P,R_focusx,e,slicex);
-
+% Save field
 data.(fname) = txfeilddb;
+% save the transducer geometry
+data.(strcat('G_',fname(1:end-8))) = xdc_data;
 end
 end
 end
