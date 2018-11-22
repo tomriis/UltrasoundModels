@@ -1,4 +1,4 @@
-function [txfielddb]=human_array_simulation(varargin)
+function [txfielddb, xdc_data]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
 expectedGeometries = {'focused','spherical','flat'};
@@ -134,7 +134,7 @@ switch plane
         txfield = txfield'; %flip the z coordinate for proper orientation
 end
 txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
-
+xdc_data = xdc_get(Tx,'rect');
 if p.Results.visualize_output
     figure;
     switch plane

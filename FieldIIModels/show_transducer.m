@@ -9,7 +9,7 @@
 %  Note this version onlys shows the defined rectangles
 
 
-function show_transducer(Th,varargin)
+function show_transducer(varargin)
 
 %  Do it for the rectangular elements
 p = inputParser;
