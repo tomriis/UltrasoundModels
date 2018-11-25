@@ -1,10 +1,10 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
-outfile = './param_search_z.mat';
-n_elements = [64];%[64,96,128,192,256]; 
+outfile = './param_search_z2.mat';
+n_elements = [64,128];%[64,96,128,192,256]; 
 element_W_x = [2.0];%[1.0,2.0,3.0,4.0,5.0];
 element_W_y = [40,60];%[20,40,60,80];
-focus = [45];%[25,35,45];
+focus = [35,45];%[25,35,45];
 ROC = [120];%[80,120,160];
 elGeo = {'flat'};
 Slice = {'xy','xz','yz'};
