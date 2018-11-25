@@ -310,7 +310,7 @@ function pushbutton1_Callback(hObject, ~, handles)
 
     fname = fieldname_from_params(handles.current_params);
     try
-        handles.xdc_geometry = handles.data(strcat('G_',fname(1:end-8)));
+        handles.xdc_geometry = handles.data.(strcat('G_',fname(1:end-8)));
         handles.plot_geo_flag = true;
     catch
         set(handles.text10,'String',strcat(fname(1:end-8),sprintf('\n Geometry not available')));

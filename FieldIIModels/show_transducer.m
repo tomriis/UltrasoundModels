@@ -14,22 +14,22 @@ function show_transducer(varargin)
 %  Do it for the rectangular elements
 p = inputParser;
 addOptional(p,'Th', -1);
-addOptional(p,'data',0);
+addOptional(p,'data',[]);
 addOptional(p, 'fast',false);
 addOptional(p, 'show_skull',false);
 parse(p, varargin{:});
+
 if p.Results.Th > 0
     data = xdc_get(Th,'rect');
-elseif p.Results.data
+elseif ~isempty(p.Results.data)
     data = p.Results.data;
 else
     return
 end
 
 [~,M]=size(data);
-
 figure;
-
+disp('Plotting transducers...')
 if p.Results.fast
        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
        y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
@@ -61,6 +61,7 @@ grid
 axis('image')
 hold off
 view([90, 90, 90]);  
+disp('Complete')
 end
 
 function show_skull_space(center_z)
