@@ -1,7 +1,7 @@
 function [handles] = find_params_in_data(handles)
     fname = fieldname_from_params(handles.current_params);
     try 
-        handles.txfielddb = txfield_to_db(handles.data,fname);
+        handles.txfielddb = txfield_to_db(handles,fname);
         handles.plot_flag = true;
         set(handles.text10, 'String', "");
     catch

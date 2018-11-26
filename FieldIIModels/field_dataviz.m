@@ -56,6 +56,9 @@ handles.ROC_equals_R_focus = true;
 if handles.ROC_equals_R_focus
     set(handles.slider8,'Visible',false);
 end
+% Initialize Pop Up Menu
+handles.txfield_norm='dB';
+set(handles.popupmenu1,'String',{'dB','Normalize','Raw'});
 % Initialize all silders
 handles.plot_flag = false;
 slider1_Callback(handles.slider1, eventdata,handles);
@@ -287,8 +290,9 @@ function radiobutton3_Callback(hObject, ~, handles)
 % --- Executes on slider movement.
 function slider9_Callback(hObject, ~, handles)
     value = handles.parameters.Slice{int16(get(hObject,'Value'))};
+    disp(value);
     caption = sprintf('Plane: %s', value);
-    set(handles.text10, 'String', caption);
+    set(handles.text11, 'String', caption);
     handles.current_params.Slice = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
@@ -320,4 +324,20 @@ function pushbutton1_Callback(hObject, ~, handles)
         show_transducer('data',handles.xdc_geometry);
     end
     set(hObject,'Enable','on');
-    
+
+% --- Executes on selection change in popupmenu1.
+function popupmenu1_Callback(hObject, eventdata, handles)
+        contents = cellstr(get(hObject,'String'));
+        handles.txfield_norm = contents{get(hObject,'Value')};
+        handles = find_params_in_data(handles);
+        if handles.plot_flag
+            plot_xyplane_and_ypeaks(handles);
+        end
+        
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

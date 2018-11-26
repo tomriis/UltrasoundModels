@@ -96,7 +96,7 @@ delays = compute_delays(Tx, focus, c); %(s) The delay within which the ultrasoun
 xdc_focus_times (Tx, 0, delays');
 
 %% Set measurement points
-[x,y,z] = get_slice_xyz(plane, focus)
+[x,y,z] = get_slice_xyz(plane, focus);
 %create all individual x, y, z points within the above ranges
 [xv, yv, zv] = meshgrid(x, y, z);
 pos = [xv(:), yv(:), zv(:)];
