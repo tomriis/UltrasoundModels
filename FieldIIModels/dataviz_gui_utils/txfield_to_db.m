@@ -15,7 +15,7 @@ function txfield = txfield_to_db(handles, fname)
         maxall = max([maxxy, maxxz, maxyz]);
         txfield = db(data.(fname)./maxall);
     elseif strcmp(handles.txfield_norm, 'Raw')
-        txfield = data;
+        txfield = data.(fname);
     elseif strcmp(handles.txfield_norm,'Normalize')
         txfield = data.(fname)./max(max(data.(fname)));
     end

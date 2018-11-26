@@ -7,7 +7,13 @@ function [] = plot_xyplane_and_ypeaks(handles)
         if strcmp(handles.txfield_norm,'dB')
             YLimLower = -45;
             YLimUpper = 0.5;
-        else
+            units = 'dB';
+        elseif strcmp(handles.txfield_norm,'Normalize')
+            YLimLower = min(min(txfielddb));
+            YLimUpper = max(max(txfielddb));
+            units = 'Normalized';
+        elseif strcmp(handles.txfield_norm,'Raw')
+            units = '';
             YLimLower = min(min(txfielddb));
             YLimUpper = max(max(txfielddb));
         end
@@ -65,7 +71,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         ylabel(axes1,ax1ylabel);
         originalSize1 = get(axes1, 'Position');
         ch = colorbar(axes1);
-        ylabel(ch,'dB');
+        ylabel(ch, units);
         set(axes1,'Position',originalSize1);
         hold off;
         
@@ -86,7 +92,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         ylim(axes2,[YLimLower,YLimUpper]); hold on;
         plot(axes2, [XL, XH], [-6 -6], 'k--', 'linewidth', 2);
         xlabel(axes2,ax2xlabel); 
-        ylabel(axes2,'Pressure (dB)'); 
+        ylabel(axes2,sprintf('Pressure (%s)',units)); 
         field_space_ticksx = round(linspace(XL,XH, (XH-XL)/10+1));
         xticks(axes2,field_space_ticksx);
         yticks(axes2,round(linspace(YLimLower, YLimUpper, (YLimUpper-YLimLower)/6+1)));
