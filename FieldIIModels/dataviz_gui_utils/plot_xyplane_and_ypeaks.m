@@ -24,12 +24,14 @@ function [] = plot_xyplane_and_ypeaks(handles)
                 ax1ylabel = 'z (mm)';
                 ax2xlabel = 'z (mm)';
                 y=z;
+                
             case 'yz'
                 ax1xlabel = 'y (mm)';
                 ax1ylabel = 'z (mm)';
                 ax2xlabel = 'z (mm)';
                 x=y;
                 y=z;
+                
             case 'xy'
                 ax1xlabel = 'x (mm)';
                 ax1ylabel = 'y (mm)';
@@ -43,7 +45,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         field_space_ticksy = round(linspace(YL,YH, (YH-YL)/10+1));
         
         axes(axes1);
-        
+        axes1.YDir = 'reverse';
         h=imagesc(x, y, txfielddb);
         hold on; 
         if handles.radiobutton1.Value
@@ -67,6 +69,16 @@ function [] = plot_xyplane_and_ypeaks(handles)
             axes1.XGrid = 'off';
             axes1.YGrid = 'off';
         end 
+        if handles.radiobutton4.Value
+            switch handles.current_params.Slice
+                case 'xy'
+                    plot(axes1, [XL, XH], [-focus(2) focus(2)], 'w-', 'linewidth', 2);
+                case 'xz'
+                    plot(axes1, [focus(1)*1000, focus(1)*1000], [min(z) max(z)],'w-','linewidth',2);
+                case 'yz'
+                    plot(axes1, [focus(2)*1000, focus(2)*1000], [min(z) max(z)],'w-','linewidth',2);
+            end
+        end
         xlabel(axes1,ax1xlabel);
         ylabel(axes1,ax1ylabel);
         originalSize1 = get(axes1, 'Position');

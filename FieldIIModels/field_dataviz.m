@@ -325,7 +325,7 @@ function pushbutton1_Callback(hObject, ~, handles)
     set(hObject,'Enable','on');
 
 % --- Executes on selection change in popupmenu1.
-function popupmenu1_Callback(hObject, eventdata, handles)
+function popupmenu1_Callback(hObject, ~, handles)
         contents = cellstr(get(hObject,'String'));
         handles.txfield_norm = contents{get(hObject,'Value')};
         handles = find_params_in_data(handles);
@@ -341,3 +341,10 @@ function popupmenu1_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in radiobutton4.
+function radiobutton4_Callback(hObject, eventdata, handles)
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
