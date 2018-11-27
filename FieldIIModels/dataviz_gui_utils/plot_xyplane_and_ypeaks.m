@@ -45,7 +45,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         field_space_ticksy = round(linspace(YL,YH, (YH-YL)/10+1));
         
         axes(axes1);
-        axes1.YDir = 'reverse';
+        
         h=imagesc(x, y, txfielddb);
         hold on; 
         if handles.radiobutton1.Value
