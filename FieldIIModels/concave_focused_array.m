@@ -9,10 +9,10 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
     rectangles=[];
     for i = 1:length(index_x)
     % Create transducer
-        if strcmp(type,"focused")
+        if strcmp(type,'focused')
             % Focused
             Th = xdc_focused_array(1, D(1), D(2), 0, R_focus, Nx, Ny, [0,0,0]);
-        elseif strcmp(type,"spherical")
+        elseif strcmp(type,'spherical')
             % Spherical
             Th = xdc_concave(D(1), R_focus, D(1)/Nx);
         else
