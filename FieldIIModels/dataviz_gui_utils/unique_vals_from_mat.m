@@ -1,6 +1,7 @@
 function [data] = unique_vals_from_mat(Matfile)
 % Returns array of fieldname strings from the loaded matfile
     data = struct('N',[],'ROC',[],'X',[],'Y',[],'F',[],'P',[],'ElGeo',[],'Ro',[]);
+    data.Slice={};
     fields_cell = fieldnames(Matfile);
     count = 1;
     for i = 1:length(fields_cell)
@@ -16,6 +17,7 @@ function [data] = unique_vals_from_mat(Matfile)
             data.P(count) = params.P;
             data.ElGeo(count) = params.ElGeo;
             data.Ro(count) = params.Ro;
+            data.Slice(count) = {params.Slice};
             
             count= count +1;
         end

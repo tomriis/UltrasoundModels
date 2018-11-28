@@ -56,6 +56,9 @@ handles.ROC_equals_R_focus = true;
 if handles.ROC_equals_R_focus
     set(handles.slider8,'Visible',false);
 end
+% Initialize Pop Up Menu
+handles.txfield_norm='dB';
+set(handles.popupmenu1,'String',{'dB','Normalize'});
 % Initialize all silders
 handles.plot_flag = false;
 slider1_Callback(handles.slider1, eventdata,handles);
@@ -72,8 +75,10 @@ slider6_Callback(handles.slider6, eventdata,handles);
 handles=guidata(hObject);
 slider7_Callback(handles.slider7, eventdata,handles);
 handles=guidata(hObject);
-handles.plot_flag = true;
 slider8_Callback(handles.slider8, eventdata,handles);
+handles=guidata(hObject); 
+handles.plot_flag = true;
+slider9_Callback(handles.slider9, eventdata,handles);
 handles=guidata(hObject);
 
 guidata(hObject, handles);
@@ -262,21 +267,84 @@ end
 
 
 % --- Executes on button press in radiobutton1.
-function radiobutton1_Callback(hObject, eventdata, handles)
+function radiobutton1_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
 
 % --- Executes on button press in radiobutton2.
-function radiobutton2_Callback(hObject, eventdata, handles)
+function radiobutton2_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
 
 % --- Executes on button press in radiobutton3.
-function radiobutton3_Callback(hObject, eventdata, handles)
+function radiobutton3_Callback(hObject, ~, handles)
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes on slider movement.
+function slider9_Callback(hObject, ~, handles)
+    value = handles.parameters.Slice{int16(get(hObject,'Value'))};
+    caption = sprintf('Plane: %s', value);
+    set(handles.text11, 'String', caption);
+    handles.current_params.Slice = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes during object creation, after setting all properties.
+function slider9_CreateFcn(hObject, ~, ~)
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in pushbutton1.
+function pushbutton1_Callback(hObject, ~, handles)
+    set(hObject, 'Enable','off');
+
+    fname = fieldname_from_params(handles.current_params);
+    try
+        handles.xdc_geometry = handles.data.(strcat('G_',fname(1:end-8)));
+        handles.plot_geo_flag = true;
+    catch
+        set(handles.text10,'String',strcat(fname(1:end-8),sprintf('\n Geometry not available')));
+        handles.plot_geo_flag = false;
+    end
+    if handles.plot_geo_flag
+        show_transducer('data',handles.xdc_geometry);
+    end
+    set(hObject,'Enable','on');
+
+% --- Executes on selection change in popupmenu1.
+function popupmenu1_Callback(hObject, ~, handles)
+        contents = cellstr(get(hObject,'String'));
+        handles.txfield_norm = contents{get(hObject,'Value')};
+        handles = find_params_in_data(handles);
+        guidata(hObject, handles);
+        if handles.plot_flag
+            plot_xyplane_and_ypeaks(handles);
+        end
+        
+
+
+% --- Executes during object creation, after setting all properties.
+function popupmenu1_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in radiobutton4.
+function radiobutton4_Callback(hObject, eventdata, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end

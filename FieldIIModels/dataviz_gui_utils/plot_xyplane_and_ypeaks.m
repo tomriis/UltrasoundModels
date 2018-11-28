@@ -1,17 +1,53 @@
 function [] = plot_xyplane_and_ypeaks(handles)
         axes1=handles.axes1;axes2=handles.axes2;txfielddb = handles.txfielddb;
         
-        x = (-60 : 0.5 : 60);
-        y = x;
-        XL = 60;
-        YLimLower = -45;
-        YLimUpper = 0.5;
-        field_space_ticks = round(linspace(-XL,XL, 2*XL/10+1));
+        focus = [handles.current_params.F,0,-handles.current_params.ROC]*1e-3;
+        [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus);
+        x= x*1000; y=y*1000; z=z*1000;
+        if strcmp(handles.txfield_norm,'dB')
+            YLimLower = -45;
+            YLimUpper = 0.5;
+            units = 'dB';
+        elseif strcmp(handles.txfield_norm,'Normalize')
+            YLimLower = min(min(txfielddb));
+            YLimUpper = max(max(txfielddb));
+            units = 'Normalized';
+        elseif strcmp(handles.txfield_norm,'Raw')
+            units = '';
+            YLimLower = min(min(txfielddb));
+            YLimUpper = max(max(txfielddb));
+        end
+        
+        switch handles.current_params.Slice
+            case 'xz'
+                ax1xlabel = 'x (mm)';
+                ax1ylabel = 'z (mm)';
+                ax2xlabel = 'z (mm)';
+                y=z;
+                
+            case 'yz'
+                ax1xlabel = 'y (mm)';
+                ax1ylabel = 'z (mm)';
+                ax2xlabel = 'z (mm)';
+                x=y;
+                y=z;
+                
+            case 'xy'
+                ax1xlabel = 'x (mm)';
+                ax1ylabel = 'y (mm)';
+                ax2xlabel = 'x (mm)';
+                
+        end
+        XL = min(x); XH = max(x); 
+        YL = min(y); YH = max(y);
+        
+        field_space_ticksx = round(linspace(XL,XH, (XH-XL)/10+1));
+        field_space_ticksy = round(linspace(YL,YH, (YH-YL)/10+1));
         
         axes(axes1);
-        h=imagesc(x, y, txfielddb);
-        hold on;
         
+        h=imagesc(x, y, txfielddb);
+        hold on; 
         if handles.radiobutton1.Value
             contour(x,y,txfielddb,[-6,-6],'LineColor','k','LineWidth',0.5)
         end
@@ -19,8 +55,9 @@ function [] = plot_xyplane_and_ypeaks(handles)
             contour(x,y,txfielddb,linspace(min(min(txfielddb)),max(max(txfielddb)),10),...
                 'LineColor', [0.9 0.9 0.9],'LineWidth',0.5)
         end
-        xticks(axes1,field_space_ticks);
-        yticks(axes1,field_space_ticks);
+        
+        xticks(axes1,field_space_ticksx);
+        yticks(axes1,field_space_ticksy);
         if handles.radiobutton3.Value
             axes1.XGrid = 'on';
             axes1.YGrid = 'on';
@@ -31,26 +68,45 @@ function [] = plot_xyplane_and_ypeaks(handles)
         else
             axes1.XGrid = 'off';
             axes1.YGrid = 'off';
-        end       
-       
-        xlabel(axes1,'x (mm)');
-        ylabel(axes1,'y (mm)');
-        
+        end 
+        if handles.radiobutton4.Value
+            switch handles.current_params.Slice
+                case 'xy'
+                    plot(axes1, [XL, XH], [-focus(2) focus(2)], 'w-', 'linewidth', 2);
+                case 'xz'
+                    plot(axes1, [focus(1)*1000, focus(1)*1000], [min(z) max(z)],'w-','linewidth',2);
+                case 'yz'
+                    plot(axes1, [focus(2)*1000, focus(2)*1000], [min(z) max(z)],'w-','linewidth',2);
+            end
+        end
+        xlabel(axes1,ax1xlabel);
+        ylabel(axes1,ax1ylabel);
         originalSize1 = get(axes1, 'Position');
         ch = colorbar(axes1);
-        ylabel(ch,'dB');
+        ylabel(ch, units);
         set(axes1,'Position',originalSize1);
         hold off;
-
+        
         axes(axes2);
-       
-        plot(axes2, x, txfielddb(round(length(txfielddb) / 2), :)); 
-        xlim(axes2,[-XL XL]); hold on; 
+        switch handles.current_params.Slice
+            case 'xz'
+                ind = x==handles.current_params.F;
+                plot(axes2, z, txfielddb(:, ind));
+                x=z;
+            case 'yz'
+                plot(axes2, z, txfielddb(:, round(length(txfielddb) / 2)));
+                x=z;
+            case 'xy'
+                plot(axes2, x, txfielddb(round(length(txfielddb) / 2), :));
+        end
+        XL = min(x); XH = max(x); 
+        xlim(axes2,[XL XH]); hold on; 
         ylim(axes2,[YLimLower,YLimUpper]); hold on;
-        plot(axes2, [-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
-        xlabel(axes2,'x (mm)');
-        ylabel(axes2,'Pressure (dB)');        
-        xticks(axes2,field_space_ticks);
+        plot(axes2, [XL, XH], [-6 -6], 'k--', 'linewidth', 2);
+        xlabel(axes2,ax2xlabel); 
+        ylabel(axes2,sprintf('Pressure (%s)',units)); 
+        field_space_ticksx = round(linspace(XL,XH, (XH-XL)/10+1));
+        xticks(axes2,field_space_ticksx);
         yticks(axes2,round(linspace(YLimLower, YLimUpper, (YLimUpper-YLimLower)/6+1)));
         hold off;
 end

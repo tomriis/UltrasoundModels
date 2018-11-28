@@ -1,4 +1,4 @@
-function [txfielddb]=human_array_simulation(varargin)
+function [txfield, xdc_data]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
 expectedGeometries = {'focused','spherical','flat'};
@@ -16,6 +16,7 @@ addOptional(p, 'Nx', 4);
 addOptional(p, 'Ny', 4);
 addOptional(p,'visualize_transducer',false);
 addOptional(p,'visualize_output',true);
+addOptional(p,'Slice','xy');
 parse(p, varargin{:})
 
 
@@ -23,7 +24,7 @@ parse(p, varargin{:})
 %% Parameters to vary in this exercise
 visualize_transducer = p.Results.visualize_transducer;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
-plane = 'xy'; %('xy' or 'xz'); the plane within which we visualize the pressure field
+plane = p.Results.Slice; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
 %% Initialize Field II:
 field_init(-1);
@@ -95,16 +96,7 @@ delays = compute_delays(Tx, focus, c); %(s) The delay within which the ultrasoun
 xdc_focus_times (Tx, 0, delays');
 
 %% Set measurement points
-switch plane
-    case 'xy'
-        x = (-60 : 0.5 : 60)*1e-3;
-        y = x;
-        z = focus(3);
-    case 'xz'
-        x = (-60 : 0.5 : 60)*1e-3;
-        y = 0;
-        z = (0 : 0.5 : 120)*1e-3;
-end
+[x,y,z] = get_slice_xyz(plane, focus);
 %create all individual x, y, z points within the above ranges
 [xv, yv, zv] = meshgrid(x, y, z);
 pos = [xv(:), yv(:), zv(:)];
@@ -112,6 +104,7 @@ pos = [xv(:), yv(:), zv(:)];
 %% Calculate the emitted field at those points
 [hp, ~] = calc_hp(Tx, pos); %this is where the simulation happens
 
+xdc_data = xdc_get(Tx,'rect');
 %% Plot the emitted field
 %txfield = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
 %of the propagating pulse; summing it is a dirty way to approximate the amplitude of the signal regardless of the time it occurs at 
@@ -123,6 +116,9 @@ switch plane
         txfield = fliplr(txfield); %flip the x coordinate for proper orientation
     case 'xz'
         txfield = reshape(txfield, length(x), length(z));
+        txfield = fliplr(txfield'); %flip the z coordinate for proper orientation
+    case 'yz'
+        txfield = reshape(txfield, length(y), length(z));
         txfield = txfield'; %flip the z coordinate for proper orientation
 end
 txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
@@ -138,7 +134,10 @@ if p.Results.visualize_output
             ch = colorbar; ylabel(ch, 'dB'); 
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
-            XL = 60; plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); xlim([-XL XL]); hold on; plot([-XL, XL], [-6 -6], 'k--', 'linewidth', 2);
+            XL = min(x)*1e3;
+            XH = max(x)*1e3;
+            plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
+            xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
             xlabel('x (mm)');
         case 'xz'
             imagesc(x*1e3, z*1e3, txfielddb); colorbar;
@@ -147,7 +146,18 @@ if p.Results.visualize_output
             ch = colorbar; ylabel(ch, 'dB');        
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
-            ZL1 = 0; ZL2 = 120; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
+            ZL1 = min(z)*1000; ZL2 = max(z)*1000; plot(z*1e3, txfielddb(:, (x==focus(1)))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
+            xlabel('z (mm)');
+        case 'yz' 
+            imagesc(y*1e3, z*1e3, txfielddb); colorbar;
+            xlabel('y (mm)');
+            ylabel('z (mm)');
+            ch = colorbar; ylabel(ch, 'dB');        
+            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
+            figure;
+            %Adjust for changing focus in x and y direction . map to
+            %indexes
+            ZL1 = min(z)*1000; ZL2 = max(z)*1000; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
             xlabel('z (mm)');
     end
     ylabel('Pressure (dB)');
