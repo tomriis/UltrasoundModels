@@ -54,7 +54,7 @@ end
 % Hack for when data is such that ROC = R_focus
 handles.ROC_equals_R_focus = true;
 if handles.ROC_equals_R_focus
-    set(handles.slider8,'Visible',false);
+    set(handles.slider8,'Visible','off');
 end
 % Initialize Pop Up Menu
 handles.txfield_norm='dB';
