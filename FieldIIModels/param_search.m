@@ -1,12 +1,12 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
-outfile = './param_search_xyz.mat';
-n_elements = [64,128,256]; 
-element_W_x = [1.0,2.0,3.0,4.0,5.0];
-element_W_y = [20,40,60,80];
-focus = [25,35,45];
-ROC = [80,120,160];
-elGeo = {'flat','focused','spherical'};
+outfile = './param_search_fine.mat';
+%n_elements = [64,96,128,192]; 
+element_W_x = [1.0,1.5,2.0,2.5,3.0,3.5,4];
+element_W_y = [60,80,100];
+focus = [0,30,35,40,45];
+ROC = [120, 160];
+elGeo = {'flat','focused'};
 Slice = {'xy','xz','yz'};
 
 data = struct();
@@ -14,21 +14,21 @@ for f = 1:length(focus)
     focusx = focus(f);
 for roc = 1:length(ROC)
     ROCx = ROC(roc);
-for n = 1:length(n_elements)
-    n_elementsx = n_elements(n);
 for w = 1:length(element_W_x)
     element_Wx = element_W_x(w);
     P = element_Wx+0.15;
+    n_elementsx = floor(ROCx*3.14/P);
     AngleOfExtent = P*n_elementsx/ROCx;
     if AngleOfExtent > pi
         continue;
     end
+    
 for y = 1:length(element_W_y)
     element_Wy = element_W_y(y);
 for e = 1:length(elGeo)
     elGeox = elGeo{e};
     if strcmp(elGeox, 'focused')
-        Nx = 2;
+        Nx = 1;
     else
         Nx = 6;
     end
@@ -45,7 +45,7 @@ fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P
 data.(fname) = txfeilddb;
 % save the transducer geometry
 data.(strcat('G_',fname(1:end-8))) = xdc_data;
-end
+
 end
 end
 end
