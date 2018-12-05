@@ -88,9 +88,10 @@ function [] = plot_xyplane_and_ypeaks(handles)
         hold off;
         
         axes(axes2);
+
         switch handles.current_params.Slice
             case 'xz'
-                ind = x==handles.current_params.F;
+                [~,ind] = min(abs(x-handles.current_params.F));                   
                 plot(axes2, z, txfielddb(:, ind));
                 x=z;
             case 'yz'

@@ -33,8 +33,8 @@ parse(p, varargin{:})
 
 handles.filename = p.Results.datafile;
 handles.data = matfile(handles.filename);
-handles.axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
-handles.axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
+handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
+handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
 handles.ROC_equals_R_focus = p.Results.ROC_equals_R_focus;
 handles.n_equals_pi = p.Results.n_equals_pi;
@@ -129,6 +129,9 @@ function slider2_Callback(hObject, ~, handles)
         caption = sprintf('R Focus: %d (mm)', value);
         set(handles.text8, 'String', caption);
         handles.current_params.Ro = value;
+    end
+    if handles.n_equals_pi
+        
     end
     value = handles.parameters.ROC(slider_val);
     caption = sprintf('ROC: %d (mm)', value);
