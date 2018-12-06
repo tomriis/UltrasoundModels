@@ -25,13 +25,19 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
+p = inputParser;
+addRequired(p,'datafile')
+addOptional(p,'ROC_equals_R_focus',true);
+addOptional(p,'extent_equals_pi',true);
+parse(p, varargin{:})
 
-handles.filename = varargin{1};
+handles.filename = p.Results.datafile;
 handles.data = matfile(handles.filename);
-handles.axes1 = axes('Position',[0.40 0.57 0.45 0.42]);
-handles.axes2 = axes('Position',[0.40 0.05 0.45 0.42]);
+handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
+handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
-
+handles.ROC_equals_R_focus = p.Results.ROC_equals_R_focus;
+handles.extent_equals_pi = p.Results.extent_equals_pi;
 % Set slider values
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
@@ -52,9 +58,12 @@ for i =1:length(field)
     end
 end
 % Hack for when data is such that ROC = R_focus
-handles.ROC_equals_R_focus = true;
+
 if handles.ROC_equals_R_focus
     set(handles.slider8,'Visible','off');
+end
+if handles.extent_equals_pi
+    set(handles.slider1,'Visible','off');
 end
 % Initialize Pop Up Menu
 handles.txfield_norm='dB';
@@ -125,6 +134,9 @@ function slider2_Callback(hObject, ~, handles)
     caption = sprintf('ROC: %d (mm)', value);
     set(handles.text3, 'String', caption);
     handles.current_params.ROC = value;
+    if handles.extent_equals_pi
+       handles = extent_equals_pi_callback(handles);
+    end
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag

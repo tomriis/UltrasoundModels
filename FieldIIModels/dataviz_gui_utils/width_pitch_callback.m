@@ -10,4 +10,7 @@ function [handles]=width_pitch_callback(hObject,handles)
     set(handles.slider6,'Value', index);
     handles.current_params.X = valueX;
     handles.current_params.P = valueP;
+    if handles.extent_equals_pi
+        handles = extent_equals_pi_callback(handles);
+    end
 end
