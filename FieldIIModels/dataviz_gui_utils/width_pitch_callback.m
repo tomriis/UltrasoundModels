@@ -10,10 +10,7 @@ function [handles]=width_pitch_callback(hObject,handles)
     set(handles.slider6,'Value', index);
     handles.current_params.X = valueX;
     handles.current_params.P = valueP;
-    if handles.n_equals_pi
-        n_elements = floor(handles.current_params.ROC*3.14/handles.current_params.P);
-        caption = sprintf('N Elements: %d', n_elements);
-        set(handles.text2,'String',caption);
-        handles.current_params.N = n_elements;
+    if handles.extent_equals_pi
+        handles = extent_equals_pi_callback(handles);
     end
 end

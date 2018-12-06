@@ -2,7 +2,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         axes1=handles.axes1;axes2=handles.axes2;txfielddb = handles.txfielddb;
         
         focus = [handles.current_params.F,0,-handles.current_params.ROC]*1e-3;
-        [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus);
+        [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus,size(txfielddb,1));
         x= x*1000; y=y*1000; z=z*1000;
         if strcmp(handles.txfield_norm,'dB')
             YLimLower = -45;
@@ -88,7 +88,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         hold off;
         
         axes(axes2);
-
+        try
         switch handles.current_params.Slice
             case 'xz'
                 [~,ind] = min(abs(x-handles.current_params.F));                   
@@ -99,6 +99,12 @@ function [] = plot_xyplane_and_ypeaks(handles)
                 x=z;
             case 'xy'
                 plot(axes2, x, txfielddb(round(length(txfielddb) / 2), :));
+        end
+        catch
+            disp(num2str(length(txfielddb)));
+            disp(length(txfielddb(:, round(length(txfielddb) / 2))))
+            disp(length(x))
+            
         end
         XL = min(x); XH = max(x); 
         xlim(axes2,[XL XH]); hold on; 

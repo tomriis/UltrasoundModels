@@ -28,7 +28,7 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 p = inputParser;
 addRequired(p,'datafile')
 addOptional(p,'ROC_equals_R_focus',true);
-addOptional(p,'n_equals_pi',true);
+addOptional(p,'extent_equals_pi',true);
 parse(p, varargin{:})
 
 handles.filename = p.Results.datafile;
@@ -37,7 +37,7 @@ handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
 handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
 handles.ROC_equals_R_focus = p.Results.ROC_equals_R_focus;
-handles.n_equals_pi = p.Results.n_equals_pi;
+handles.extent_equals_pi = p.Results.extent_equals_pi;
 % Set slider values
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
@@ -62,7 +62,7 @@ end
 if handles.ROC_equals_R_focus
     set(handles.slider8,'Visible','off');
 end
-if handles.n_equals_pi
+if handles.extent_equals_pi
     set(handles.slider1,'Visible','off');
 end
 % Initialize Pop Up Menu
@@ -130,13 +130,13 @@ function slider2_Callback(hObject, ~, handles)
         set(handles.text8, 'String', caption);
         handles.current_params.Ro = value;
     end
-    if handles.n_equals_pi
-        
-    end
     value = handles.parameters.ROC(slider_val);
     caption = sprintf('ROC: %d (mm)', value);
     set(handles.text3, 'String', caption);
     handles.current_params.ROC = value;
+    if handles.extent_equals_pi
+       handles = extent_equals_pi_callback(handles);
+    end
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
