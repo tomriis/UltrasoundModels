@@ -8,7 +8,9 @@ focus = [0,30,35,40,45];
 ROC = [120, 160];
 elGeo = {'flat','focused'};
 Slice = {'xy','xz','yz'};
-
+total = length(element_W_x)*length(element_W_y)*length(focus)*length(ROC)*length(elGeo)*length(Slice);
+count = 0;
+Ny = 8;
 data = struct();
 for f = 1:length(focus)
     focusx = focus(f);
@@ -35,10 +37,10 @@ for e = 1:length(elGeo)
 for s =1:length(Slice)
     slicex=Slice{s};
     R_focusx = ROCx;
- 
+disp(strcat
 [txfeilddb, xdc_data] = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],...,
-    'P', P,'Nx',Nx,'Ny',8, 'R_focus',R_focusx,'element_geometry',elGeox,'Slice',slicex,...,
-    'visualize_transducer',false,'visualize_output',false);
+    'P', P,'Nx',Nx,'Ny',Ny, 'R_focus',R_focusx,'element_geometry',elGeox,'Slice',slicex,...,
+    'visualize_transducer',false,'visualize_output',true);
 
 fname = fieldname_from_params(n_elementsx,ROCx, element_Wx, element_Wy, focusx,P,R_focusx,e,slicex);
 % Save field

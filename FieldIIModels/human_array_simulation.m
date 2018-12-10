@@ -1,7 +1,7 @@
 function [txfield, xdc_data]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
-expectedGeometries = {'focused','spherical','flat'};
+expectedGeometries = {'focused','spherical','flat','focused2'};
 
 p = inputParser;
 addRequired(p,'n_elements', @(x) isnumeric(x));
@@ -58,8 +58,10 @@ Tx = concave_focused_array(n_elements, ROC/1000, P/1000, D/1000, R_focus/1000, N
 
 %Show the transducer array in 3D
 if visualize_transducer
-    show_xdc(Tx,'notfast');
-    view([90, 90, 90]);    
+    xdc_data = xdc_get(Tx,'rect');
+    show_transducer('data',xdc_data);
+    view([90, 90, 90]);
+    txfield=0; 
     return;
 end
 %xdc_show(Tx); %this displays the coordinates of each element within the array

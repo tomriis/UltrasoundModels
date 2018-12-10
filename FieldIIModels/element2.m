@@ -63,7 +63,7 @@ c3(i) = (z1(i) + z3(i))/2;
 		
 % Rotation goes here
 % do the rotation about the yaxis
-rot = makeyrotform(angle_x, angle_y);
+rot = makexyrotform(angle_x, angle_y);
 
 % apply the rotation
 invec = [x1(i), y1(i), z1(i), 0]';
