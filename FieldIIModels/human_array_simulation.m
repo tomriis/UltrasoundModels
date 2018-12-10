@@ -1,4 +1,4 @@
-function [txfield, xdc_data]=human_array_simulation(varargin)
+function [txfield, xdc_data, delays]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
 expectedGeometries = {'focused','spherical','flat','focused2'};
@@ -93,7 +93,7 @@ delays = compute_delays(Tx, focus, c); %(s) The delay within which the ultrasoun
 %delays=repmat(delays,1,Nx*Ny);
 
 %ele_delay(Tx, (1:n_elements)', delays); %set the delays
-%xdc_center_focus(Tx, [0,0,focus(3)]);
+%xdc_center_focus(Tx, [0,0,0]);
 %xdc_focus(Tx, 0, focus);
 xdc_focus_times (Tx, 0, delays');
 
