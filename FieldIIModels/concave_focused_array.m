@@ -6,18 +6,12 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
     index_x = -n_elements_x/2 + 0.5 : n_elements_x/2 - 0.5;
     angle_x = index_x*angle_inc_x;
     
-    % Same 
     len_y = D(2);
     AngExtent_y = len_y/ R_focus;
     angle_inc_y = AngExtent_y/Ny;
     index_y = -Ny/2+0.5: Ny/2-0.5;
     angle_y = index_y * angle_inc_y;
-    % Generate array 
-%     if strcmp(type,'focused2')
-%         Ny = round(D(2)/D(1));
-%         [Th, rect, cent, focus] = xdc_concaveArray2(n_elements_x, Ny, ROC_x*1000, R_focus*1000, D(1)*1000, P*1000);
-%         return
-%     end
+
     rectangles=[];
     for i = 1:length(index_x)
     % Create transducer
@@ -29,6 +23,7 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
             Th = xdc_concave(D(1), R_focus, D(1)/Nx);
         elseif strcmp(type,'focused2')
             focused_rectangles = [];
+            disp(length(angle_y));
             for k=1:length(angle_y)
                 x = [-D(1)/2 D(1)/2]; y = [-(D(2)/Ny)/2 (D(2)/Ny)/2]; z = [0,0];
                 rect = [i x(1)  y(1)  z(1)  x(2)  y(1)  z(1)  x(2)  y(2)  z(2)  x(1)  y(2)  z(2)  1  D(1)  D(2)  0  0  0];
