@@ -95,10 +95,10 @@ delays = compute_delays(Tx, focus, c, n_elements, Nx, Ny); %(s) The delay within
 
 %delays=repmat(delays,1,Nx*Ny);
 
-ele_delay(Tx, 1, delays(1,:)); %set the delays
+%ele_delay(Tx, 1, delays(1,:)); %set the delays
 %xdc_center_focus(Tx, [0,0,0]);
-%xdc_focus(Tx, 0, focus);
-%xdc_focus_times (Tx, 0, 3.585e-05*ones(2,1)');
+xdc_focus(Tx, 0, focus);
+%xdc_focus_times (Tx, 0, delays);
 
 %% Set measurement points
 [x,y,z] = get_slice_xyz(plane, focus);
