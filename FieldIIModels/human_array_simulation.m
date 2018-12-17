@@ -1,7 +1,7 @@
 function [txfield, xdc_data]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
-expectedGeometries = {'focused','spherical','flat'};
+expectedGeometries = {'focused','spherical','flat','focused2','linear'};
 
 p = inputParser;
 addRequired(p,'n_elements', @(x) isnumeric(x));
@@ -54,12 +54,17 @@ Nx = p.Results.Nx; %number of mathematical subelements in x
 Ny = p.Results.Ny; %number of mathematical subelements in y
 element_geometry = p.Results.element_geometry;
 R_focus = p.Results.R_focus;
+%if strcmp(element_geometry, 'linear')
+%    Tx = xdc_linear_array (1, D(1), D(2), 0, 1, Ny, focus);
+%else
 Tx = concave_focused_array(n_elements, ROC/1000, P/1000, D/1000, R_focus/1000, Nx, Ny, element_geometry);
-
+%end
 %Show the transducer array in 3D
 if visualize_transducer
-    show_xdc(Tx,'notfast');
-    view([90, 90, 90]);    
+    xdc_data = xdc_get(Tx,'rect');
+    show_transducer('data',xdc_data);
+    view([90, 90, 90]);
+    txfield=0; 
     return;
 end
 %xdc_show(Tx); %this displays the coordinates of each element within the array
@@ -85,15 +90,15 @@ xdc_excitation(Tx, excitation);
 
 %% Set focal point
 focus = focal_point * 1e-3;  %(m)
-delays = compute_delays(Tx, focus, c); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
+delays = compute_delays(Tx, focus, c, n_elements, Nx, Ny); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 
 %delays=repmat(delays,1,Nx*Ny);
 
-%ele_delay(Tx, (1:n_elements)', delays); %set the delays
-%xdc_center_focus(Tx, [0,0,focus(3)]);
-%xdc_focus(Tx, 0, focus);
-xdc_focus_times (Tx, 0, delays');
+%ele_delay(Tx, 1, delays(1,:)); %set the delays
+%xdc_center_focus(Tx, [0,0,0]);
+xdc_focus(Tx, 0, focus);
+%xdc_focus_times (Tx, 0, delays);
 
 %% Set measurement points
 [x,y,z] = get_slice_xyz(plane, focus);
@@ -163,6 +168,8 @@ if p.Results.visualize_output
     ylabel('Pressure (dB)');
     set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
 end
-
+disp(strcat('---------------',element_geometry,'--------------------------'));
+xdc_show(Tx);
+disp('||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
 %% Terminate Field II
 field_end();

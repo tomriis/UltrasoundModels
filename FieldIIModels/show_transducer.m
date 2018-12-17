@@ -20,7 +20,7 @@ addOptional(p, 'show_skull',false);
 parse(p, varargin{:});
 
 if p.Results.Th > 0
-    data = xdc_get(Th,'rect');
+    data = xdc_get(p.Results.Th,'rect');
 elseif ~isempty(p.Results.data)
     data = p.Results.data;
 else

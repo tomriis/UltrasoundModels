@@ -23,7 +23,7 @@ index_x = -nelements_x/2 + 0.5 : nelements_x/2 - 0.5;
 angle_x = index_x*angle_inc_x;
 numArray_x = length(angle_x);
 
-len_y = P * nelements_y; %arc length
+len_y = W * nelements_y; %arc length
 AngExtent_y = len_y / ROC_y;
 angle_inc_y = (AngExtent_y)/nelements_y; 					
 index_y = -nelements_y/2 + 0.5 : nelements_y/2 - 0.5;
