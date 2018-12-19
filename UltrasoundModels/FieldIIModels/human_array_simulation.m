@@ -1,19 +1,19 @@
 function [txfield, xdc_data]=human_array_simulation(varargin)
 
 default_element_W = 1.5;
-expectedGeometries = {'focused','spherical','flat','focused2','linear'};
+expectedGeometries = {'focused','flat','focused2'};
 
 p = inputParser;
-addRequired(p,'n_elements', @(x) isnumeric(x));
+addRequired(p,'n_elements_x', @(x) isnumeric(x));
+addRequired(p,'n_elements_y', @(x) isnumeric(x));
 addRequired(p,'ROC', @(x) isnumeric(x));
 addRequired(p,'D');
 addRequired(p, 'focal_point');
-addOptional(p, 'AngleOfExtent', 0, @(x) isnumeric(x));
-addOptional(p, 'P', default_element_W, @(x) isnumeric(x));
+addOptional(p, 'kerf',0.2);
+
 addOptional(p, 'element_geometry', 'flat', @(x) any(validatestring(x,expectedGeometries)));
 addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
-addOptional(p, 'Nx', 4);
-addOptional(p, 'Ny', 4);
+
 addOptional(p,'visualize_transducer',false);
 addOptional(p,'visualize_output',true);
 addOptional(p,'Slice','xy');
@@ -42,23 +42,16 @@ set_field('att', alpha);
 %% Linear concave array
 
 ROC = p.Results.ROC; %mm
-n_elements = p.Results.n_elements;  %number of physical elements.
-AngExtent = p.Results.AngleOfExtent;
-if AngExtent ~= 0 
-    P = AngExtent * ROC / n_elements; %pitch (mm)
-else
-    P = p.Results.P;
-end
+n_elements_x = p.Results.n_elements_x;  %number of physical elements in X.
+n_elements_y = p.Results.n_elements_y;  %number of physical elements in Y.
+kerf = p.Results.kerf;
 D = p.Results.D; %Diameter, width, and length of element (mm)
-Nx = p.Results.Nx; %number of mathematical subelements in x
-Ny = p.Results.Ny; %number of mathematical subelements in y
+
 element_geometry = p.Results.element_geometry;
 R_focus = p.Results.R_focus;
-%if strcmp(element_geometry, 'linear')
-%    Tx = xdc_linear_array (1, D(1), D(2), 0, 1, Ny, focus);
-%else
-Tx = concave_focused_array(n_elements, ROC/1000, P/1000, D/1000, R_focus/1000, Nx, Ny, element_geometry);
-%end
+
+Tx = concave_focused_array(n_elements_x,n_elements_y, ROC/1000, kerf/1000, D/1000, R_focus/1000, element_geometry);
+
 %Show the transducer array in 3D
 if visualize_transducer
     xdc_data = xdc_get(Tx,'rect');
@@ -90,7 +83,8 @@ xdc_excitation(Tx, excitation);
 
 %% Set focal point
 focus = focal_point * 1e-3;  %(m)
-delays = compute_delays(Tx, focus, c, n_elements, Nx, Ny); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
+
+%delays = compute_delays(Tx, focus, c, n_elements, Nx, Ny); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 
 %delays=repmat(delays,1,Nx*Ny);
@@ -168,8 +162,5 @@ if p.Results.visualize_output
     ylabel('Pressure (dB)');
     set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
 end
-disp(strcat('---------------',element_geometry,'--------------------------'));
-xdc_show(Tx);
-disp('||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
 %% Terminate Field II
 field_end();
