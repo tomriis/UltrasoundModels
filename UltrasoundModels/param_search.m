@@ -37,7 +37,7 @@ for e = 1:length(elGeo)
 for s =1:length(Slice)
     slicex=Slice{s};
     R_focusx = ROCx;
-disp(strcat
+
 [txfeilddb, xdc_data] = human_array_simulation(n_elementsx,ROCx,[element_Wx,element_Wy],[focusx,0,-ROCx],...,
     'P', P,'Nx',Nx,'Ny',Ny, 'R_focus',R_focusx,'element_geometry',elGeox,'Slice',slicex,...,
     'visualize_transducer',false,'visualize_output',true);

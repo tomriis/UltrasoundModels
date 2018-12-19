@@ -1,4 +1,4 @@
-function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny, type)
+function [Th] = concave_focused_array(n_elements_x, n_elements_y, ROC_x, kerf, D, R_focus, type)
     % All dimensions in meters
     len_x = P * n_elements_x; %arc length
     AngExtent_x = len_x / ROC_x;
@@ -11,13 +11,16 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
     angle_inc_y = AngExtent_y/Ny;
     index_y = -Ny/2+0.5: Ny/2-0.5;
     angle_y = index_y* angle_inc_y;
-
+    
+    
+    
     rectangles=[];
     for i = 1:length(index_x)
     % Create transducer
         if strcmp(type,'focused')
             % Focused
-            Th = xdc_focused_array(1, D(1), D(2), 0, R_focus, Nx, Ny, [0,0,0]);
+            kerf = P-D(1);
+            Th = xdc_focused_array(Ny, D(1), D(2), kerf, R_focus, 1, 1, [0,0,0]);
         elseif strcmp(type,'spherical')
             % Spherical
             Th = xdc_concave(D(1), R_focus, D(1)/Nx);
@@ -50,7 +53,7 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
             Th = xdc_rectangles( rect, cent, [0,0,0]);
         end
         rect = xdc_pointer_to_rect(Th);
-        rect(1,:) = i;
+        
     % Flip tranducer 
     if strcmp(type, 'focused')
         rot = makeyrotform(pi);
@@ -72,7 +75,6 @@ function [Th] = concave_focused_array(n_elements_x, ROC_x, P, D, R_focus, Nx, Ny
     focus = [0, 0, -ROC_x];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
-    cent(end,:)=-0.0538;
     %center_elements = get_center_elements(rectangles);
     %cent = center_elements(end-2:end,:);
     Th = xdc_rectangles(rectangles', cent', focus);
