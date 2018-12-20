@@ -1,13 +1,13 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
-outfile = './param_searcht.mat';
-n_elements_x = [10];
-n_elements_y = [1,2];%[1,2,3,4];
-element_W_x = 1;%[1.0,1.5,2.0,2.5,3.0,3.5,4];
-element_W_y = 10;%[10,20];
-focus = 0;%[0,30,35,40,45];
-ROC = 160;%[120, 160];
-Slice = {'xz'};%{'xy','xz','yz'};
+outfile = './param_search_field.mat';
+n_elements_x = [64];
+n_elements_y = [12,3,4];
+element_W_x = [1.0,2.0];%2.5,3.0,3.5,4];
+element_W_y = [10,20];
+focus = [0,40];
+ROC = [120 160];
+Slice = {'xy','xz','yz'};
 total = length(element_W_x)*length(element_W_y)*length(focus)*(length(ROC)+1)*length(Slice);
 count = 0;
 
@@ -46,8 +46,8 @@ for kk = 1:2
 'Slice',slice_i, 'visualize_output',false);
 
 s = struct();
-s.NX = n_elements_x_i; s.NX =n_elements_y_i; s.ROC = ROC_i; s.W = W_i; s.H = H_i;
-s.F = focus_i; s.Slice = slice_i; s.R_focus = Ro; 
+s.M = 1.0; s.NX = n_elements_x_i; s.NY =n_elements_y_i; s.ROC = ROC_i; s.W = W_i; s.H = H_i;
+s.F = focus_i; s.Slice = slice_i; s.Ro = R_focus_i; 
 
 fname = fieldname_from_params(s);
 % Save field

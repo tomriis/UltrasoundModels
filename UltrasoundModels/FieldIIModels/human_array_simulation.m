@@ -32,7 +32,7 @@ field_init(-1);
 %% Set up medium & simulation:
 c = 1500;  %(m/s) global speed of sound in medium
 f0 = 650e3;  %(Hz) center frequency of the transducer
-fs = f0 * 20*2;  %(Hz) sampling frequency of the simulation; 20 times the transducer frequency is enough
+fs = f0 * 20*1.5;  %(Hz) sampling frequency of the simulation; 20 times the transducer frequency is enough
 alpha = 0.5 * 100 / 1e6;  %(dB/m/Hz) attenuation of ultrasound in the brain
 %
 set_field('c', c);
