@@ -1,12 +1,19 @@
 function [fieldname]=fieldname_from_params(s)
 
-n_elements_x=s.Nx; ROC=s.ROC; X=s.X; Y=s.Y; focus=s.F; P=s.P; 
-ElGeo = s.ElGeo; R_focus = s.Ro; Slice=s.Slice;
-
+n_elements_x = s.NX; n_elements_y=s.NY; ROC = s.ROC; W = s.W; H = s.H;
+focus = s.F; slice = s.Slice; R_focus = s.Ro;
+if ROC > 10000
+    R_focus = inf;
+    ElGeo = 1;
+else
+    R_focus = ROC;
+    ElGeo = 2;
+end
 %returns txt field from params
 
-    runstring = strcat('ElGeo',num2str(ElGeo),'N',num2str(n_elements),'ROC',num2str(ROC),'X',num2str(X),...
-'Y',num2str(Y),'F',num2str(focus),'P',num2str(P),'Ro',num2str(R_focus),'Slice_',Slice);
+    runstring = strcat('ElGeo',num2str(ElGeo),'NX',num2str(n_elements_x),...,
+        'NY',num2str(n_elements_y),'ROC',num2str(ROC),'W',num2str(W),...
+'H',num2str(H),'F',num2str(focus),'Ro',num2str(R_focus),'Slice_',slice);
 
     fieldname = split(runstring,'.');
     fieldname = strcat(fieldname{:});

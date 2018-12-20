@@ -1,24 +1,21 @@
 function [data] = param_search()
 % Define parameters and ranges for simulation to search through
-outfile = './param_search_fine.mat';
-n_elements_x = [64];
-n_elements_y = [1,2,3,4];
-%n_elements_x, n_elements_y, ROC_x, kerf, D, R_focus, type
-
-element_W_x = [1.0,1.5,2.0,2.5,3.0,3.5,4];
-element_W_y = [10,20];
-focus = [0,30,35,40,45];
-ROC = [120, 160];
-elGeo = {'focused2'};
-Slice = {'xy','xz','yz'};
-total = length(element_W_x)*length(element_W_y)*length(focus)*length(ROC)*length(elGeo)*length(Slice);
+outfile = './param_searcht.mat';
+n_elements_x = [10];
+n_elements_y = [1,2];%[1,2,3,4];
+element_W_x = 1;%[1.0,1.5,2.0,2.5,3.0,3.5,4];
+element_W_y = 10;%[10,20];
+focus = 0;%[0,30,35,40,45];
+ROC = 160;%[120, 160];
+Slice = {'xz'};%{'xy','xz','yz'};
+total = length(element_W_x)*length(element_W_y)*length(focus)*(length(ROC)+1)*length(Slice);
 count = 0;
-Ny = 8;
+
 data = struct();
 for a = 1:length(n_elements_x)
     n_elements_x_i = n_elements_x(a);
-    for b = 1:length(n_elements_y)
-        n_elements_y_i = n_elements_y(b);
+for b = 1:length(n_elements_y)
+    n_elements_y_i = n_elements_y(b);
         
 for f = 1:length(focus)
     focus_i = focus(f);
@@ -26,25 +23,33 @@ for roc = 1:length(ROC)
     ROC_i = ROC(roc);
 for w = 1:length(element_W_x)
     W_i = element_W_x(w);
-    P = W_i+kerf;
-    n_elementsx = floor(ROCx*3.14/P);
-    AngleOfExtent = P*n_elementsx/ROCx;
+    P = W_i+0.2;
+    n_elementsx = floor(ROC_i*3.14/P);
+    AngleOfExtent = P*n_elementsx/ROC_i;
     if AngleOfExtent > pi
         continue;
     end
 for y = 1:length(element_W_y)
-    Y_i = element_W_y(y);
-for e = 1:length(elGeo)
-    elGeo_i = elGeo{e};
-for s =1:length(Slice)
-    slice_i=Slice{s};
-    R_focus_i = ROC_i;
+    H_i = element_W_y(y);
+for sl =1:length(Slice)
+    slice_i=Slice{sl};
+R_focus = [ROC_i, 1e14];
+for kk = 1:2
+    R_focus_i =R_focus(kk);
 
+    disp('-----------------------------------------')
+    disp(strcat('      ',num2str(count),' of ', num2str(total)));
+    count = count +1;
+    
 [txfeilddb, xdc_data] = human_array_simulation(n_elements_x_i, n_elements_y_i,ROC_i,...,
-[W_i Y_i],[focus_i,0,-ROC_i],'element_geometry','focused2','R_focus',R_focus_i,...,
+[W_i H_i],[focus_i,0,-ROC_i],'element_geometry','focused2','R_focus',R_focus_i,...,
 'Slice',slice_i, 'visualize_output',false);
 
-fname = fieldname_from_params(n_elements_x_i,n_elements_y_i, ROC_i, W_i, Y_i, focusx,P,R_focusx,e,slicex);
+s = struct();
+s.NX = n_elements_x_i; s.NX =n_elements_y_i; s.ROC = ROC_i; s.W = W_i; s.H = H_i;
+s.F = focus_i; s.Slice = slice_i; s.R_focus = Ro; 
+
+fname = fieldname_from_params(s);
 % Save field
 data.(fname) = txfeilddb;
 % save the transducer geometry
