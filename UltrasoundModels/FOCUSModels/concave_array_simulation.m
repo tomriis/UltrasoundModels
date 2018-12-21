@@ -58,7 +58,7 @@ if ndiv<ndiv2
 end
 ndiv=3;
 p_cw=cw_pressure(transducer_array, coord_grid, lossless, ndiv, f0);
-
+p_cw = squeeze(p_cw);
 %figure();
 %h = pcolor(x*1000,z*1000,rot90(squeeze(abs(p_cw)),3));
 %set(h,'edgecolor','none');

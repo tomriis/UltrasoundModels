@@ -1,5 +1,10 @@
 function txfield = txfield_to_db(handles, fname)
     data = handles.data;
+    if handles.current_params.M == 1
+        data = fliplr(data);
+    elseif handles.current_params.M == 2
+        data = rot90(data);
+    end
     if strcmp(handles.txfield_norm, 'dB')
         txfield = db(data.(fname)./max(max(data.(fname))));
     elseif strcmp(handles.txfield_norm,'dbmaxall')
