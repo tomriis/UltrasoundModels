@@ -1,12 +1,13 @@
 function txfield = txfield_to_db(handles, fname)
     data = handles.data;
-    if handles.current_params.M == 1
-        data = fliplr(data);
-    elseif handles.current_params.M == 2
-        data = rot90(data);
-    end
+    txfield = data.(fname);
+        if handles.current_params.M == 1
+            txfield = fliplr(txfield);
+        elseif handles.current_params.M == 2
+            txfield = rot90(abs(txfield));
+        end
     if strcmp(handles.txfield_norm, 'dB')
-        txfield = db(data.(fname)./max(max(data.(fname))));
+        txfield = db(txfield./max(max(txfield)));
     elseif strcmp(handles.txfield_norm,'dbmaxall')
         basename=fname(1:end-8);
         slicexy = strcat(basename,'Slice_xy');
@@ -18,11 +19,9 @@ function txfield = txfield_to_db(handles, fname)
         maxyz = max(max(data.(sliceyz)));
 
         maxall = max([maxxy, maxxz, maxyz]);
-        txfield = db(data.(fname)./maxall);
-    elseif strcmp(handles.txfield_norm, 'Raw')
-        txfield = data.(fname);
+        txfield = db(txfield./maxall);
     elseif strcmp(handles.txfield_norm,'Normalize')
-        txfield = data.(fname)./max(max(data.(fname)));
+        txfield = txfield./max(max(txfield));
     end
     
     

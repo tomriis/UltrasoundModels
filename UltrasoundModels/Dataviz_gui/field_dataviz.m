@@ -204,8 +204,8 @@ end
 % --- Executes on slider movement.
 function slider6_Callback(hObject, ~, handles)
     value = handles.parameters.M(int16(get(hObject,'Value')));
-    namemap = {'flat','focused'};
-    caption = sprintf('M: %s', namemap{value});
+    namemap = {'Field II','FOCUS'};
+    caption = sprintf('Platform:  %s', namemap{value});
     set(handles.text1, 'String', caption);
     handles.current_params.M = value;
     handles = find_params_in_data(handles);
@@ -292,7 +292,20 @@ function pushbutton1_Callback(hObject, ~, handles)
         handles.plot_geo_flag = false;
     end
     if handles.plot_geo_flag
-        show_transducer('data',handles.xdc_geometry);
+        if handles.current_params.M ==1
+            show_transducer('data',handles.xdc_geometry);
+        else
+            figure; draw_array(handles.xdc_geometry);hold on;
+            colormap(cool(128));
+            %view(3)
+            xlabel('x [m] (Lateral)')
+            ylabel('y [m] (Elevation)')
+            zlabel('z [m] (Axial)')
+            grid
+            axis('image')
+            hold off
+            view([90, 90, 90]); 
+        end
     end
     set(hObject,'Enable','on');
 

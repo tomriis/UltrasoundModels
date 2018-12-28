@@ -51,13 +51,16 @@ transducer_array = find_single_focus_phase(transducer_array, focus_x,focus_y, fo
 % pressure field.
 ndiv=3;
 
-ndiv2 = round(2 * width/lambda); 
+ndiv2 = round(2 * max([width,height])/lambda); 
 
 if ndiv<ndiv2
    ndiv = ndiv2;
+   
 end
-ndiv=3;
-p_cw=cw_pressure(transducer_array, coord_grid, lossless, ndiv, f0);
+disp(num2str(width))
+disp(num2str(lambda));
+disp(num2str(ndiv));
+p_cw=cw_pressure(transducer_array, coord_grid, water, ndiv, f0);
 p_cw = squeeze(p_cw);
 %figure();
 %h = pcolor(x*1000,z*1000,rot90(squeeze(abs(p_cw)),3));
