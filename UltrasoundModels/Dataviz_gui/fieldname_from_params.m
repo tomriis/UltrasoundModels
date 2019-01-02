@@ -2,7 +2,7 @@ function [fieldname]=fieldname_from_params(s)
 
 n_elements_x = s.NX; n_elements_y=s.NY; ROC = s.ROC; W = s.W; H = s.H;
 focus = s.F; slice = s.Slice; R_focus = s.Ro; M = s.M;
-if ROC > 10000
+if R_focus > 10000
     R_focus = inf;
     ElGeo = 1;
 else

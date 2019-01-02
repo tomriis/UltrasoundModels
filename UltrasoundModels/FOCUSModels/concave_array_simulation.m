@@ -9,10 +9,10 @@ addRequired(p,'n_elements_y', @(x) isnumeric(x));
 addRequired(p,'ROC', @(x) isnumeric(x));
 addRequired(p,'D');
 addRequired(p, 'focal_point');
-addOptional(p, 'kerf',0.2);
+addOptional(p, 'kerf',0.4);
 
 addOptional(p, 'element_geometry', 'flat', @(x) any(validatestring(x,expectedGeometries)));
-addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
+addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
 
 addOptional(p,'visualize_transducer',false);
 addOptional(p,'visualize_output',true);
