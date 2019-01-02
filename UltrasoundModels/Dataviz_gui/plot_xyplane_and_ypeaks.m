@@ -1,6 +1,5 @@
 function [] = plot_xyplane_and_ypeaks(handles)
         axes1=handles.axes1;axes2=handles.axes2;txfielddb = handles.txfielddb;
-        
         focus = [handles.current_params.F,0,-handles.current_params.ROC]*1e-3;
         [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus,size(txfielddb,1));
         x= x*1000; y=y*1000; z=z*1000;

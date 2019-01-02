@@ -7,13 +7,13 @@ set_field('c', c);
 set_field('fs', fs);
 set_field('att', alpha);
 
-height=60/1000;
+height=20/1000;
 width=4/1000;
-kerf=0;
-N_elements=1;
+kerf=0.2e-3;
+N_elements=4;
 no_sub_x=1;
-no_sub_y=10;
-focus=[0 0 1000]/1000;
+no_sub_y=1;
+focus=[0 0 80]/1000;
 
 Th = xdc_linear_array (N_elements, width, height, kerf,no_sub_x, no_sub_y, focus);
 
