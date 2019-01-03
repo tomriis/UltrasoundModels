@@ -294,7 +294,7 @@ function pushbutton1_Callback(hObject, ~, handles)
         if handles.current_params.M ==1
             show_transducer('data',handles.xdc_geometry);
         else
-            figure; draw_array(handles.xdc_geometry);hold on;
+            figure; focus_draw_array(handles.xdc_geometry);hold on;
             colormap(cool(128));
             %view(3)
             xlabel('x [m] (Lateral)')
