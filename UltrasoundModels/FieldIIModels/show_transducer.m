@@ -29,7 +29,7 @@ end
 
 [~,M]=size(data);
 figure;
-disp('Plotting transducers...')
+
 if p.Results.fast
        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
        y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
@@ -61,7 +61,7 @@ grid
 axis('image')
 hold off
 view([90, 90, 90]);  
-disp('Complete')
+
 end
 
 function show_skull_space(center_z)

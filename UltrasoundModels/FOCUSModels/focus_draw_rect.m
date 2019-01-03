@@ -8,5 +8,5 @@ function focus_draw_rect(xdcr,color)
     drawy=[h h -h -h];
     drawz=zeros(1,4);
     cord_grid=[drawx(:) drawy(:) drawz(:)];
-    cord_grid=trans_rot(cord_grid,[x y z],[xdcr.euler(1) xdcr.euler(2) xdcr.euler(3)],1);
+    cord_grid=focus_trans_rot(cord_grid,[x y z],[xdcr.euler(1) xdcr.euler(2) xdcr.euler(3)],1);
     patch(cord_grid(:,1),cord_grid(:,2),cord_grid(:,3),color);
