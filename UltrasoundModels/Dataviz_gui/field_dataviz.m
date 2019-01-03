@@ -44,7 +44,6 @@ handles.current_params = cell2struct(cell(length(field),1),field);
 field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice'};
 for i =1:9
         sl = handles.(strcat('slider',num2str(i)));
-
         numSteps = length(handles.parameters.(field_slider_map{i}));
     if numSteps > 1
         set(sl, 'Min', 1);
@@ -223,7 +222,7 @@ end
 function slider7_Callback(hObject, ~, handles)
     value = handles.parameters.ElGeo(int16(get(hObject,'Value')));
     name_map = {'Flat','Focused'};
-    caption = sprintf('Element Geometry: %s', name_map{value});
+    caption = sprintf('Geometry: %s', name_map{value});
     set(handles.text9, 'String', caption);
     handles.current_params.ElGeo = value;
     handles = find_params_in_data(handles);
