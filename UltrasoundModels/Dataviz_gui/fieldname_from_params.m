@@ -2,12 +2,17 @@ function [fieldname]=fieldname_from_params(s)
 
 n_elements_x = s.NX; n_elements_y=s.NY; ROC = s.ROC; W = s.W; H = s.H;
 focus = s.F; slice = s.Slice; R_focus = s.Ro; M = s.M;
-if R_focus > 10000
-    R_focus = inf;
+try
+    ElGeo = s.ElGeo;
+catch
     ElGeo = 1;
-else
-    R_focus = ROC;
-    ElGeo = 2;
+end
+if isempty(R_focus)
+    if ElGeo == 1
+        R_focus = inf;
+    elseif ElGeo == 2
+        R_focus = ROC;
+    end
 end
 %returns txt field from params
 

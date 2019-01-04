@@ -2,6 +2,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         axes1=handles.axes1;axes2=handles.axes2;txfielddb = handles.txfielddb;
         focus = [handles.current_params.F,0,-handles.current_params.ROC]*1e-3;
         [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus,size(txfielddb,1));
+        
         x= x*1000; y=y*1000; z=z*1000;
         if strcmp(handles.txfield_norm,'dB')
             YLimLower = -45;
@@ -37,6 +38,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
                 ax2xlabel = 'x (mm)';
                 
         end
+        txfielddb = txfielddb(1:length(x),1:length(y));
         XL = min(x); XH = max(x); 
         YL = min(y); YH = max(y);
         
@@ -94,12 +96,14 @@ function [] = plot_xyplane_and_ypeaks(handles)
                 plot(axes2, z, txfielddb(:, ind));
                 x=z;
             case 'yz'
-                plot(axes2, z, txfielddb(:, round(length(txfielddb) / 2)));
+                plot(axes2, z, txfielddb(1:length(z), round(length(txfielddb) / 2)));
                 x=z;
             case 'xy'
-                plot(axes2, x, txfielddb(round(length(txfielddb) / 2), :));
+                plot(axes2, x, txfielddb(round(length(txfielddb) / 2), 1:length(x)));
         end
-        catch
+        catch e
+            fprintf(1,'The identifier was:\n%s',e.identifier);
+            fprintf(1,'There was an error! The message was:\n%s',e.message);
             disp(num2str(length(txfielddb)));
             disp(length(txfielddb(:, round(length(txfielddb) / 2))))
             disp(length(x))

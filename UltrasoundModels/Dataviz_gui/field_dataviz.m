@@ -29,13 +29,13 @@ p = inputParser;
 addRequired(p,'datafile')
 addOptional(p,'extent_equals_pi',false);
 parse(p, varargin{:})
-
+f = waitbar(0, 'Loading Data File');
 handles.filename = p.Results.datafile;
 handles.data = matfile(handles.filename);
 handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
 handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
-
+waitbar(1/2,f,'Load Complete');
 handles.extent_equals_pi = p.Results.extent_equals_pi;
 % Set slider values
 field = fieldnames(handles.parameters);
@@ -44,7 +44,6 @@ handles.current_params = cell2struct(cell(length(field),1),field);
 field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice'};
 for i =1:9
         sl = handles.(strcat('slider',num2str(i)));
-
         numSteps = length(handles.parameters.(field_slider_map{i}));
     if numSteps > 1
         set(sl, 'Min', 1);
@@ -68,23 +67,32 @@ handles.txfield_norm='dB';
 set(handles.popupmenu1,'String',{'dB','Normalize'});
 % Initialize all silders
 handles.plot_flag = false;
+waitbar(1/2+0.5*1/9,f,'Initializing GUI');
 slider1_Callback(handles.slider1, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*2/9,f);
 slider2_Callback(handles.slider2, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*3/9,f);
 slider3_Callback(handles.slider3, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*4/9,f);
 slider4_Callback(handles.slider4, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*5/9,f);
 slider5_Callback(handles.slider5, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*6/9,f);
 slider6_Callback(handles.slider6, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*7/9,f);
 slider7_Callback(handles.slider7, eventdata,handles);
 handles=guidata(hObject);
+waitbar(1/2+0.5*8/9,f);
 slider8_Callback(handles.slider8, eventdata,handles);
 handles=guidata(hObject); 
 handles.plot_flag = true;
+close(f);
 slider9_Callback(handles.slider9, eventdata,handles);
 handles=guidata(hObject);
 
@@ -223,7 +231,7 @@ end
 function slider7_Callback(hObject, ~, handles)
     value = handles.parameters.ElGeo(int16(get(hObject,'Value')));
     name_map = {'Flat','Focused'};
-    caption = sprintf('Element Geometry: %s', name_map{value});
+    caption = sprintf('Geometry: %s', name_map{value});
     set(handles.text9, 'String', caption);
     handles.current_params.ElGeo = value;
     handles = find_params_in_data(handles);
@@ -292,10 +300,11 @@ function pushbutton1_Callback(hObject, ~, handles)
         handles.plot_geo_flag = false;
     end
     if handles.plot_geo_flag
+        disp('Plotting transducers...')
         if handles.current_params.M ==1
             show_transducer('data',handles.xdc_geometry);
         else
-            figure; draw_array(handles.xdc_geometry);hold on;
+            figure; focus_draw_array(handles.xdc_geometry);hold on;
             colormap(cool(128));
             %view(3)
             xlabel('x [m] (Lateral)')
@@ -306,6 +315,7 @@ function pushbutton1_Callback(hObject, ~, handles)
             hold off
             view([90, 90, 90]); 
         end
+        disp('Complete');
     end
     set(hObject,'Enable','on');
 
