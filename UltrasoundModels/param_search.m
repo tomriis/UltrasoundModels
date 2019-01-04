@@ -5,9 +5,9 @@ n_elements_x = [64];
 n_elements_y = [1,2,3,4];
 element_W_x = [1.0,1.5,2.0,2.5,3.0,3.5,4];
 element_W_y = [6,10,15,20];
-focus = [25,30,35,40];
+focus = [0,25,30,35,40];
 ROC = [120 160];
-Slice = {'yz'};
+Slice = {'xy','xz','yz'};
 total = length(n_elements_y)*length(element_W_x)*length(element_W_y)*length(focus)*length(ROC)*length(Slice);
 count = 0;
 M = 1;
@@ -48,7 +48,7 @@ else
 end
 s = struct();
 s.M = M; s.NX = n_elements_x_i; s.NY =n_elements_y_i; s.ROC = ROC_i; s.W = W_i; s.H = H_i;
-s.F = focus_i; s.Slice = slice_i; s.Ro = inf; s.ElGeo = 1;
+s.F = focus_i; s.Slice = slice_i; s.Ro = ROC_i; s.ElGeo = 2;
 
 fname = fieldname_from_params(s);
 % Save field
