@@ -28,6 +28,7 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 p = inputParser;
 addRequired(p,'datafile')
 addOptional(p,'extent_equals_pi',false);
+addOptional(p,'NX_NY_coupled',true);
 parse(p, varargin{:})
 f = waitbar(0, 'Loading Data File');
 handles.filename = p.Results.datafile;
@@ -37,6 +38,7 @@ handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
 waitbar(1/2,f,'Load Complete');
 handles.extent_equals_pi = p.Results.extent_equals_pi;
+handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 % Set slider values
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
@@ -61,6 +63,9 @@ end
 
 if handles.extent_equals_pi
     set(handles.slider1,'Visible','off');
+end
+if handles.NX_NY_coupled
+    set(handles.slider1, 'Visible','off');
 end
 % Initialize Pop Up Menu
 handles.txfield_norm='dB';
@@ -97,6 +102,7 @@ slider9_Callback(handles.slider9, eventdata,handles);
 handles=guidata(hObject);
 handles.plot_flag = true;
 slider10_Callback(handles.slider10, eventdata,handles);
+handles=guidata(hObject);
 close(f);
 guidata(hObject, handles);
 
@@ -351,6 +357,11 @@ function slider8_Callback(hObject, eventdata, handles)
     caption = sprintf('NY: %d', value);
     set(handles.text7, 'String', caption);
     handles.current_params.NY = value;
+    if handles.NX_NY_coupled
+        handles.current_params.NX = floor(256/handles.current_params.NY);
+        caption = sprintf('NX: %d', handles.current_params.NX);
+        set(handles.text2, 'String', caption);
+    end
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
