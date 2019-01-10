@@ -390,7 +390,7 @@ end
 % --- Executes on slider movement.
 function slider10_Callback(hObject, eventdata, handles)
     value = handles.parameters.Q(int16(get(hObject,'Value')));
-    caption = sprintf('Frequency: %d', value);
+    caption = sprintf('Frequency: %d KHz', value);
     set(handles.text12, 'String', caption);
     handles.current_params.Q = value;
     handles = find_params_in_data(handles);
