@@ -50,7 +50,11 @@ for i =1:10
     if numSteps > 1
         set(sl, 'Min', 1);
         set(sl, 'Max', numSteps);
-        set(sl, 'Value', 1);
+        if i == 2
+            set(sl,'Value',3);
+        else
+            set(sl, 'Value', 1);
+        end
         set(sl, 'SliderStep', [1/(numSteps-1) , 1/(numSteps-1) ]);
     else
         set(sl,'Min',1);
@@ -301,10 +305,12 @@ function pushbutton1_Callback(hObject, ~, handles)
 
     fname = fieldname_from_params(handles.current_params);
     try
-        handles.xdc_geometry = handles.data.(strcat('G_',fname(1:end-8)));
+        k = strfind(fname,'Slice_');
+        fname(k:k+7)=[];
+        handles.xdc_geometry = handles.data.(strcat('G_',fname));
         handles.plot_geo_flag = true;
     catch
-        set(handles.text10,'String',strcat(fname(1:end-8),sprintf('\n Geometry not available')));
+        set(handles.text10,'String',strcat(fname,sprintf('\n Geometry not available')));
         handles.plot_geo_flag = false;
     end
     if handles.plot_geo_flag
