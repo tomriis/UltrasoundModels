@@ -7,6 +7,11 @@ try
 catch
     ElGeo = 1;
 end
+try 
+    Q = s.Q;
+catch
+    Q = 650;
+end
 if isempty(R_focus)
     if ElGeo == 1
         R_focus = inf;
@@ -18,7 +23,7 @@ end
 
     runstring = strcat('M',num2str(M),'ElGeo',num2str(ElGeo),'NX',num2str(n_elements_x),...,
         'NY',num2str(n_elements_y),'ROC',num2str(ROC),'W',num2str(W),...
-'H',num2str(H),'F',num2str(focus),'Ro',num2str(R_focus),'Slice_',slice);
+'H',num2str(H),'F',num2str(focus),'Ro',num2str(R_focus),'Slice_',slice,'Q',num2str(Q));
 
     fieldname = split(runstring,'.');
     fieldname = strcat(fieldname{:});

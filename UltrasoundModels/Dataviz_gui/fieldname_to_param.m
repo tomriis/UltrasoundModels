@@ -13,6 +13,7 @@ function [params] = fieldname_to_param(fieldname)
     k_F = strfind(fieldname,'F');
     k_Ro = strfind(fieldname,'Ro');
     k_Slice = strfind(fieldname,'Slice_');
+    k_Q = strfind(fieldname,'Q');
     params.M = str2double(fieldname(k_M+1:k_ElGeo-1));
     params.NX = str2double(fieldname(k_NX+2:k_NY-1));
     params.NY = str2double(fieldname(k_NY+2:k_ROC-1));
@@ -34,6 +35,11 @@ function [params] = fieldname_to_param(fieldname)
         params.Ro = str2double(fieldname(k_Ro+2:end));
     else
         params.Slice = fieldname(k_Slice+6:k_Slice+7);
+    end
+    if isempty(k_Q)
+        params.Q = 650;
+    else
+        params.Q = str2double(fieldname(k_Q+1:k_Q+3));
     end
 end
 
