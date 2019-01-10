@@ -41,8 +41,8 @@ handles.extent_equals_pi = p.Results.extent_equals_pi;
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice'};
-for i =1:9
+field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice','Q'};
+for i =1:10
         sl = handles.(strcat('slider',num2str(i)));
         numSteps = length(handles.parameters.(field_slider_map{i}));
     if numSteps > 1
@@ -67,35 +67,37 @@ handles.txfield_norm='dB';
 set(handles.popupmenu1,'String',{'dB','Normalize'});
 % Initialize all silders
 handles.plot_flag = false;
-waitbar(1/2+0.5*1/9,f,'Initializing GUI');
+numSliders = 10;
+waitbar(1/2+0.5*1/numSliders,f,'Initializing GUI');
 slider1_Callback(handles.slider1, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*2/9,f);
+waitbar(1/2+0.5*2/numSliders,f);
 slider2_Callback(handles.slider2, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*3/9,f);
+waitbar(1/2+0.5*3/numSliders,f);
 slider3_Callback(handles.slider3, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*4/9,f);
+waitbar(1/2+0.5*4/numSliders,f);
 slider4_Callback(handles.slider4, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*5/9,f);
+waitbar(1/2+0.5*5/numSliders,f);
 slider5_Callback(handles.slider5, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*6/9,f);
+waitbar(1/2+0.5*6/numSliders,f);
 slider6_Callback(handles.slider6, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*7/9,f);
+waitbar(1/2+0.5*7/numSliders,f);
 slider7_Callback(handles.slider7, eventdata,handles);
 handles=guidata(hObject);
-waitbar(1/2+0.5*8/9,f);
+waitbar(1/2+0.5*8/numSliders,f);
 slider8_Callback(handles.slider8, eventdata,handles);
 handles=guidata(hObject); 
-handles.plot_flag = true;
-close(f);
+waitbar(1/2+0.5*9/numSliders,f);
 slider9_Callback(handles.slider9, eventdata,handles);
 handles=guidata(hObject);
-
+handles.plot_flag = true;
+slider10_Callback(handles.slider10, eventdata,handles);
+close(f);
 guidata(hObject, handles);
 
 
@@ -359,6 +361,31 @@ function slider8_Callback(hObject, eventdata, handles)
 % --- Executes during object creation, after setting all properties.
 function slider8_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to slider8 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider10_Callback(hObject, eventdata, handles)
+    value = handles.parameters.Q(int16(get(hObject,'Value')));
+    caption = sprintf('Frequency: %d', value);
+    set(handles.text12, 'String', caption);
+    handles.current_params.Q = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes during object creation, after setting all properties.
+function slider10_CreateFcn(hObject, ~, ~)
+% hObject    handle to slider10 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
