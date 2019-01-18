@@ -7,6 +7,9 @@ function [handles] = find_params_in_data(handles)
         k = strfind(fname, 'Ro');
         caption = sprintf('R Focus: %s (mm)', fname(k+2:k+4));
         set(handles.text8,'String',caption);
+        k = strfind(fname, 'Q');
+        caption = sprintf('Frequency: %s KHz', fname(k+1:k+3));
+        set(handles.text12,'String',caption);
     catch
         % Check if angle of extent is too large, if so dont plot
         str = sprintf('Current parameters not in %s \n \n',handles.filename);
