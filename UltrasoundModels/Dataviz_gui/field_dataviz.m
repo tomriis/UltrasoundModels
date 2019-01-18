@@ -43,7 +43,7 @@ handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice','Q'};
+field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice','Z'};
 for i =1:10
         sl = handles.(strcat('slider',num2str(i)));
         numSteps = length(handles.parameters.(field_slider_map{i}));
@@ -389,10 +389,15 @@ end
 
 % --- Executes on slider movement.
 function slider10_Callback(hObject, eventdata, handles)
-    value = handles.parameters.Q(int16(get(hObject,'Value')));
+    value = handles.parameters.Q(1);
     caption = sprintf('Frequency: %d KHz', value);
     set(handles.text12, 'String', caption);
     handles.current_params.Q = value;
+    
+    value = handles.parameters.Z(int16(get(hObject,'Value')));
+    caption = sprintf('Focus Z: %d (mm)', value);
+    set(handles.text13, 'String', caption);
+    handles.current_params.Z = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag

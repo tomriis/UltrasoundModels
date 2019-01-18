@@ -86,20 +86,24 @@ function [] = plot_xyplane_and_ypeaks(handles)
         ch = colorbar(axes1);
         ylabel(ch, units);
         set(axes1,'Position',originalSize1);
+        axis square tight
         hold off;
         
         axes(axes2);
         try
         switch handles.current_params.Slice
             case 'xz'
-                [~,ind] = min(abs(x-handles.current_params.F));                   
-                plot(axes2, z, txfielddb(:, ind));
+                [~,ind] = min(abs(x-handles.current_params.F));
+                profile = txfielddb(:, ind);
+                plot(axes2, z, profile);
                 x=z;
             case 'yz'
-                plot(axes2, z, txfielddb(1:length(z), round(length(txfielddb) / 2)));
+                profile = txfielddb(1:length(z), round(length(txfielddb) / 2));
+                plot(axes2, z, profile);
                 x=z;
             case 'xy'
-                plot(axes2, x, txfielddb(round(length(txfielddb) / 2), 1:length(x)));
+                profile = txfielddb(round(length(txfielddb) / 2), 1:length(x));
+                plot(axes2, x, profile);
         end
         catch e
             fprintf(1,'The identifier was:\n%s',e.identifier);
@@ -108,6 +112,12 @@ function [] = plot_xyplane_and_ypeaks(handles)
             disp(length(txfielddb(:, round(length(txfielddb) / 2))))
             disp(length(x))
             
+        end
+        ind = find(profile>-6);
+        if length(ind>1)
+            hwhm = x(ind(end))-x(ind(1));
+            caption = sprintf('Half Width: %.3f (mm)',hwhm);
+            set(handles.text14,'String',caption);
         end
         XL = min(x); XH = max(x); 
         xlim(axes2,[XL XH]); hold on; 
@@ -118,5 +128,6 @@ function [] = plot_xyplane_and_ypeaks(handles)
         field_space_ticksx = round(linspace(XL,XH, (XH-XL)/10+1));
         xticks(axes2,field_space_ticksx);
         yticks(axes2,round(linspace(YLimLower, YLimUpper, (YLimUpper-YLimLower)/6+1)));
+        axis square tight
         hold off;
 end

@@ -21,6 +21,8 @@ if isempty(R_focus)
 end
 if Z < 0
     Z = strcat('_',num2str(abs(Z)));
+elseif Z == 0
+    Z = '00';
 else
     Z = num2str(Z);
 end
