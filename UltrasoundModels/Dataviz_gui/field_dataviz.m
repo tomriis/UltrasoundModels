@@ -52,6 +52,8 @@ for i =1:10
         set(sl, 'Max', numSteps);
         if i == 2
             set(sl,'Value',3);
+        elseif i==10
+            set(sl,'Value',3);
         else
             set(sl, 'Value', 1);
         end
@@ -153,6 +155,11 @@ function slider2_Callback(hObject, ~, handles)
     if handles.extent_equals_pi
        handles = extent_equals_pi_callback(handles);
     end
+    
+    focus_z= -handles.current_params.ROC+handles.current_params.Z;
+    caption = sprintf('Focus: [%d, 0, %d] (mm)', handles.current_params.F, focus_z);
+    set(handles.text6, 'String', caption);
+    
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -206,7 +213,8 @@ function slider4_CreateFcn(hObject, ~, ~)
 
 function slider5_Callback(hObject, ~, handles)
     value = handles.parameters.F(int16(get(hObject,'Value')));
-    caption = sprintf('Focus: [%d, 0, -ROC] (mm)', value);
+    focus_z= -handles.current_params.ROC+handles.current_params.Z;
+    caption = sprintf('Focus: [%d, 0, %d] (mm)', value, focus_z);
     set(handles.text6, 'String', caption);
     handles.current_params.F = value;
     handles = find_params_in_data(handles);
@@ -398,6 +406,11 @@ function slider10_Callback(hObject, eventdata, handles)
     caption = sprintf('Focus Z: %d (mm)', value);
     set(handles.text13, 'String', caption);
     handles.current_params.Z = value;
+    
+    focus_z= -handles.current_params.ROC+handles.current_params.Z;
+    caption = sprintf('Focus: [%d, 0, %d] (mm)', handles.current_params.F, focus_z);
+    set(handles.text6, 'String', caption);
+    
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -407,11 +420,14 @@ function slider10_Callback(hObject, eventdata, handles)
 
 % --- Executes during object creation, after setting all properties.
 function slider10_CreateFcn(hObject, ~, ~)
-% hObject    handle to slider10 (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
 
-% Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes on button press in radiobutton12.
+function radiobutton12_Callback(hObject, eventdata, handles)
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end

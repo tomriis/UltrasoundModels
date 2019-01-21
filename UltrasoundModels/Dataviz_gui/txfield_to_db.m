@@ -1,6 +1,7 @@
-function txfield = txfield_to_db(handles, fname)
+function handles = txfield_to_db(handles, fname)
     data = handles.data;
     txfield = data.(fname);
+    handles.maxtxfield = max(max(txfield));
         if handles.current_params.M == 1
             txfield = fliplr(txfield);
         elseif handles.current_params.M == 2
@@ -23,6 +24,6 @@ function txfield = txfield_to_db(handles, fname)
     elseif strcmp(handles.txfield_norm,'Normalize')
         txfield = txfield./max(max(txfield));
     end
-    
+    handles.txfielddb = txfield;
     
 end
