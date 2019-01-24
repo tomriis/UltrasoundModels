@@ -1,7 +1,6 @@
 function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus,a,b)
     
     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
-    
     len_z = (D_rz(2)+kerf)*n_elements_z;
     AngExtent_z = len_z/ R_focus;
     angle_inc_z = AngExtent_z/n_elements_z;
