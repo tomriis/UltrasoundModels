@@ -17,7 +17,7 @@ function [x,y,z] = get_slice_xyz(plane, focus,varargin)
             z =focus(3)+(-60 : stepSize : 60)*1e-3;
         case 'yz'
             x = focus(1);
-            y = focus(2)+(-60 : stepSize : 60)*1e-3;
+            y = (-60 : stepSize : 60)*1e-3;
             z = focus(3)+(-60 : stepSize : 60)*1e-3;
     end
 end

@@ -16,13 +16,26 @@ addOptional(p,'visualize_output',true);
 addOptional(p,'Slice','xy');
 parse(p, varargin{:})
 
+%% Due to memory issue, must define transducer in vertical direction
+%% and transform focus and measurement plane to horizontal direction
+
+y_to_z_transform = [1 0 0; 0 0 1; 0 1 0];
 
 
 %% Parameters to vary in this exercise
 visualize_transducer = p.Results.visualize_transducer;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
+% if size(focal_point,1) == 1
+%     focal_point = focal_point';
+% end
+% focal_point = (y_to_z_transform*focal_point)';
 plane = p.Results.Slice; %('xy' or 'xz'); the plane within which we visualize the pressure field
-
+% switch plane
+%     case 'xy'
+%         plane = 'xz';
+%     case 'xz'
+%         plane = 'xy';
+% end
 %% Initialize Field II:
 field_init(-1);
 
@@ -52,9 +65,7 @@ Tx = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1
 if visualize_transducer
     xdc_data = xdc_get(Tx,'rect');
     show_transducer('data',xdc_data);
-    view([90, 90, 90]);
-    txfield=0; 
-    return;
+    
 end
 %xdc_show(Tx); %this displays the coordinates of each element within the array
 
@@ -125,7 +136,7 @@ if p.Results.visualize_output
             imagesc(x*1e3, y*1e3, txfielddb);
             axis equal tight;
             xlabel('x (mm)');
-            ylabel('y (mm)');
+            ylabel('z (mm)');
             ch = colorbar; ylabel(ch, 'dB'); 
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
@@ -137,23 +148,23 @@ if p.Results.visualize_output
         case 'xz'
             imagesc(x*1e3, z*1e3, txfielddb); colorbar;
             xlabel('x (mm)');
-            ylabel('z (mm)');
+            ylabel('y (mm)');
             ch = colorbar; ylabel(ch, 'dB');        
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
             ZL1 = min(z)*1000; ZL2 = max(z)*1000; plot(z*1e3, txfielddb(:, (x==focus(1)))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
-            xlabel('z (mm)');
+            xlabel('y (mm)');
         case 'yz' 
             imagesc(y*1e3, z*1e3, txfielddb); colorbar;
-            xlabel('y (mm)');
-            ylabel('z (mm)');
+            xlabel('z (mm)');
+            ylabel('y (mm)');
             ch = colorbar; ylabel(ch, 'dB');        
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
             %Adjust for changing focus in x and y direction . map to
             %indexes
             ZL1 = min(z)*1000; ZL2 = max(z)*1000; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
-            xlabel('z (mm)');
+            xlabel('y (mm)');
     end
     ylabel('Pressure (dB)');
     set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
