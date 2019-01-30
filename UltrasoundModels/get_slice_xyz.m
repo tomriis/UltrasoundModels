@@ -8,8 +8,8 @@ function [x,y,z] = get_slice_xyz(plane, focus,varargin)
     
     switch plane
         case 'xy'
-            x = focus(1)+(-60 : stepSize : 60)*1e-3;
-            y = focus(2)+(-60 : stepSize : 60)*1e-3;
+            x = (-60 : stepSize : 60)*1e-3;
+            y = (-60 : stepSize : 60)*1e-3;
             z = focus(3);
         case 'xz'
             x = (-60 : stepSize : 60)*1e-3;
