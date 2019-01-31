@@ -62,7 +62,7 @@ for i =1:10
         set(sl,'Min',1);
         set(sl,'Max',2);
         set(sl,'Value',1);
-        set(sl, 'Visible',false);
+        set(sl, 'Visible','off');
     end
 end
 % Hack for when data is such that ROC = R_focus

@@ -2,7 +2,7 @@ function angles_r = get_ellipse_angle_spacing(a,b, N)
         p = ellipse_perimeter(a,b);
         res = 30000;
         arc_length = p/N;
-        X = linspace(0,2*pi,res);
+        X = linspace(-pi,pi,res);
         Y = sqrt(a^2*sin(X).^2 + b^2*cos(X).^2);
         
         Y = zeros(length(X),1);
@@ -15,7 +15,7 @@ function angles_r = get_ellipse_angle_spacing(a,b, N)
             arc_lengths(i) = q;
         end
         angles_r = zeros(N,1);
-        for i = 1:N-1
+        for i = 0:N-1
             len = arc_length*i;
             [~,ind] = min(abs(arc_lengths-len));
             angles_r(i+1) = X(ind);

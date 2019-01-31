@@ -65,7 +65,8 @@ Tx = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1
 if visualize_transducer
     xdc_data = xdc_get(Tx,'rect');
     show_transducer('data',xdc_data);
-    
+    txfield = 0;
+    return
 end
 %xdc_show(Tx); %this displays the coordinates of each element within the array
 
