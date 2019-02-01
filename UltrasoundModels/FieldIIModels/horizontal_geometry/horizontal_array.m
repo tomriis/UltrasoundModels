@@ -64,5 +64,11 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus
     rectangles(1,:) = 1:(n_elements_x*n_elements_y);
     %center_elements = get_center_elements(rectangles);
     %cent = center_elements(end-2:end,:);
+    areas = zeros(size(rectangles,2),1);
+    for i = 1:length(areas)
+        areas(i) = find_rect_area(rectangles(:,i));
+    end
+    figure; hist(areas);
+    
     Th = xdc_rectangles(rectangles', cent', focus);
 end
