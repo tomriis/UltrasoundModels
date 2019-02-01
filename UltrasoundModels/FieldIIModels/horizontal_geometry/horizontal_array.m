@@ -15,7 +15,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus
     AngExtent_x = 2*pi; %len_x / ROC_x;
     angle_inc_x = (AngExtent_x)/n_elements_x; 					
     index_x = -n_elements_x/2 + 0.5 : n_elements_x/2 - 0.5;
-    angle_r = index_x*angle_inc_x;
+    %angle_r = index_x*angle_inc_x;
     
     angle_hor = zeros(1,length(angle_r));
     
@@ -49,33 +49,33 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus
     
     % Position transducer
         rot = make_ellipse_y_rot_mat(angle_r(i),a, b);
-        rect([4,7,10,13,19],:)=rect([4,7,10,13,19],:)+a/2;
-        positioned_rect = apply_affine_to_rect(rot, rect);
+        dummy([4,7,10,13,19],:)=rect([4,7,10,13,19],:)+a/2;
+        center_rect = apply_affine_to_rect(rot, dummy);
         
-        angle_hor(i) = find_angle_at_point([a*cos(angle_r(i)),b*sin(angle_r(i))],a,b);
+        angle_hor(i) = find_angle_at_point(angle_r(i),[a*cos(angle_r(i)),b*sin(angle_r(i))],a,b);
         roty = makeyrotform(angle_hor(i));
-        for j = 1:size(positioned_rect,2)
-            center = positioned_rect([17,18,19],j)';
-            disp(center);
-            x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];
-            rect = [i x(1)  y(1)  z(1)  x(2)  y(1)  z(1)  x(2)  y(2)  z(2)  x(1)  y(2)  z(2)  1  D(1)  D(2)  center];
-            rect = rect';
+        center = center_rect([17,18,19],1);
+        for j = 1:size(rect,2)
+            
+%             x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];
+%             rect = [i x(1)  y(1)  z(1)  x(2)  y(1)  z(1)  x(2)  y(2)  z(2)  x(1)  y(2)  z(2)  1  D(1)  D(2)  center];
+%             rect = rect';
+            %rect = positioned_rect(:,j);
             for ii = 1:4
                 xyz_i = [3*ii-1, 3*ii, 3*ii+1];
-                invec = [rect(xyz_i);0];
+                invec = [rect(xyz_i,j);0];
                 outvec = roty * invec;
-                rect(xyz_i) = center'+outvec(1:3);
+                rect(xyz_i,j) = center+outvec(1:3);
             end
-            positioned_rect(:,j) = rect;
         end
     % Append to transducer geometry
-        rectangles = horzcat(rectangles, positioned_rect);
+        rectangles = horzcat(rectangles, rect);
     end
     
     % Subtract maximal z from all so that the top-most element's center is
     % positioned at z = 0:
     mv = max(rectangles(end,:));
-    rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:) - mv;
+    rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:);
     % Place the static focus at the center of rotation
     focus = [0, 0, -a/2];
     % Convert to transducer pointer
@@ -85,6 +85,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus
     for i =1:length(areas)
         areas(i) = find_rect_area(rectangles(:,i));
     end
-    figure; hist(areas);
+    %figure; hist(areas);
     Th = xdc_rectangles(rectangles', cent', focus);
+    figure; plot(angle_r, angle_hor);
 end

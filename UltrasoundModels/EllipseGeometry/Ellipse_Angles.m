@@ -45,7 +45,7 @@ function [focus]=Ellipse_Angles(handles)
             x = [e(1),e(1)+SIGN*normed_dist];
             plot(x,perp(1)*x+perp(2),'black-');
         end
-        angle_rad = find_angle_between_lines(perp,point_slope_ray);
+        angle_rad = find_angle_between_lines(perp,[point_slope_ray(1) 1]);
         % Simple binary threshold  
         % Could change the ray's alpha according to angle
         if abs(angle_rad*180/pi) > reflection_threshold
