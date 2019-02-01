@@ -54,18 +54,14 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus
         
         angle_hor(i) = find_angle_at_point(angle_r(i),[a*cos(angle_r(i)),b*sin(angle_r(i))],a,b);
         roty = makeyrotform(angle_hor(i));
-        center = center_rect([17,18,19],1);
+        center = [b*sin(angle_r(i)); 0; a*cos(angle_r(i))];%center_rect([17,18,19],1);
         for j = 1:size(rect,2)
-            
-%             x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];
-%             rect = [i x(1)  y(1)  z(1)  x(2)  y(1)  z(1)  x(2)  y(2)  z(2)  x(1)  y(2)  z(2)  1  D(1)  D(2)  center];
-%             rect = rect';
-            %rect = positioned_rect(:,j);
             for ii = 1:4
                 xyz_i = [3*ii-1, 3*ii, 3*ii+1];
                 invec = [rect(xyz_i,j);0];
                 outvec = roty * invec;
                 rect(xyz_i,j) = center+outvec(1:3);
+                rect([17,18,19],j) = center;
             end
         end
     % Append to transducer geometry
@@ -75,17 +71,19 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D_rz, R_focus
     % Subtract maximal z from all so that the top-most element's center is
     % positioned at z = 0:
     mv = max(rectangles(end,:));
-    rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:);
+    rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:)-mv;
     % Place the static focus at the center of rotation
     focus = [0, 0, -a/2];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
     rectangles(1,:) = 1:(n_elements_x*n_elements_y);
-    areas = zeros(1,size(rectangles,2));
-    for i =1:length(areas)
-        areas(i) = find_rect_area(rectangles(:,i));
-    end
+%     areas = zeros(1,size(rectangles,2));
+%     for i =1:length(areas)
+%         areas(i) = find_rect_area(rectangles(:,i));
+%     end
     %figure; hist(areas);
+    distances = find_rect_distances(rectangles);
+    
     Th = xdc_rectangles(rectangles', cent', focus);
-    figure; plot(angle_r, angle_hor);
+    %figure; plot(angle_r, angle_hor);
 end
