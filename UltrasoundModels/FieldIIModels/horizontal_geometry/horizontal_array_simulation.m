@@ -11,8 +11,8 @@ addOptional(p, 'kerf',0.4);
 
 addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
 
-addOptional(p,'visualize_transducer',false);
-addOptional(p,'visualize_output',true);
+addOptional(p,'vis_transducer',false);
+addOptional(p,'vis_output',true);
 addOptional(p,'Slice','xy');
 parse(p, varargin{:})
 
@@ -23,7 +23,7 @@ y_to_z_transform = [1 0 0; 0 0 1; 0 1 0];
 
 
 %% Parameters to vary in this exercise
-visualize_transducer = p.Results.visualize_transducer;
+visualize_transducer = p.Results.vis_transducer;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
 if size(focal_point,2) == 1
     focal_point = focal_point';
