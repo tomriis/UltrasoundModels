@@ -101,7 +101,6 @@ disp(focus)
 %xdc_center_focus(Tx, [0,0,0]);
 xdc_focus(Tx, 0, focus);
 %xdc_focus_times (Tx, 0, delays);
-
 %% Set measurement points
 [x,y,z] = get_slice_xyz(plane, focus);
 %create all individual x, y, z points within the above ranges
@@ -120,17 +119,17 @@ txfield = max(hp); %take the maximal value of the propagating pulse, and this wa
 switch plane
     case 'xy'
         txfield = reshape(txfield, length(x), length(y));
-        txfield = fliplr(txfield); %flip the x coordinate for proper orientation
+        %txfield = fliplr(txfield); %flip the x coordinate for proper orientation
     case 'xz'
         txfield = reshape(txfield, length(x), length(z));
-        txfield = fliplr(txfield'); %flip the z coordinate for proper orientation
+        %txfield = fliplr(txfield); %flip the z coordinate for proper orientation
     case 'yz'
         txfield = reshape(txfield, length(y), length(z));
-        txfield = txfield'; %flip the z coordinate for proper orientation
+        %txfield = txfield'; %flip the z coordinate for proper orientation
 end
 txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
-
-if p.Results.visualize_output
+try
+if p.Results.vis_output
     figure;
     switch plane
         case 'xy'
@@ -169,6 +168,8 @@ if p.Results.visualize_output
     end
     ylabel('Pressure (dB)');
     set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
+end
+catch 
 end
 %% Terminate Field II
 field_end();
