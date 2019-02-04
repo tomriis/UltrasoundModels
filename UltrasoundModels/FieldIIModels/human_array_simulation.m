@@ -1,7 +1,5 @@
 function [txfield, xdc_data]=human_array_simulation(varargin)
 
-expectedGeometries = {'focused','flat','focused2'};
-
 p = inputParser;
 addRequired(p,'n_elements_x', @(x) isnumeric(x));
 addRequired(p,'n_elements_y', @(x) isnumeric(x));
@@ -9,8 +7,6 @@ addRequired(p,'ROC', @(x) isnumeric(x));
 addRequired(p,'D');
 addRequired(p, 'focal_point');
 addOptional(p, 'kerf',0.4);
-
-addOptional(p, 'element_geometry', 'flat', @(x) any(validatestring(x,expectedGeometries)));
 addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
 
 addOptional(p,'visualize_transducer',false);
@@ -45,11 +41,9 @@ n_elements_x = p.Results.n_elements_x;  %number of physical elements in X.
 n_elements_y = p.Results.n_elements_y;  %number of physical elements in Y.
 kerf = p.Results.kerf;
 D = p.Results.D; %Diameter, width, and length of element (mm)
-
-element_geometry = p.Results.element_geometry;
 R_focus = p.Results.R_focus;
 
-Tx = concave_focused_array(n_elements_x,n_elements_y, ROC/1000, kerf/1000, D/1000, R_focus/1000, element_geometry);
+Tx = concave_focused_array(n_elements_x,n_elements_y, ROC/1000, kerf/1000, D/1000, R_focus/1000);
 
 %Show the transducer array in 3D
 if visualize_transducer

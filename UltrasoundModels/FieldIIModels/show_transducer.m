@@ -61,7 +61,7 @@ grid
 axis('image')
 hold off
 view([90, 90, 90]);  
-
+%axis square tight
 end
 
 function show_skull_space(center_z)

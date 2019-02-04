@@ -62,7 +62,7 @@ for i =1:10
         set(sl,'Min',1);
         set(sl,'Max',2);
         set(sl,'Value',1);
-        set(sl, 'Visible',false);
+        set(sl, 'Visible','off');
     end
 end
 % Hack for when data is such that ROC = R_focus
@@ -314,7 +314,7 @@ function pushbutton1_Callback(hObject, ~, handles)
     fname = fieldname_from_params(handles.current_params);
     try
         k = strfind(fname,'Slice_');
-        fname(k:k+7)=[];
+        fname = fname(1:k-1);
         handles.xdc_geometry = handles.data.(strcat('G_',fname));
         handles.plot_geo_flag = true;
     catch
