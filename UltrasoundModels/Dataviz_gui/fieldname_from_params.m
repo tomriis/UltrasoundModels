@@ -1,7 +1,14 @@
 function [fieldname]=fieldname_from_params(s)
 
-n_r = s.NR; n_z=s.NZ; A = s.A; B = s.B; D = s.D;
+n_r = s.NR; n_z=s.NZ; A = s.A; B = s.B; 
 focus = s.F; slice = s.Slice; R_focus = s.Ro; ElGeo = s.ElGeo;
+
+try
+    D = s.D;
+catch
+    D(1) = s.H;
+    D(2) = s.W;
+end
 
 %returns txt field from params
     runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,

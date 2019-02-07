@@ -14,13 +14,19 @@ function [params] = fieldname_to_param(fieldname)
     k_Ro = strfind(fieldname,'Ro');
     k_Slice = strfind(fieldname,'Slice_');
     
+    params.ElGeo = str2double(fieldname(k_ElGeo+5));
     params.NR = str2double(fieldname(k_NR+2:k_NZ-1));
     params.NZ = str2double(fieldname(k_NZ+2:k_A-1));
     params.A = str2double(fieldname(k_A+1:k_B-1));
     params.B = str2double(fieldname(k_B+1:k_W-1));
     if params.A ~=params.B
         params.B = 135/170*params.B;
-        if params.B
+        strnum=fieldname(k_B+1:k_W-1);
+        b_test1 = str2double(strcat(strnum(1:2),'.',strnum(2:end)));
+        b_test2 = str2double(strcat(strnum(1:3),'.',strnum(2:end)));
+        if params.B - b_test1 > 1 && params.B - b_test2 > 1
+            warning('Likely not the correct B value in fieldname_to_param');
+        end
     end
     params.W = get_param_decimal(fieldname, k_W+1,k_H-1);
     params.H = str2double(fieldname(k_H+1:k_Ro-1));
@@ -36,7 +42,7 @@ function [params] = fieldname_to_param(fieldname)
     end        
 end
 
-function [focus] = get_focus_from_string(fstring);
+function [focus] = get_focus_from_string(fstring)
     inds = strfind(fstring,'_');
     
     focus=[];
