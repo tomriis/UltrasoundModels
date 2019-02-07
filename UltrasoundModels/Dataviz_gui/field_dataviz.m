@@ -134,6 +134,11 @@ function sliderA_Callback(hObject, ~, handles)
     caption = sprintf('Major Axis: %d (mm)', value);
     set(handles.text3, 'String', caption);
     handles.current_params.A = value;
+    if handles.current_params.ElGeo == 2
+        caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
+        set(handles.text8,'String',caption);
+        handles.current_params.Ro = handles.current_params.A;
+    end
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -280,7 +285,6 @@ end
 % --- Executes on button press in pushbutton1.
 function pushbutton1_Callback(hObject, ~, handles)
     set(hObject, 'Enable','off');
-
     fname = fieldname_from_params(handles.current_params);
     try
         k = strfind(fname,'Slice_');
@@ -293,20 +297,7 @@ function pushbutton1_Callback(hObject, ~, handles)
     end
     if handles.plot_geo_flag
         disp('Plotting transducers...')
-        if handles.current_params.M ==1
-            show_transducer('data',handles.xdc_geometry);
-        else
-            figure; focus_draw_array(handles.xdc_geometry);hold on;
-            colormap(cool(128));
-            %view(3)
-            xlabel('x [m] (Lateral)')
-            ylabel('y [m] (Elevation)')
-            zlabel('z [m] (Axial)')
-            grid
-            axis('image')
-            hold off
-            view([90, 90, 90]); 
-        end
+        show_transducer('data',handles.xdc_geometry);
         disp('Complete');
     end
     set(hObject,'Enable','on');
