@@ -6,15 +6,23 @@ slice = s.Slice; R_focus = s.Ro; ElGeo = s.ElGeo;
 try
     focus = s.F;
 catch
-    focus(1) = s.FX;
-    focus(2) = s.FY;
-    focus(3) = s.FZ;
+    if ~isempty(s.FX) && ~isempty(s.FY) && ~isempty(s.FZ)
+        focus(1) = s.FX;
+        focus(2) = s.FY;
+        focus(3) = s.FZ;
+    else
+        focus = zeros(1,3);
+    end
 end
 try
     D = s.D;
 catch
-    D(1) = s.H;
-    D(2) = s.W;
+    if ~isempty(s.H) && ~isempty(s.W)
+        D(1) = s.H;
+        D(2) = s.W;
+    else
+        D = zeros(1,2);
+    end
 end
 
 %returns txt field from params
