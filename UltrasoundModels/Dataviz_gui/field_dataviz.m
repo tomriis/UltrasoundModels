@@ -27,7 +27,6 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 p = inputParser;
 addRequired(p,'datafile')
-addOptional(p,'extent_equals_pi',false);
 addOptional(p,'NX_NY_coupled',true);
 parse(p, varargin{:})
 f = waitbar(0, 'Loading Data File');
@@ -37,26 +36,19 @@ handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
 handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
 waitbar(1/2,f,'Load Complete');
-handles.extent_equals_pi = p.Results.extent_equals_pi;
 handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 % Set slider values
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'NX','ROC','W','H','F','M','ElGeo','NY','Slice','Z'};
+field_slider_map={'NR','A','W','H','FX','FY','ElGeo','NZ','Slice','FZ','B'};
 for i =1:10
-        sl = handles.(strcat('slider',num2str(i)));
+        sl = handles.(strcat('slider',field_slider_map{i}));
         numSteps = length(handles.parameters.(field_slider_map{i}));
     if numSteps > 1
         set(sl, 'Min', 1);
         set(sl, 'Max', numSteps);
-        if i == 2
-            set(sl,'Value',3);
-        elseif i==10
-            set(sl,'Value',3);
-        else
-            set(sl, 'Value', 1);
-        end
+        set(sl, 'Value', 1);
         set(sl, 'SliderStep', [1/(numSteps-1) , 1/(numSteps-1) ]);
     else
         set(sl,'Min',1);
@@ -67,11 +59,8 @@ for i =1:10
 end
 % Hack for when data is such that ROC = R_focus
 
-if handles.extent_equals_pi
-    set(handles.slider1,'Visible','off');
-end
 if handles.NX_NY_coupled
-    set(handles.slider1, 'Visible','off');
+    set(handles.sliderNR, 'Visible','off');
 end
 % Initialize Pop Up Menu
 handles.txfield_norm='dB';
@@ -80,34 +69,34 @@ set(handles.popupmenu1,'String',{'dB','Normalize'});
 handles.plot_flag = false;
 numSliders = 10;
 waitbar(1/2+0.5*1/numSliders,f,'Initializing GUI');
-slider1_Callback(handles.slider1, eventdata,handles);
+sliderNR_Callback(handles.sliderNR, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*2/numSliders,f);
-slider2_Callback(handles.slider2, eventdata,handles);
+sliderA_Callback(handles.sliderA, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*3/numSliders,f);
-slider3_Callback(handles.slider3, eventdata,handles);
+sliderW_Callback(handles.sliderW, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*4/numSliders,f);
-slider4_Callback(handles.slider4, eventdata,handles);
+sliderH_Callback(handles.sliderH, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*5/numSliders,f);
-slider5_Callback(handles.slider5, eventdata,handles);
+sliderFX_Callback(handles.sliderFX, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*6/numSliders,f);
-slider6_Callback(handles.slider6, eventdata,handles);
+sliderFY_Callback(handles.sliderFY, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*7/numSliders,f);
-slider7_Callback(handles.slider7, eventdata,handles);
+sliderElGeo_Callback(handles.sliderElGeo, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*8/numSliders,f);
-slider8_Callback(handles.slider8, eventdata,handles);
+sliderNZ_Callback(handles.sliderNZ, eventdata,handles);
 handles=guidata(hObject); 
 waitbar(1/2+0.5*9/numSliders,f);
-slider9_Callback(handles.slider9, eventdata,handles);
+sliderSlice_Callback(handles.sliderSlice, eventdata,handles);
 handles=guidata(hObject);
 handles.plot_flag = true;
-slider10_Callback(handles.slider10, eventdata,handles);
+slider10_Callback(handles.sliderFZ, eventdata,handles);
 handles=guidata(hObject);
 close(f);
 guidata(hObject, handles);
@@ -115,20 +104,15 @@ guidata(hObject, handles);
 
 % --- Outputs from this function are returned to the command line.
 function varargout = field_dataviz_OutputFcn(hObject, eventdata, handles) 
-% varargout  cell array for returning output args (see VARARGOUT);
-% hObject    handle to figure
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
 % Get default command line output from handles structure
 %varargout{1} = handles.output;
 
 
-function slider1_Callback(hObject, ~, handles)
-    value = handles.parameters.NX(int16(get(hObject,'Value')));
-    caption = sprintf('NX: %d', value);
+function sliderNR_Callback(hObject, ~, handles)
+    value = handles.parameters.NR(int16(get(hObject,'Value')));
+    caption = sprintf('NR: %d', value);
     set(handles.text2, 'String', caption);
-    handles.current_params.NX = value;
+    handles.current_params.NR = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -136,30 +120,18 @@ function slider1_Callback(hObject, ~, handles)
     end
 
 
-function slider1_CreateFcn(hObject, ~, ~)
+function sliderNR_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
 
 
-function slider2_Callback(hObject, ~, handles)
+function sliderA_Callback(hObject, ~, handles)
     slider_val = int16(get(hObject,'Value'));
-%     if handles.current_params.M == 1
-%         caption = sprintf('R Focus: %d (mm)', value)
-%         set(handles.text8,'String',caption);
-%     elseif handles.current_params.M == 
-    value = handles.parameters.ROC(slider_val);
-    caption = sprintf('ROC: %d (mm)', value);
+    value = handles.parameters.A(slider_val);
+    caption = sprintf('Major Axis: %d (mm)', value);
     set(handles.text3, 'String', caption);
-    handles.current_params.ROC = value;
-    if handles.extent_equals_pi
-       handles = extent_equals_pi_callback(handles);
-    end
-    
-    focus_z= -handles.current_params.ROC+handles.current_params.Z;
-    caption = sprintf('Focus: [%d, 0, %d] (mm)', handles.current_params.F, focus_z);
-    set(handles.text6, 'String', caption);
-    
+    handles.current_params.A = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -167,18 +139,18 @@ function slider2_Callback(hObject, ~, handles)
     end
 
 
-function slider2_CreateFcn(hObject, ~, ~)
+function sliderA_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
 
 
-function slider3_Callback(hObject, ~, handles)
+function sliderW_Callback(hObject, ~, handles)
     index = int16(get(hObject,'Value'));
     valueX = handles.parameters.W(index);
     captionX = sprintf('X: %.2f (mm)', valueX);
     set(handles.text4, 'String', captionX);
-    set(handles.slider3,'Value', index);
+    set(handles.sliderW,'Value', index);
     handles.current_params.W = valueX;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
@@ -187,13 +159,13 @@ function slider3_Callback(hObject, ~, handles)
     end
 
 
-function slider3_CreateFcn(hObject, ~, ~)
+function sliderW_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
 
 
-function slider4_Callback(hObject, ~, handles)
+function sliderH_Callback(hObject, ~, handles)
     value = handles.parameters.H(int16(get(hObject,'Value')));
     caption = sprintf('Y: %.2f (mm)', value);
     set(handles.text5, 'String', caption);
@@ -205,18 +177,17 @@ function slider4_Callback(hObject, ~, handles)
     end
 
 
-function slider4_CreateFcn(hObject, ~, ~)
+function sliderH_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
 
 
-function slider5_Callback(hObject, ~, handles)
-    value = handles.parameters.F(int16(get(hObject,'Value')));
-    focus_z= -handles.current_params.ROC+handles.current_params.Z;
-    caption = sprintf('Focus: [%d, 0, %d] (mm)', value, focus_z);
+function sliderFX_Callback(hObject, ~, handles)
+    value = handles.parameters.FX(int16(get(hObject,'Value')));
+    caption = sprintf('FX: %.2f (mm)',value);
     set(handles.text6, 'String', caption);
-    handles.current_params.F = value;
+    handles.current_params.FX = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -225,30 +196,29 @@ function slider5_Callback(hObject, ~, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function slider5_CreateFcn(hObject, ~, ~)
+function sliderFX_CreateFcn(hObject, ~, ~)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 % --- Executes on slider movement.
-function slider6_Callback(hObject, ~, handles)
-    value = handles.parameters.M(int16(get(hObject,'Value')));
-    namemap = {'Field II','FOCUS'};
-    caption = sprintf('Platform:  %s', namemap{value});
+function sliderFY_Callback(hObject, ~, handles)
+    value = handles.parameters.FY(int16(get(hObject,'Value')));
+
+    caption = sprintf('FY: %.2f', value);
     set(handles.text1, 'String', caption);
-    handles.current_params.M = value;
+    handles.current_params.FY = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
-function slider6_CreateFcn(hObject, ~, ~)
-
+function sliderFY_CreateFcn(hObject, ~, ~)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
 
-function slider7_Callback(hObject, ~, handles)
+function sliderElGeo_Callback(hObject, ~, handles)
     value = handles.parameters.ElGeo(int16(get(hObject,'Value')));
     name_map = {'Flat','Focused'};
     caption = sprintf('Geometry: %s', name_map{value});
@@ -260,8 +230,7 @@ function slider7_Callback(hObject, ~, handles)
         plot_xyplane_and_ypeaks(handles);
     end
 
-% --- Executes during object creation, after setting all properties.
-function slider7_CreateFcn(hObject, ~, ~)
+function sliderElGeo_CreateFcn(hObject, ~, ~)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -272,23 +241,17 @@ function radiobutton1_Callback(hObject, ~, handles)
         plot_xyplane_and_ypeaks(handles);
     end
 
-
-% --- Executes on button press in radiobutton2.
 function radiobutton2_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
-
-% --- Executes on button press in radiobutton3.
 function radiobutton3_Callback(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
-
-% --- Executes on slider movement.
-function slider9_Callback(hObject, ~, handles)
+function sliderSlice_Callback(hObject, ~, handles)
     value = handles.parameters.Slice{int16(get(hObject,'Value'))};
     caption = sprintf('Plane: %s', value);
     set(handles.text11, 'String', caption);
@@ -301,7 +264,7 @@ function slider9_Callback(hObject, ~, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function slider9_CreateFcn(hObject, ~, ~)
+function sliderSlice_CreateFcn(hObject, ~, ~)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
@@ -366,14 +329,19 @@ function radiobutton4_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on slider movement.
-function slider8_Callback(hObject, eventdata, handles)
+function sliderNZ_Callback(hObject, eventdata, handles)
     value = handles.parameters.NY(int16(get(hObject,'Value')));
-    caption = sprintf('NY: %d', value);
+    caption = sprintf('NZ: %d', value);
     set(handles.text7, 'String', caption);
     handles.current_params.NY = value;
     if handles.NX_NY_coupled
-        handles.current_params.NX = floor(256/handles.current_params.NY);
-        caption = sprintf('NX: %d', handles.current_params.NX);
+        kerf = 0.4;
+        handles.current_params.NR = floor(256/handles.current_params.NZ);
+        p = ellipse_perimeter(handles.current_params.A,handles.current_params.B);
+        if handles.current_params.NR*(handles.current_params.W+kerf) > p
+            handles.current_params.NR = floor(p/(handles.current_params.W+kerf));
+        end
+        caption = sprintf('NR: %d', handles.current_params.NR);
         set(handles.text2, 'String', caption);
     end
     handles = find_params_in_data(handles);
@@ -384,8 +352,8 @@ function slider8_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function slider8_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to slider8 (see GCBO)
+function sliderNZ_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderNZ (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 
@@ -396,21 +364,11 @@ end
 
 
 % --- Executes on slider movement.
-function slider10_Callback(hObject, eventdata, handles)
-    value = handles.parameters.Q(1);
-    caption = sprintf('Frequency: %d KHz', value);
+function sliderFZ_Callback(hObject, ~, handles)
+    value = handles.parameters.FZ(int16(get(hObject,'Value')));
+    caption = sprintf('FZ: %.2f (mm)', value);
     set(handles.text12, 'String', caption);
-    handles.current_params.Q = value;
-    
-    value = handles.parameters.Z(int16(get(hObject,'Value')));
-    caption = sprintf('Focus Z: %d (mm)', value);
-    set(handles.text13, 'String', caption);
-    handles.current_params.Z = value;
-    
-    focus_z= -handles.current_params.ROC+handles.current_params.Z;
-    caption = sprintf('Focus: [%d, 0, %d] (mm)', handles.current_params.F, focus_z);
-    set(handles.text6, 'String', caption);
-    
+    handles.current_params.FZ = value;
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -419,7 +377,7 @@ function slider10_Callback(hObject, eventdata, handles)
 
 
 % --- Executes during object creation, after setting all properties.
-function slider10_CreateFcn(hObject, ~, ~)
+function sliderFZ_CreateFcn(hObject, ~, ~)
 
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
@@ -431,3 +389,29 @@ function radiobutton12_Callback(hObject, eventdata, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
+
+
+% --- Executes on slider movement.
+function sliderB_Callback(hObject, eventdata, handles)
+    slider_val = int16(get(hObject,'Value'));
+    value = handles.parameters.A(slider_val);
+    caption = sprintf('Major Axis: %d (mm)', value);
+    set(handles.text3, 'String', caption);
+    handles.current_params.A = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderB_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderB (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

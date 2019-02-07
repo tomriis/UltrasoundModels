@@ -1,8 +1,15 @@
 function [fieldname]=fieldname_from_params(s)
 
 n_r = s.NR; n_z=s.NZ; A = s.A; B = s.B; 
-focus = s.F; slice = s.Slice; R_focus = s.Ro; ElGeo = s.ElGeo;
+slice = s.Slice; R_focus = s.Ro; ElGeo = s.ElGeo;
 
+try
+    focus = s.F;
+catch
+    focus(1) = s.FX;
+    focus(2) = s.FY;
+    focus(3) = s.FZ;
+end
 try
     D = s.D;
 catch

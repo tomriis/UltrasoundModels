@@ -1,27 +1,27 @@
 function [data] = unique_vals_from_mat(Matfile)
 % Returns array of fieldname strings from the loaded matfile
-    data = struct('M',[],'NX',[],'NY',[],'ROC',[],'W',[],'H',[],'F',[],...,
-        'ElGeo',[],'Ro',[],'Q',[],'Z',[]);
+    data = struct('NR',[],'NZ',[],'A',[],'B',[],'W',[],'H',[],...,
+        'ElGeo',[],'Ro',[],'FX',[],'FY',[],'FZ',[]);
     data.Slice={};
     fields_cell = fieldnames(Matfile);
     count = 1;
     for i = 1:length(fields_cell)
         f = fields_cell(i);
         field_string = f{:};
-        if ~strcmp(field_string,'Properties')
+        if ~strcmp(field_string,'Properties') && ~strcmp(field_string(1),'G')
             params = fieldname_to_param(field_string);
-            data.M(count) = params.M;
-            data.NX(count) = params.NX;
-            data.NY(count) = params.NY;
-            data.ROC(count) = params.ROC;
+            data.ElGeo(count) = params.ElGeo;
+            data.NR(count) = params.NR;
+            data.NZ(count) = params.NZ;
+            data.A(count) = params.A;
+            data.B(count) = params.B;
             data.W(count) = params.W;
             data.H(count) = params.H;
-            data.F(count) = params.F;
-            data.ElGeo(count) = params.ElGeo;
+            data.FX(count) = params.FX;
+            data.FY(count) = params.FY;
+            data.FZ(count) = params.FZ;
             data.Ro(count) = params.Ro;
             data.Slice(count) = {params.Slice};
-            data.Q(count) = params.Q;
-            data.Z(count) = params.Z;
             count= count +1;
         end
     end

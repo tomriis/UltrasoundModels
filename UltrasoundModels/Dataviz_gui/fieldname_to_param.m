@@ -20,7 +20,7 @@ function [params] = fieldname_to_param(fieldname)
     params.A = str2double(fieldname(k_A+1:k_B-1));
     params.B = str2double(fieldname(k_B+1:k_W-1));
     if params.A ~=params.B
-        params.B = 135/170*params.B;
+        params.B = 135/170*params.A;
         strnum=fieldname(k_B+1:k_W-1);
         b_test1 = str2double(strcat(strnum(1:2),'.',strnum(2:end)));
         b_test2 = str2double(strcat(strnum(1:3),'.',strnum(2:end)));
@@ -32,7 +32,8 @@ function [params] = fieldname_to_param(fieldname)
     params.H = str2double(fieldname(k_H+1:k_Ro-1));
     
     params.Ro = str2double(fieldname(k_Ro+2:k_Slice-1));
-    params.F = get_focus_from_string(fieldname(k_F+1:end));
+    focus = get_focus_from_string(fieldname(k_F+1:end));
+    params.FX = focus(1); params.FY = focus(2); params.FZ = focus(3);
     
     if isempty(k_Slice)
         params.Slice = 'xy';
