@@ -393,7 +393,8 @@ function radiobutton12_Callback(hObject, eventdata, handles)
 function sliderB_Callback(hObject, eventdata, handles)
     slider_val = int16(get(hObject,'Value'));
     value = handles.parameters.B(slider_val);
-    caption = sprintf('Minor Axis: %d (mm)', value);
+    disp(value);
+    caption = sprintf('Minor Axis: %.2f (mm)', value);
     set(handles.textMinorAxis, 'String', caption);
     handles.current_params.B = value;
     handles = find_params_in_data(handles);

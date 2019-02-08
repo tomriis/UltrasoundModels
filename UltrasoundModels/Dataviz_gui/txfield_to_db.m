@@ -2,9 +2,11 @@ function handles = txfield_to_db(handles, fname)
     data = handles.data;
     txfield = data.(fname);
     handles.maxtxfield = max(max(txfield));
-        
-    txfield = fliplr(txfield);
-      
+    if strcmp(handles.current_params.Slice,'yz') 
+        txfield = txfield';
+    elseif strcmp(handles.current_params.Slice,'xz')
+        txfield = txfield';
+    end
     if strcmp(handles.txfield_norm, 'dB')
         txfield = db(txfield./max(max(txfield)));
     elseif strcmp(handles.txfield_norm,'dbmaxall')

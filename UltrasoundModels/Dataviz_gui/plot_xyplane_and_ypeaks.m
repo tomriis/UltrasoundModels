@@ -103,7 +103,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         
         switch handles.current_params.Slice
             case 'xz'
-                [~,ind] = min(abs(x-handles.current_params.F));
+                [~,ind] = min(abs(x-handles.current_params.FX));
                 if ~handles.radiobutton12.Value
                     profile = txfielddb(:, ind);
                     plot(axes2, z, profile);
@@ -136,7 +136,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         end
   
         ind = find(profile>-6);
-        if length(ind>1)
+        if length(ind>=2)
             hwhm = x(ind(end))-x(ind(1));
             caption = sprintf('Half Width: %.3f (mm)',hwhm);
             set(handles.text14,'String',caption);
