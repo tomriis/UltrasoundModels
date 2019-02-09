@@ -44,7 +44,11 @@ handles.current_params = cell2struct(cell(length(field),1),field);
 field_slider_map={'NR','A','W','H','FX','FY','ElGeo','NZ','Slice','FZ','B'};
 for i =1:length(field_slider_map)
         sl = handles.(strcat('slider',field_slider_map{i}));
-        numSteps = length(handles.parameters.(field_slider_map{i}));
+        if field_slider_map{i} == 'B'
+            numSteps = 2;
+        else
+            numSteps = length(handles.parameters.(field_slider_map{i}));
+        end
     if numSteps > 1
         set(sl, 'Min', 1);
         set(sl, 'Max', numSteps);
@@ -128,19 +132,24 @@ function sliderNR_CreateFcn(hObject, ~, ~)
     end
 
 
-function sliderA_Callback(hObject, ~, handles)
+function sliderA_Callback(hObject, eventData, handles)
     slider_val = int16(get(hObject,'Value'));
     value = handles.parameters.A(slider_val);
     caption = sprintf('Major Axis: %d (mm)', value);
     set(handles.text3, 'String', caption);
     handles.current_params.A = value;
+    
     if handles.current_params.ElGeo == 2
         caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
         set(handles.text8,'String',caption);
         handles.current_params.Ro = handles.current_params.A;
     end
+   
+    
     handles = find_params_in_data(handles);
+    sliderB_Callback(hObject, eventData, handles)
     guidata(hObject, handles);
+ 
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
@@ -391,9 +400,9 @@ function radiobutton12_Callback(hObject, eventdata, handles)
 
 % --- Executes on slider movement.
 function sliderB_Callback(hObject, eventdata, handles)
-    slider_val = int16(get(hObject,'Value'));
-    value = handles.parameters.B(slider_val);
-    disp(value);
+    Semi_Minor_Axis_Ratio = [135/170 1];
+    slider_val = int16(get(handles.sliderB,'Value'));
+    value = Semi_Minor_Axis_Ratio(slider_val)*handles.current_params.A;
     caption = sprintf('Minor Axis: %.2f (mm)', value);
     set(handles.textMinorAxis, 'String', caption);
     handles.current_params.B = value;

@@ -1,5 +1,5 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_512RoAYoEven.mat';
+    outfile = './ps_512RoAYoffEven.mat';
 
     % Transducer Geometry
     kerf = 0.4;
@@ -17,7 +17,7 @@ function [data,data_error]=param_search_horizontal()
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = 0 : 20 : 40;
-    Y = 0;%0 : 20 : 40;
+    Y = [20 40];
     Z = 0 : 20 : 40;
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
