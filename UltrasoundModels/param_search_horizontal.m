@@ -1,5 +1,5 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_256RoAYo.mat';
+    outfile = './ps_512RoAYoffEven.mat';
 
     % Transducer Geometry
     kerf = 0.4;
@@ -7,17 +7,17 @@ function [data,data_error]=param_search_horizontal()
     z_width = [4 6 8];
     
     %Array Geometry
-    N_Elements_Z = [4 5 6];
+    N_Elements_Z = [4 6];
     %Nx * Nz = [256, 512];
-   
+    total_elements = 512;
     Semi_Major_Axis = [180/2, 240/2, 300/2];
     % 1. circular 2. elliptical 
     Semi_Minor_Axis_Ratio = [1, 135/170];
-    R_Focus_Ratio = 1; %[1 , 1e15];
+    R_Focus_Ratio = 1; %[1 , 1e10];
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = 0 : 20 : 40;
-    Y = 0; %0 : 20 : 40;
+    Y = [20 40];
     Z = 0 : 20 : 40;
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
@@ -39,7 +39,7 @@ function [data,data_error]=param_search_horizontal()
         D(2) = z_width(z_width_i);
     for nz_i = 1:length(N_Elements_Z)
         n_z = N_Elements_Z(nz_i);
-        n_r = floor(256/n_z);
+        n_r = floor(total_elements/n_z);
         p = ellipse_perimeter(A,B);
         if n_r*(D(1)+kerf) > p
             n_r = floor(p/(D(1)+kerf));
@@ -68,7 +68,7 @@ function [data,data_error]=param_search_horizontal()
     end
     s.ElGeo = ElGeo; s.NR = n_r; s.NZ =n_z; s.A = A; s.B = B; s.D = D; s.F=[x,y,z];
     s.Slice = slice; s.Ro = R_focus; 
-
+    
     fname = fieldname_from_params(s);
     
         [txfield, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
@@ -97,7 +97,7 @@ function [data,data_error]=param_search_horizontal()
     save(outfile, '-struct', 'data');
     try
         sendmail('tomriis11@gmail.com','Code Finished', ...
-        ['Done with ps256RoAYo.mat' 10 'Good luck with building GUI']);
+        ['Done with ps512RoAYoEven.mat' 10 'Fix odd horizontal vertical']);
     catch
         disp('Email Failed');
     end

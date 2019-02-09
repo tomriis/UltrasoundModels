@@ -1,7 +1,6 @@
 function [] = plot_xyplane_and_ypeaks(handles)
         axes1=handles.axes1;axes2=handles.axes2;txfielddb = handles.txfielddb;
-        focus_z = -handles.current_params.ROC+handles.current_params.Z;
-        focus = [handles.current_params.F,0,focus_z]*1e-3;
+        focus = [handles.current_params.FX,handles.current_params.FY,handles.current_params.FZ]*1e-3;
         [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus,size(txfielddb,1));
         x= x*1000; y=y*1000; z=z*1000;
         if strcmp(handles.txfield_norm,'dB')
@@ -104,7 +103,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         
         switch handles.current_params.Slice
             case 'xz'
-                [~,ind] = min(abs(x-handles.current_params.F));
+                [~,ind] = min(abs(x-handles.current_params.FX));
                 if ~handles.radiobutton12.Value
                     profile = txfielddb(:, ind);
                     plot(axes2, z, profile);
@@ -137,7 +136,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
         end
   
         ind = find(profile>-6);
-        if length(ind>1)
+        if length(ind>=2)
             hwhm = x(ind(end))-x(ind(1));
             caption = sprintf('Half Width: %.3f (mm)',hwhm);
             set(handles.text14,'String',caption);
