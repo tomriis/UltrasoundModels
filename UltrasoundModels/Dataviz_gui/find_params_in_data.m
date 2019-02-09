@@ -11,7 +11,7 @@ function [handles] = find_params_in_data(handles)
         set(handles.textMaxPressure, 'String',sprintf('Max Pressure: %d',handles.maxtxfield));
     catch e
         % Check if angle of extent is too large, if so dont plot
-        disp(e.message);
+        
         str = sprintf('Current parameters not in %s \n \n',handles.filename);
         set(handles.text10,'String',str);
         handles.plot_flag = false;
