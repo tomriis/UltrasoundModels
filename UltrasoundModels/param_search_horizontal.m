@@ -7,7 +7,7 @@ function [data,data_error]=param_search_horizontal()
     z_width = [4 6 8];
     
     %Array Geometry
-    N_Elements_Z = [4 6];
+    N_Elements_Z = [4 5 6];
     %Nx * Nz = [256, 512];
     total_elements = 512;
     Semi_Major_Axis = [180/2, 240/2, 300/2];

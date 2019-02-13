@@ -44,7 +44,7 @@ D = p.Results.D; %Diameter, width, and length of element (mm)
 R_focus = p.Results.R_focus;
 
 Tx = concave_focused_array(n_elements_x,n_elements_y, ROC/1000, kerf/1000, D/1000, R_focus/1000);
-
+%Tx=xdc_convex_array(n_elements_x, D(1)/1000,D(2)/1000,kerf/1000,ROC/1000,1,1,[0,0,-ROC]/1000);
 %Show the transducer array in 3D
 if visualize_transducer
     xdc_data = xdc_get(Tx,'rect');
