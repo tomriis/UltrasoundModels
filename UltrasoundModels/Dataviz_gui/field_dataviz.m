@@ -61,7 +61,7 @@ for i =1:length(field_slider_map)
         set(sl, 'Visible','off');
     end
 end
-handles.total_elements =256;
+handles.total_elements =512;
 if handles.NX_NY_coupled
     set(handles.sliderNR, 'Visible','off');
 end

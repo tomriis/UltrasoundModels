@@ -1,24 +1,24 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_512RoAYoffEven.mat';
+    outfile = './ps_512test.mat';
 
     % Transducer Geometry
     kerf = 0.4;
-    r_width = [4 6 8];
+    r_width = 6;%[4 6 8];
     z_width = [4 6 8];
     
     %Array Geometry
     N_Elements_Z = [4 5 6];
     %Nx * Nz = [256, 512];
     total_elements = 512;
-    Semi_Major_Axis = [180/2, 240/2, 300/2];
+    Semi_Major_Axis = [180/2 240/2];%[180/2, 240/2, 300/2];
     % 1. circular 2. elliptical 
-    Semi_Minor_Axis_Ratio = [1, 135/170];
+    Semi_Minor_Axis_Ratio = 1;%[1, 135/170];
     R_Focus_Ratio = 1; %[1 , 1e10];
     % Steering
-    Slice_XYZ = {'xy','xz','yz'};
-    X = 0 : 20 : 40;
-    Y = [20 40];
-    Z = 0 : 20 : 40;
+    Slice_XYZ = {'xy'};%{'xy','xz','yz'};
+    X = 0;%0 : 20 : 40;
+    Y = 0;%[20 40];
+    Z = 0;% : 20 : 40;
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
         length(r_width)*length(z_width);
@@ -70,9 +70,12 @@ function [data,data_error]=param_search_horizontal()
     s.Slice = slice; s.Ro = R_focus; 
     
     fname = fieldname_from_params(s);
-    
-        [txfield, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
-            'R_focus',R_focus,'Slice',slice,'vis_output',false);
+%     
+%         [txfield, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
+%             'R_focus',R_focus,'Slice',slice,'vis_output',false);
+focus = [0,0,-A];
+[txfield, xdc_data] = human_array_simulation(n_r, n_z,A,...,
+D,focus,'R_focus',R_focus,'Slice','xy', 'visualize_output',false);
     
         data.(fname) = txfield;
         k = strfind(fname,'Slice_');

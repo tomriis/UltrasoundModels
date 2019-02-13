@@ -8,7 +8,11 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     angle_z = index_z* angle_inc_z;
     
 
-    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
+    %angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
+    AngExtent_x = 2*pi;%len_x / ROC_x;
+    angle_inc_x = (AngExtent_x)/n_elements_r; 					
+    index_x = -n_elements_r/2 + 0.5 : n_elements_r/2 - 0.5;
+    angle_r = index_x*angle_inc_x;
     
     angle_hor = zeros(1,length(angle_r));
    
@@ -34,13 +38,22 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     % Position transducer
         angle_hor(i) = find_angle_at_point(angle_r(i),[a*cos(angle_r(i)),b*sin(angle_r(i))],a,b);
         roty = makeyrotform(angle_hor(i));
-        center = [b*sin(angle_r(i)); 0; a*cos(angle_r(i))];%center_rect([17,18,19],1);
+        % New  CODE 
+        rot = makeyrotform(angle_r(i));
+        rect([4,7,10,13,19],:)=rect([4,7,10,13,19],:)+a;
+        positioned_rect = apply_affine_to_rect(rot, rect);
+        rect([4,7,10,13,19],:)=rect([4,7,10,13,19],:)-a;
+        centers = positioned_rect([17, 18, 19],:);
+        
+        %center = [b*sin(angle_r(i)); 0; a*cos(angle_r(i))];%center_rect([17,18,19],1);
         for j = 1:size(rect,2)
+            center = centers(:,j);
+            xz_center = [center(1); 0; center(3)];
             for ii = 1:4
                 xyz_i = [3*ii-1, 3*ii, 3*ii+1];
                 invec = [rect(xyz_i,j);0];
                 outvec = roty * invec;
-                rect(xyz_i,j) = center+outvec(1:3);
+                rect(xyz_i,j) = xz_center+outvec(1:3);
                 rect([17,18,19],j) = center;
             end
         end
@@ -53,7 +66,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     mv = max(rectangles(end,:));
     rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:)-mv;
     % Place the static focus at the center of rotation
-    focus = [0,0,0];%[0, 0, -a/2];
+    focus = [0,0,-a];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
     rectangles(1,:) = 1:(n_elements_r*n_elements_z);
