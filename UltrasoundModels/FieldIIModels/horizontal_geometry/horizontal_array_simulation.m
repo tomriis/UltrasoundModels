@@ -8,7 +8,6 @@ addRequired(p,'b', @(x) isnumeric(x));
 addRequired(p,'D');
 addRequired(p, 'focal_point');
 addOptional(p, 'kerf',0.4);
-
 addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
 
 addOptional(p,'vis_transducer',false);
@@ -58,7 +57,6 @@ n_elements_z = p.Results.n_elements_z;  %number of physical elements in Y.
 kerf = p.Results.kerf;
 D_rz = p.Results.D; %Diameter, width, and length of element (mm)
 R_focus = p.Results.R_focus;
-
 Tx = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000);
 
 %Show the transducer array in 3D
@@ -142,7 +140,8 @@ if p.Results.vis_output
             figure;
             XL = min(x)*1e3;
             XH = max(x)*1e3;
-            plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
+            profile = txfielddb(round(length(txfielddb) / 2), 1:length(x));
+            plot(x*1e3, profile); 
             xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
             xlabel('x (mm)');
         case 'xz'

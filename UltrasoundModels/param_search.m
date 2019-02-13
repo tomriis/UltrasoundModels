@@ -54,7 +54,7 @@ for sl =1:length(Slice)
     try
 if M == 1    
     [txfeilddb, xdc_data] = human_array_simulation(n_elements_x_i, n_elements_y_i,ROC_i,...,
-    [W_i H_i],[focus_i,0,-ROC_i+focus_z_i],'element_geometry','focused2','R_focus',R_focus_i,...,
+    [W_i H_i],[focus_i,0,-ROC_i+focus_z_i],'R_focus',R_focus_i,...,
     'Slice',slice_i, 'visualize_output',false);
 else
     R_focus_i = 1e15;
