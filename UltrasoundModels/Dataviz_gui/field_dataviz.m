@@ -61,7 +61,7 @@ for i =1:length(field_slider_map)
         set(sl, 'Visible','off');
     end
 end
-
+handles.total_elements =256;
 if handles.NX_NY_coupled
     set(handles.sliderNR, 'Visible','off');
 end
@@ -159,7 +159,7 @@ function sliderNZ_Callback(hObject, eventdata, handles)
     set(handles.text7, 'String', caption);
     handles.current_params.NZ = value;
     if handles.NX_NY_coupled
-        handles.current_params.NR = find_NR_from_geo(256, handles.current_params.NZ,...,
+        handles.current_params.NR = find_NR_from_geo(handles.total_elements, handles.current_params.NZ,...,
             handles.current_params.A, handles.current_params.B, handles.current_params.W);
         
         caption = sprintf('NR: %d', handles.current_params.NR);

@@ -97,7 +97,7 @@ function [data,data_error]=param_search_horizontal()
     save(outfile, '-struct', 'data');
     try
         sendmail('tomriis11@gmail.com','Code Finished', ...
-        ['Done with ps512RoAYoEven.mat' 10 'Fix odd horizontal vertical']);
+        ['Done with ps512RoAYoffEven.mat' 10 'Fix odd horizontal vertical on NZ =5']);
     catch
         disp('Email Failed');
     end
