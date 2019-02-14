@@ -144,8 +144,8 @@ function sliderA_Callback(hObject, eventdata, handles)
         set(handles.text8,'String',caption);
         handles.current_params.Ro = handles.current_params.A;
     end
-    sliderB_Callback(hObject, eventdata, handles)
-    disp(num2str(handles.current_params.NR))
+    handles = semiminor_callback(handles);
+    disp(num2str(handles.current_params.NR));
     guidata(hObject, handles);
 
 
@@ -155,18 +155,7 @@ function sliderA_CreateFcn(hObject, ~, ~)
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
 function sliderNZ_Callback(hObject, eventdata, handles)
-    value = handles.parameters.NZ(int16(get(handles.sliderNZ,'Value')));
-    caption = sprintf('NZ: %d', value);
-    set(handles.text7, 'String', caption);
-    handles.current_params.NZ = value;
-    if handles.NX_NY_coupled
-        handles.current_params.NR = find_NR_from_geo(handles.total_elements, handles.current_params.NZ,...,
-            handles.current_params.A, handles.current_params.B, handles.current_params.H);
-        
-        caption = sprintf('NR: %d', handles.current_params.NR);
-        set(handles.text2, 'String', caption);
-    end
-    handles = find_params_in_data(handles);
+    handles = NZ_Callback(handles);
     guidata(hObject, handles);
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
@@ -379,15 +368,11 @@ function radiobutton12_Callback(hObject, eventdata, handles)
 
 % --- Executes on slider movement.
 function sliderB_Callback(hObject, eventdata, handles)
-    Semi_Minor_Axis_Ratio = [135/170 1];
-    slider_val = int16(get(handles.sliderB,'Value'));
-    value = Semi_Minor_Axis_Ratio(slider_val)*handles.current_params.A;
-    caption = sprintf('Minor Axis: %.2f (mm)', value);
-    set(handles.textMinorAxis, 'String', caption);
-    handles.current_params.B = value;
-    sliderNZ_Callback(hObject, eventdata, handles)
-    %guidata(hObject, handles);
-
+    handles = semiminor_callback(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 
 % --- Executes during object creation, after setting all properties.
