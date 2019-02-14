@@ -145,6 +145,7 @@ function sliderA_Callback(hObject, eventdata, handles)
         handles.current_params.Ro = handles.current_params.A;
     end
     sliderB_Callback(hObject, eventdata, handles)
+    disp(num2str(handles.current_params.NR))
     guidata(hObject, handles);
 
 
@@ -186,9 +187,10 @@ function sliderW_Callback(hObject, eventdata, handles)
     set(handles.sliderW,'Value', index);
     handles.current_params.W = valueX;
     handles = find_params_in_data(handles);
-    sliderB_Callback(hObject, eventdata, handles)
     guidata(hObject, handles);
-
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 function sliderW_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -196,16 +198,15 @@ function sliderW_CreateFcn(hObject, ~, ~)
     end
 
 
-function sliderH_Callback(hObject, ~, handles)
+function sliderH_Callback(hObject, eventdata, handles)
     value = handles.parameters.H(int16(get(hObject,'Value')));
     caption = sprintf('Dy: %.2f (mm)', value);
     set(handles.text5, 'String', caption);
     handles.current_params.H = value;
     handles = find_params_in_data(handles);
+    sliderB_Callback(hObject, eventdata, handles)
     guidata(hObject, handles);
-    if handles.plot_flag
-        plot_xyplane_and_ypeaks(handles);
-    end
+
 
 
 function sliderH_CreateFcn(hObject, ~, ~)
@@ -235,7 +236,7 @@ end
 function sliderFY_Callback(hObject, ~, handles)
     value = handles.parameters.FY(int16(get(hObject,'Value')));
 
-    caption = sprintf('FY: %.2f', value);
+    caption = sprintf('FY: %.2f (mm)', value);
     set(handles.text1, 'String', caption);
     handles.current_params.FY = value;
     handles = find_params_in_data(handles);
@@ -384,9 +385,8 @@ function sliderB_Callback(hObject, eventdata, handles)
     caption = sprintf('Minor Axis: %.2f (mm)', value);
     set(handles.textMinorAxis, 'String', caption);
     handles.current_params.B = value;
-    handles = find_params_in_data(handles);
     sliderNZ_Callback(hObject, eventdata, handles)
-    guidata(hObject, handles);
+    %guidata(hObject, handles);
 
 
 
