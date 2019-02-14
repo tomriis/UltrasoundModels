@@ -145,15 +145,18 @@ function sliderA_Callback(hObject, eventdata, handles)
         handles.current_params.Ro = handles.current_params.A;
     end
     handles = semiminor_callback(handles);
-    disp(num2str(handles.current_params.NR));
     guidata(hObject, handles);
-
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
 
 
 function sliderA_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
+
+    
 function sliderNZ_Callback(hObject, eventdata, handles)
     handles = NZ_Callback(handles);
     guidata(hObject, handles);
@@ -161,8 +164,7 @@ function sliderNZ_Callback(hObject, eventdata, handles)
         plot_xyplane_and_ypeaks(handles);
     end
 
-
-% --- Executes during object creation, after setting all properties.
+    
 function sliderNZ_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
