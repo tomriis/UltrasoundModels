@@ -160,7 +160,7 @@ function sliderNZ_Callback(hObject, eventdata, handles)
     handles.current_params.NZ = value;
     if handles.NX_NY_coupled
         handles.current_params.NR = find_NR_from_geo(handles.total_elements, handles.current_params.NZ,...,
-            handles.current_params.A, handles.current_params.B, handles.current_params.W);
+            handles.current_params.A, handles.current_params.B, handles.current_params.H);
         
         caption = sprintf('NR: %d', handles.current_params.NR);
         set(handles.text2, 'String', caption);
