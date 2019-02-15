@@ -41,7 +41,7 @@ handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'NR','A','W','H','FX','FY','ElGeo','NZ','Slice','FZ','B'};
+field_slider_map={'T','A','W','H','FX','FY','ElGeo','NZ','Slice','FZ','B'};
 for i =1:length(field_slider_map)
         sl = handles.(strcat('slider',field_slider_map{i}));
         if field_slider_map{i} == 'B'
@@ -61,9 +61,8 @@ for i =1:length(field_slider_map)
         set(sl, 'Visible','off');
     end
 end
-handles.total_elements =512;
 if handles.NX_NY_coupled
-    set(handles.sliderNR, 'Visible','off');
+    set(handles.sliderT, 'Visible','off');
 end
 % Initialize Pop Up Menu
 handles.txfield_norm='dB';
@@ -72,7 +71,7 @@ set(handles.popupmenu1,'String',{'dB','Normalize'});
 handles.plot_flag = false;
 numSliders = 10;
 waitbar(1/2+0.5*1/numSliders,f,'Initializing GUI');
-sliderNR_Callback(handles.sliderNR, eventdata,handles);
+sliderT_Callback(handles.sliderT, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*2/numSliders,f);
 sliderA_Callback(handles.sliderA, eventdata,handles);
@@ -114,11 +113,13 @@ function varargout = field_dataviz_OutputFcn(hObject, eventdata, handles)
 %varargout{1} = handles.output;
 
 
-function sliderNR_Callback(hObject, ~, handles)
-    value = handles.parameters.NR(int16(get(hObject,'Value')));
-    caption = sprintf('NR: %d', value);
-    set(handles.text2, 'String', caption);
-    handles.current_params.NR = value;
+function sliderT_Callback(hObject, ~, handles)
+
+    value = handles.parameters.T(int16(get(hObject,'Value')));
+    caption = sprintf('N Total ~ %d', value);
+    set(handles.textNTotal, 'String', caption);
+    handles.current_params.T = value;
+    handles = NZ_Callback(handles);
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -126,7 +127,7 @@ function sliderNR_Callback(hObject, ~, handles)
     end
 
 
-function sliderNR_CreateFcn(hObject, ~, ~)
+function sliderT_CreateFcn(hObject, ~, ~)
     if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
         set(hObject,'BackgroundColor',[.9 .9 .9]);
     end
