@@ -24,12 +24,18 @@ catch
         D = zeros(1,2);
     end
 end
+try 
+    T = s.T;
+catch
+    T = 256;
+end
 
 %returns txt field from params
     runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,
         'NZ',num2str(n_z),'A',num2str(A),'B',num2str(B),'W',num2str(D(2)),...,
 'H',num2str(D(1)),'Ro',num2str(R_focus),'Slice_',slice,'F',...,
-strcat(num2str(focus(1)),'_',num2str(focus(2)),'_',num2str(focus(3))));
+strcat(num2str(focus(1)),'_',num2str(focus(2)),'_',num2str(focus(3))),...,
+'T',num2str(T));
 
     fieldname = split(runstring,'.');
     fieldname = strcat(fieldname{:});
