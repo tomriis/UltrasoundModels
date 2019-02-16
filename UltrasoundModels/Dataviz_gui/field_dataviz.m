@@ -61,7 +61,7 @@ for i =1:length(field_slider_map)
         set(sl, 'Visible','off');
     end
 end
-handles.total_elements =512;
+handles.total_elements =256;
 if handles.NX_NY_coupled
     set(handles.sliderNR, 'Visible','off');
 end
@@ -155,7 +155,7 @@ function sliderA_CreateFcn(hObject, ~, ~)
     end
 function sliderNZ_Callback(hObject, eventdata, handles)
     value = handles.parameters.NZ(int16(get(handles.sliderNZ,'Value')));
-    caption = sprintf('NZ: %d', value);
+    caption = sprintf('NY: %d', value);
     set(handles.text7, 'String', caption);
     handles.current_params.NZ = value;
     if handles.NX_NY_coupled

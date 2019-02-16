@@ -8,11 +8,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     angle_z = index_z* angle_inc_z;
     
 
-    %angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
-    AngExtent_x = 2*pi;%len_x / ROC_x;
-    angle_inc_x = (AngExtent_x)/n_elements_r; 					
-    index_x = -n_elements_r/2 + 0.5 : n_elements_r/2 - 0.5;
-    angle_r = index_x*angle_inc_x;
+    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
     
     angle_hor = zeros(1,length(angle_r));
    
@@ -39,7 +35,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
         angle_hor(i) = find_angle_at_point(angle_r(i),[a*cos(angle_r(i)),b*sin(angle_r(i))],a,b);
         roty = makeyrotform(angle_hor(i));
         % New  CODE 
-        rot = makeyrotform(angle_r(i));
+        rot = make_ellipse_y_rot_mat(angle_r(i),a,b);
         rect([4,7,10,13,19],:)=rect([4,7,10,13,19],:)+a;
         positioned_rect = apply_affine_to_rect(rot, rect);
         rect([4,7,10,13,19],:)=rect([4,7,10,13,19],:)-a;
@@ -63,10 +59,10 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     
     % Subtract maximal z from all so that the top-most element's center is
     % positioned at z = 0:
-    mv = max(rectangles(end,:));
-    rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:)-mv;
+%     mv = max(rectangles(end,:));
+%     rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:)-mv;
     % Place the static focus at the center of rotation
-    focus = [0,0,-a];
+    focus = [0,0,0];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
     rectangles(1,:) = 1:(n_elements_r*n_elements_z);
