@@ -95,9 +95,9 @@ waitbar(1/2+0.5*8/numSliders,f);
 sliderNZ_Callback(handles.sliderNZ, eventdata,handles);
 handles=guidata(hObject); 
 waitbar(1/2+0.5*9/numSliders,f);
-sliderSlice_Callback(handles.sliderSlice, eventdata,handles);
-handles=guidata(hObject);
 sliderFZ_Callback(handles.sliderFZ, eventdata,handles);
+handles=guidata(hObject);
+sliderSlice_Callback(handles.sliderSlice, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*10/numSliders,f);
 handles.plot_flag = true;
@@ -343,7 +343,7 @@ function radiobutton4_Callback(hObject, eventdata, handles)
     end
 
 function sliderFZ_Callback(hObject, ~, handles)
-    value = handles.parameters.FZ(int16(get(hObject,'Value')));
+    value = handles.parameters.FZ(int16(get(handles.sliderFZ,'Value')));
     caption = sprintf('FZ: %.2f (mm)', value);
     set(handles.text13, 'String', caption);
     handles.current_params.FZ = value;
