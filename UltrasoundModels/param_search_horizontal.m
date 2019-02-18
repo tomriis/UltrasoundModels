@@ -1,5 +1,5 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_256RoAll.mat';
+    outfile = './ps_512_RoAll.mat';
 
     % Transducer Geometry
     kerf = 0.4;
@@ -9,7 +9,7 @@ function [data,data_error]=param_search_horizontal()
     %Array Geometry
     N_Elements_Z = [4 5 6];
     %Nx * Nz = [256, 512];
-    total_elements = 256;
+    total_elements = 512;
     Semi_Major_Axis = [180/2, 240/2, 300/2];
     % 1. circular 2. elliptical 
     Semi_Minor_Axis_Ratio = [1, 135/170];
@@ -68,7 +68,7 @@ function [data,data_error]=param_search_horizontal()
         ElGeo = 1;
     end
     s.ElGeo = ElGeo; s.NR = n_r; s.NZ =n_z; s.A = A; s.B = B; s.D = D; s.F=[x,y,z];
-    s.Slice = slice; s.Ro = R_focus; 
+    s.Slice = slice; s.Ro = R_focus; s.T = 512;
     
     fname = fieldname_from_params(s);
     try
@@ -97,8 +97,8 @@ function [data,data_error]=param_search_horizontal()
     end
     save(outfile, '-struct', 'data');
     try
-        sendmail('tomriis11@gmail.com','Code Finished', ...
-        ['Done with ps256RoAll.mat' 10 'Fix GUI and set up K Wave']);
+        sendmail('tomriis11@gmail.com','Code Finished Ese', ...
+        ['Done with ps_512_RoAll.mat' 10 'Fix flip dimension and set up K Wave']);
     catch
         disp('Email Failed');
     end

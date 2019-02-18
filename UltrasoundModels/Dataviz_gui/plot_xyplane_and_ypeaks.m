@@ -73,7 +73,7 @@ function [] = plot_xyplane_and_ypeaks(handles)
             if ~handles.radiobutton12.Value
                 switch handles.current_params.Slice
                     case 'xy'
-                        plot(axes1, [XL, XH], [-focus(2) focus(2)], 'w--', 'linewidth', 2);
+                        plot(axes1, [XL, XH], [focus(2)*1000 focus(2)*1000], 'w--', 'linewidth', 2);
                     case 'xz'
                         plot(axes1, [focus(1)*1000, focus(1)*1000], [min(z) max(z)],'w--','linewidth',2);
                     case 'yz'
@@ -103,33 +103,38 @@ function [] = plot_xyplane_and_ypeaks(handles)
         
         switch handles.current_params.Slice
             case 'xz'
-                [~,ind] = min(abs(x-handles.current_params.FX));
                 if ~handles.radiobutton12.Value
+                    [~,ind] = min(abs(x-handles.current_params.FX));
                     profile = txfielddb(:, ind);
                     plot(axes2, z, profile);
                     x=z;
                 else
+                    [~,ind] = min(abs(z-handles.current_params.FZ));
                     ax2xlabel = 'x (mm)';
-                    profile = txfielddb(round(length(txfielddb)/2),:);
+                    profile = txfielddb(ind,:);
                     plot(axes2, x, profile);
                 end
             case 'yz'
                 if ~handles.radiobutton12.Value
-                    profile = txfielddb(1:length(z), round(length(txfielddb) / 2));
+                    [~,ind] = min(abs(y-handles.current_params.FY));
+                    profile = txfielddb(1:length(z), ind);
                     plot(axes2, z, profile);
                     x=z;
                 else
+                    [~,ind] = min(abs(z-handles.current_params.FZ));
                     ax2xlabel = 'y (mm)';
-                    profile = txfielddb(round(length(txfielddb)/2),1:length(x));
+                    profile = txfielddb(ind,1:length(x));
                     plot(axes2, x, profile);
                 end   
-            case 'xy'
+            case 'xy'   
                 if ~handles.radiobutton12.Value
-                    profile = txfielddb(round(length(txfielddb) / 2), 1:length(x));
+                    [~,ind] = min(abs(y-handles.current_params.FY));
+                    profile = txfielddb(ind, 1:length(x));
                     plot(axes2, x, profile);
                 else
+                    [~,ind] = min(abs(x-handles.current_params.FX));
                     ax2xlabel = 'y (mm)';
-                    profile = txfielddb(1:length(y),round(length(txfielddb)/2));
+                    profile = txfielddb(1:length(y),ind);
                     plot(axes2, x, profile);
                     x=y;
                 end
