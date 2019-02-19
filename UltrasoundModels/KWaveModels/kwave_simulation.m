@@ -24,7 +24,7 @@ sensor_radius = 2.5e-3;                 % [m]
 num_sensor_points = 50;
 sensor.mask = makeCartCircle(sensor_radius, num_sensor_points);
 % run the simulation
-sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor);
+sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor,'DataCast', 'single');
 txfield = sensor_data;
 xdc_data = source;
 end
