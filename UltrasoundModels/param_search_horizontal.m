@@ -1,5 +1,5 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_512_RoAll.mat';
+    outfile = './ps_256_RoA.mat';
 
     % Transducer Geometry
     kerf = 0.4;
@@ -9,7 +9,7 @@ function [data,data_error]=param_search_horizontal()
     %Array Geometry
     N_Elements_Z = [4 5 6];
     %Nx * Nz = [256, 512];
-    total_elements = 512;
+    total_elements = 256;
     Semi_Major_Axis = [180/2, 240/2, 300/2];
     % 1. circular 2. elliptical 
     Semi_Minor_Axis_Ratio = [1, 135/170];
@@ -98,7 +98,7 @@ function [data,data_error]=param_search_horizontal()
     save(outfile, '-struct', 'data');
     try
         sendmail('tomriis11@gmail.com','Code Finished Ese', ...
-        ['Done with ps_512_RoAll.mat' 10 'Fix flip dimension and set up K Wave']);
+        ['Done with ps_256_RoAll.mat' 10 'Set up K Wave debug odd elements']);
     catch
         disp('Email Failed');
     end
