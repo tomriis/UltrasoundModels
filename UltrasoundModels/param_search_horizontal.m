@@ -16,7 +16,7 @@ function [data,data_error]=param_search_horizontal()
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = 0 : 20 : 40;
-    Y = 0;
+    Y = 30;
     Z = 0 : 20 : 40;
     
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
@@ -67,7 +67,7 @@ function [data,data_error]=param_search_horizontal()
         ElGeo = 1;
     end
     s.ElGeo = ElGeo; s.NR = n_r; s.NZ =n_z; s.A = A; s.B = B; s.D = D; s.F=[x,y,z];
-    s.Slice = slice; s.Ro = R_focus; s.T = 512;
+    s.Slice = slice; s.Ro = R_focus; s.T = total_elements;
     
     fname = fieldname_from_params(s);
     try
