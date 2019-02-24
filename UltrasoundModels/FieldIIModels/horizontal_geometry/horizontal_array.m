@@ -43,15 +43,17 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
         
         %center = [b*sin(angle_r(i)); 0; a*cos(angle_r(i))];%center_rect([17,18,19],1);
         for j = 1:size(rect,2)
-            center = centers(:,j);%mean(centers(:,:),2);
+            center = mean(centers,2);
+            points = zeros(3,4);
             xz_center = [center(1); 0; center(3)];
             for ii = 1:4
                 xyz_i = [3*ii-1, 3*ii, 3*ii+1];
                 invec = [rect(xyz_i,j);0];
                 outvec = roty * invec;
                 rect(xyz_i,j) = xz_center+outvec(1:3);
-                rect([17,18,19],j) = center;
+                points(:,ii)=rect(xyz_i,j);
             end
+            rect([17,18,19],j) = mean(points,2);
         end
     % Append to transducer geometry
         rectangles = horzcat(rectangles, rect);
