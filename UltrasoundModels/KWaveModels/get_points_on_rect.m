@@ -14,7 +14,7 @@ function points = get_points_on_rect(corners,kgrid)
     for i = 1:length(t)
         for ii = 1:length(r)
             points(:,count) = (v3-v1)*r(ii)+(v2-v1)*t(i)+v1;         
-            count = count +1;
+            count = count + 1;
         end
     end            
 end
