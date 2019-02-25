@@ -1,6 +1,6 @@
 function [handles] = NZ_Callback(handles)
     value = handles.parameters.NZ(int16(get(handles.sliderNZ,'Value')));
-    caption = sprintf('NZ: %d', value);
+    caption = sprintf('NY: %d', value);
     set(handles.text7, 'String', caption);
     handles.current_params.NZ = value;
     if handles.NX_NY_coupled

@@ -116,7 +116,7 @@ function varargout = field_dataviz_OutputFcn(hObject, eventdata, handles)
 function sliderT_Callback(hObject, ~, handles)
 
     value = handles.parameters.T(int16(get(hObject,'Value')));
-    caption = sprintf('N Total ~ %d', value);
+    caption = sprintf('N Total ~ %.2f', value);
     set(handles.textNTotal, 'String', caption);
     handles.current_params.T = value;
     handles = NZ_Callback(handles);
@@ -174,7 +174,7 @@ end
 function sliderW_Callback(hObject, eventdata, handles)
     index = int16(get(handles.sliderW,'Value'));
     valueX = handles.parameters.W(index);
-    captionX = sprintf('Dx: %.2f (mm)', valueX);
+    captionX = sprintf('Width Y: %.2f (mm)', valueX);
     set(handles.text4, 'String', captionX);
     set(handles.sliderW,'Value', index);
     handles.current_params.W = valueX;
@@ -192,7 +192,7 @@ function sliderW_CreateFcn(hObject, ~, ~)
 
 function sliderH_Callback(hObject, eventdata, handles)
     value = handles.parameters.H(int16(get(hObject,'Value')));
-    caption = sprintf('Dy: %.2f (mm)', value);
+    caption = sprintf('Width R: %.2f (mm)', value);
     set(handles.text5, 'String', caption);
     handles.current_params.H = value;
     handles = find_params_in_data(handles);
