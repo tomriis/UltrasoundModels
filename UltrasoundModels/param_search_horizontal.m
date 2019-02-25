@@ -1,5 +1,5 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_256_RoY30.mat';
+    outfile = './ps_256_RoY30_.mat';
     % Transducer Geometry
     kerf = 0.4;
     r_width = [4, 6, 8];
@@ -97,7 +97,7 @@ function [data,data_error]=param_search_horizontal()
     save(outfile, '-struct', 'data');
     try
         sendmail('tomriis11@gmail.com','Code Finished Ese', ...
-        ['Done with ps_256_RoY30.mat' 10 'Set up K Wave debug odd elements']);
+        ['Done with ps_256_RoY30_.mat' 10 'Set up K Wave']);
     catch
         disp('Email Failed');
     end
