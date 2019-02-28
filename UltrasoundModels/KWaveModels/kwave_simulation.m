@@ -2,9 +2,11 @@ function [txfield,xdc_data] = kwave_simulation(varargin)
 % create the computational grid
 Nx = 256;
 Ny = 256;
+Nz = 256;
 dx = 1e-3;
 dy = 1e-3;
-kgrid = makeGrid(Nx, dx, Ny, dy);
+dz = 1e-3;
+kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
 % number of grid points in the x (row) direction
 % number of grid points in the y (column) direction
 % grid point spacing in the x direction [m]
