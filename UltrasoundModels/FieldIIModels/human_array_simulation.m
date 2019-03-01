@@ -125,12 +125,12 @@ if p.Results.visualize_output
             ylabel('y (mm)');
             ch = colorbar; ylabel(ch, 'dB'); 
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-            figure;
-            XL = min(x)*1e3;
-            XH = max(x)*1e3;
-            plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
-            xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
-            xlabel('x (mm)');
+%             figure;
+%             XL = min(x)*1e3;
+%             XH = max(x)*1e3;
+%             plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
+%             xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
+%             xlabel('x (mm)');
         case 'xz'
             imagesc(x*1e3, z*1e3, txfielddb); colorbar;
             xlabel('x (mm)');
