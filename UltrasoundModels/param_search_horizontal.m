@@ -1,5 +1,5 @@
 function [data,data_error]=param_search_horizontal()
-    outfile = './ps_256_RoY30_.mat';
+    outfile = './ps_256_RoY30.mat';
     % Transducer Geometry
     kerf = 0.4;
     r_width = [4, 6, 8];
@@ -16,7 +16,7 @@ function [data,data_error]=param_search_horizontal()
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = 0 : 20 : 40;
-    Y = 30;
+    Y = [0,20,30];
     Z = 0 : 20 : 40;
     
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
@@ -97,7 +97,7 @@ function [data,data_error]=param_search_horizontal()
     save(outfile, '-struct', 'data');
     try
         sendmail('tomriis11@gmail.com','Code Finished Ese', ...
-        ['Done with ps_256_RoY30_.mat' 10 'Set up K Wave']);
+        ['Done with ps_256_RoY30_.mat' 10 'Set up K Wave 2D']);
     catch
         disp('Email Failed');
     end

@@ -9,7 +9,11 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     
 
     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
-    
+   
+%     AngExtent_z = 2*pi;
+%     angle_inc_z = AngExtent_z/n_elements_r;
+%     index_z = -n_elements_r/2+0.5: n_elements_r/2-0.5;
+%     angle_r = index_z* angle_inc_z+0.001;
     angle_hor = zeros(1,length(angle_r));
    
     rectangles=[];
