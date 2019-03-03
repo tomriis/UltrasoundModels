@@ -1,4 +1,4 @@
-function [txfield, xdc_data,angle_r]=horizontal_array_simulation(varargin)
+function [txfield, xdc_data]=horizontal_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_r', @(x) isnumeric(x));
