@@ -1,9 +1,8 @@
-function [mask,points,ijk] = kwave_focused_array(kgrid, n_r, n_y,kerf, D, R_focus,a,b,type)%n_elements_x, n_elements_y, ROC_x,ROC_y, D, kerf)
+function [mask] = kwave_focused_array(kgrid, n_r, n_y,kerf, D, R_focus,a,b,type)
     % define a square source element
     
     field_init(-1)
     if strcmp(type,'horizontal')
-        disp('ran her');
         [Th] = horizontal_array(n_r, n_y, kerf, D, R_focus,a,b);
     else
         [Th] = concave_focused_array(n_r, n_y, a, kerf, D, R_focus);
@@ -22,6 +21,8 @@ function [mask,points,ijk] = kwave_focused_array(kgrid, n_r, n_y,kerf, D, R_focu
             ijk(:,j) = coordinates_to_index(kgrid, points(:,j));
         end
         ijk = unique(ijk','rows')';
-        mask(ijk(1,:),ijk(2,:),ijk(3,:)) = 1;
+        for l = 1:size(ijk,2)
+            mask(ijk(1,l),ijk(2,l),ijk(3,l)) = 1;
+        end
     end
 end

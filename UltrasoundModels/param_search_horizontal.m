@@ -73,7 +73,7 @@ function [data,data_error]=param_search_horizontal()
 %     
 %         [txfield, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
 %             'R_focus',R_focus,'Slice',slice,'vis_output',false);
-focus = [0,0,-A];
+
 [txfield, xdc_data] = human_array_simulation(n_r, n_z,A,...,
 D,focus,'R_focus',R_focus,'Slice','xy', 'visualize_output',false);
     
