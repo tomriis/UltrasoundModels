@@ -10,7 +10,7 @@ f_x = 0;
 f_y = 0;
 f_z = 0;
 
-[~,source,mask] = kwave_simulation(n_r, n_y,A,B,D,[f_x,f_y,f_z],'R_focus',R_focus,...,
-    'Slice',slice,'Dim',2);
+[~,source,mask,ijk] = kwave_simulation(n_r, n_y,A,B,D,[f_x,f_y,f_z],'R_focus',R_focus,...,
+    'Slice',slice,'Dim',2,'type',type);
 
 figure; imagesc(source.p_mask);

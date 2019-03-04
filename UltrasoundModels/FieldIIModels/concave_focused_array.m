@@ -45,10 +45,10 @@ function [Th] = concave_focused_array(n_elements_x, n_elements_y, ROC_x, kerf, D
     
     % Subtract maximal z from all so that the top-most element's center is
     % positioned at z = 0:
-    mv = max(rectangles(end,:));
-    rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:) - mv;
+%     mv = max(rectangles(end,:));
+%     rectangles([4,7,10,13,19],:) = rectangles([4,7,10,13,19],:) - mv;
     % Place the static focus at the center of rotation
-    focus = [0, 0, -ROC_x];
+    focus = [0,0,0];%[0, 0, -ROC_x];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
     rectangles(1,:) = 1:(n_elements_x*n_elements_y);
