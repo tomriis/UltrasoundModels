@@ -1,3 +1,4 @@
+
 function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     
     p = inputParser;
@@ -16,8 +17,6 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     
     Dimensions = p.Results.Dim;
     
-
-    
     % create the computational grid
     Nx = 2048-650;
     Ny = 64;
@@ -26,7 +25,7 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     dy = 1e-3;
     dz = 10e-4;
     kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
-    
+
     % define the medium properties
     c = 1490; % Speed of sound in water
     medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz); % [m/s]
@@ -54,12 +53,12 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     delays = compute_delays(rect, focus, c);
     [mask, ijk] = rect_to_mask(kgrid, rect);
     
+
  
     if Dimensions == 2
         source.p_mask = reshape(any(mask,2),[kgrid.Nx,kgrid.Nz]);
     end
         
-    
     % define a sensor mask 
 
     
