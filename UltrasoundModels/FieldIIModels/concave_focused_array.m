@@ -2,10 +2,6 @@ function [Th] = concave_focused_array(n_elements_x, n_elements_y, ROC_x, kerf, D
     % All dimensions in meters
     len_x = (D(1)+kerf) * n_elements_x; %arc length
     AngExtent_x =len_x / ROC_x;
-<<<<<<< HEAD
-
-=======
->>>>>>> f51a5980c9a941c06ac3aa8abb5728f0db659f52
     angle_inc_x = (AngExtent_x)/n_elements_x; 					
     index_x = -n_elements_x/2 + 0.5 : n_elements_x/2 - 0.5;
     angle_x = index_x*angle_inc_x;

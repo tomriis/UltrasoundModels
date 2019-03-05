@@ -52,9 +52,7 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     % Compute delays
     delays = compute_delays(rect, focus, c);
     [mask, ijk] = rect_to_mask(kgrid, rect);
-    
-
- 
+    source.p = define_source_excitation(ijk,kgrid,delays);
     if Dimensions == 2
         source.p_mask = reshape(any(mask,2),[kgrid.Nx,kgrid.Nz]);
     end

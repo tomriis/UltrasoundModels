@@ -4,5 +4,5 @@ function delays = compute_delays(rect, focus, c)
  %accordingly based on propagation speed c:
  deltas = centers - ones(length(centers), 1) * focus;
  delays = 1/c * sqrt(sum(deltas .* deltas, 2));
-
+end
  
