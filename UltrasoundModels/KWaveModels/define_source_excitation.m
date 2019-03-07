@@ -1,5 +1,6 @@
-function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag)
+function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
     f = fieldnames(ijk);
+    time_index =1:length(kgrid.t_array);
     count = 1;
     ijk_all = [];
     for i = 1:length(f)
@@ -10,39 +11,44 @@ function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag)
     if Dimension == 2
         ijk_all(:,2) = [];
         ijk_all = unique(ijk_all, 'rows');
+        p=zeros(size(ijk_all,1),length(time_index));
         for i = 1: kgrid.Nx
-            for j = 1: kgrid.Nz
+            for k = 1: kgrid.Nz
                 members = ismember(ijk_all,[i,k],'rows');
                 if any(members==1)
                     for ii = 1:length(f)
-                        if ismember(ijk.(f{ii})',[i,k],'rows')
+                        rectn2d=ijk.(f{ii})';
+                        rectn2d(:,2)=[];
+                        members = ismember(rectn2d,[i,k],'rows');
+                        if any(members==1)
                             rect_n = ii;
                             continue;
                         end
                     end
                     phi = 2*pi*fo*delays(rect_n);
                     excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
-                    p(count, kgrid.t_array) = excitation;
+                    p(count, time_index) = excitation;
                     count = count + 1;
                 end
             end
         end
     elseif Dimension == 3
-        
+        p=zeros(size(ijk_all,1),length(time_index));
         for i = 1:kgrid.Nx
             for j = 1:kgrid.Ny
                 for k = 1:kgrid.Nz
                     members = ismember(ijk_all,[i,j,k],'rows');
                     if any(members==1)
                         for ii = 1:length(f)
-                            if ismember(ijk.(f{ii})',[i,j,k],'rows')
+                            members = ismember(ijk.(f{ii})',[i,k],'rows');
+                            if any(members==1)
                                 rect_n = ii;
                                 continue;
                             end
                         end
                         phi = 2*pi*fo*delays(rect_n);
                         excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
-                        p(count, kgrid.t_array) = excitation;
+                        p(count, time_index) = excitation;
                         count = count + 1;
                     end
                 end

@@ -30,7 +30,7 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     fo = 650e3;
     fs=20*fo;
     kgrid.dt = 1/fs;
-    
+    kgrid.t_array = 0:kgrid.dt:1e-6;
 
     % define the medium properties
     c = 1490; % Speed of sound in water
