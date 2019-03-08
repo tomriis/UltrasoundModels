@@ -11,7 +11,5 @@ f_y = 0;
 f_z = 0;
 
 
-[~,source,mask,ijk] = kwave_simulation(n_r, n_y,A,B,D,[f_x,f_y,f_z],'R_focus',R_focus,...,
+[kgrid, medium, source, sensor,ijk] = kwave_simulation(n_r, n_y,A,B,D,[f_x,f_y,f_z],'R_focus',R_focus,...,
     'Slice',slice,'Dim',2,'type',type);
-
-figure; imagesc(source.p_mask);

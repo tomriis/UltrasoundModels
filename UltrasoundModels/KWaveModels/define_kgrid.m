@@ -10,7 +10,7 @@ function kgrid = define_kgrid(fs,Dimensions)
     else
         kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
     end
-
+    
     kgrid.dt = 1/fs;
-    kgrid.t_array = 0:kgrid.dt:1e-6;
+    kgrid.t_array = 0:kgrid.dt:8.5906e-05;
 end

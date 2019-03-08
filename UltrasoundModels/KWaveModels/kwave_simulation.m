@@ -1,5 +1,5 @@
 
-function [sensor_data,source,mask, ijk] = kwave_simulation(varargin)
+function [kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
     
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
@@ -21,8 +21,9 @@ function [sensor_data,source,mask, ijk] = kwave_simulation(varargin)
     fo = 650e3;
     fs=20*fo;
     
+    c = 1490; % Speed of sound in water
     % create the computational grid
-    kgrid = define_kgrid(3, fs);
+    kgrid = define_kgrid(fs,3);
 
     % Define the source
     a = p.Results.a; %mm
@@ -34,6 +35,7 @@ function [sensor_data,source,mask, ijk] = kwave_simulation(varargin)
     R_focus = p.Results.R_focus;
     type = p.Results.type;
     focus = p.Results.focal_point/1000; %(m)
+    slice = p.Results.Slice;
     
     [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf/1000,...,
         D/1000, R_focus/1000,a/1000,b/1000,type);
@@ -48,24 +50,28 @@ function [sensor_data,source,mask, ijk] = kwave_simulation(varargin)
     delays = compute_delays(rect, focus, c);
     
     % Define source
-    [source.p_mask, ijk] = rect_to_mask(kgrid, rect);
+    [source.p_mask, ijk] = rect_to_mask(kgrid, rect, Dimensions);
     source.p = define_source_excitation(ijk,kgrid,delays, fo, magnitude,Dimensions);
       
     % Define a sensor mask 
     sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimensions);
     
-    c = 1490; % Speed of sound in water
+    disp("-------------------------------------")
+    disp("  Model Defined, Running Simulation  ")
+    disp("-------------------------------------")
+   
     % Run the simulation
     if Dimensions == 2
-        kgrid = define_kgrid(Dimensions, fs);
+        kgrid = define_kgrid(fs, Dimensions);
         % Define the medium properties   
-        medium.sound_speed = c*ones(kgrid.Nx, kgrid.Nz); % [m/s]
+        medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]
  
         sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor,'DataCast', 'single');
     else
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
-        sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
+        %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
     end
     txfield = 0;
+    sensor_data=0;
 end

@@ -1,4 +1,4 @@
-function [mask,ijk] = rect_to_mask(kgrid, rect)
+function [mask,ijk] = rect_to_mask(kgrid, rect,Dimensions)
     mask=zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
     ijk = struct();
     for k = 1:size(rect,2)
