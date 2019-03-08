@@ -1,5 +1,5 @@
 
-function [txfield,source,mask, ijk] = kwave_simulation(varargin)
+function [sensor_data,source,mask, ijk] = kwave_simulation(varargin)
     
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
@@ -16,28 +16,14 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     parse(p, varargin{:})
     
     Dimensions = p.Results.Dim;
-    
-    % create the computational grid
-    Nx = 2048-650;
-    Ny = 64;
-    Nz = 128;
-    dx = 2e-4;
-    dy = 1e-3;
-    dz = 10e-4;
-    kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
-    %makeTime
     % Define excitation
     magnitude = 0.5; %[Pa]
     fo = 650e3;
     fs=20*fo;
-    kgrid.dt = 1/fs;
-    kgrid.t_array = 0:kgrid.dt:1e-6;
-
-    % define the medium properties
-    c = 1490; % Speed of sound in water
-    medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz); % [m/s]
-    medium.density = 1040;                  % [kg/m^3]
     
+    % create the computational grid
+    kgrid = define_kgrid(3, fs);
+
     % Define the source
     a = p.Results.a; %mm
     b = p.Results.b;
@@ -51,25 +37,35 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     
     [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf/1000,...,
         D/1000, R_focus/1000,a/1000,b/1000,type);
+    
     % Adjust rect to grid
     mv = max(rect(end,:));
     shift_z = -(mv-kgrid.z_vec(end-2));
     rect = translate_rect([0,0,shift_z]', rect);
     focus(3) = focus(3)+shift_z;
+    
     % Compute delays
     delays = compute_delays(rect, focus, c);
+    
+    % Define source
     [source.p_mask, ijk] = rect_to_mask(kgrid, rect);
-    source.p = define_source_excitation(ijk,kgrid,delays, fo, magnitude,Dimension);
+    source.p = define_source_excitation(ijk,kgrid,delays, fo, magnitude,Dimensions);
+      
+    % Define a sensor mask 
+    sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimensions);
     
+    c = 1490; % Speed of sound in water
+    % Run the simulation
     if Dimensions == 2
-        source.p_mask = reshape(any(source.p_mask,2),[kgrid.Nx,kgrid.Nz]);
-    end    
-    % define a sensor mask 
-    %[X1; Y1; X2; Y2] 
-    sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimension);
-    
-    % run the simulation
-    
-    %sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor,'DataCast', 'single');
+        kgrid = define_kgrid(Dimensions, fs);
+        % Define the medium properties   
+        medium.sound_speed = c*ones(kgrid.Nx, kgrid.Nz); % [m/s]
+        medium.density = 1040;                  % [kg/m^3]
+ 
+        sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor,'DataCast', 'single');
+    else
+        medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
+        sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
+    end
     txfield = 0;
 end

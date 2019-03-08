@@ -14,4 +14,8 @@ function [mask,ijk] = rect_to_mask(kgrid, rect)
         end
         ijk.(strcat('t',num2str(k))) = t_ijk;
     end
+    
+    if Dimensions == 2
+        mask = reshape(any(mask,2),[kgrid.Nx,kgrid.Nz]);
+    end  
 end
