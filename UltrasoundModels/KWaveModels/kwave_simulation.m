@@ -27,6 +27,7 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
     %makeTime
     % Define excitation
+    magnitude = 0.5; %[Pa]
     fo = 650e3;
     fs=20*fo;
     kgrid.dt = 1/fs;
@@ -57,16 +58,15 @@ function [txfield,source,mask, ijk] = kwave_simulation(varargin)
     focus(3) = focus(3)+shift_z;
     % Compute delays
     delays = compute_delays(rect, focus, c);
-    [mask, ijk] = rect_to_mask(kgrid, rect);
-    source.p = 0;
-%     source.p = define_source_excitation(ijk,kgrid,delays);
-%     if Dimensions == 2
-%         source.p_mask = reshape(any(mask,2),[kgrid.Nx,kgrid.Nz]);
-%     end
-        
+    [source.p_mask, ijk] = rect_to_mask(kgrid, rect);
+    source.p = define_source_excitation(ijk,kgrid,delays, fo, magnitude,Dimension);
+    
+    if Dimensions == 2
+        source.p_mask = reshape(any(source.p_mask,2),[kgrid.Nx,kgrid.Nz]);
+    end    
     % define a sensor mask 
-   %[X1; Y1; X2; Y2] 
-   %sensor.mask = [
+    %[X1; Y1; X2; Y2] 
+    sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimension);
     
     % run the simulation
     
