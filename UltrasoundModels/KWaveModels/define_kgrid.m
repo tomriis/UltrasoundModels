@@ -1,4 +1,4 @@
-function kgrid = define_kgrid(fs,Dimensions)
+function kgrid = define_kgrid(fs,Dimensions, delays)
     Nx = 2048-650;
     Ny = 64;
     Nz = 128;
