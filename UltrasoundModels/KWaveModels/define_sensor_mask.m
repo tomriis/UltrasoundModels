@@ -5,7 +5,7 @@ function [mask] = define_sensor_mask(kgrid, focus, plane, Dimension)
     else 
         mask = zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
     end
-    
+
     switch plane
         case 'xy'
             x = (-limit : limit)*1e-3;

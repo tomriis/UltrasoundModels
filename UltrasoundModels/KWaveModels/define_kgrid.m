@@ -1,5 +1,5 @@
 function kgrid = define_kgrid(rect,focus, kerf, fs,Dimensions, c, type)
-    R = [max(abs(rect(17,:))), max(abs(rect(18,:))), max(abs(rect(19,:)))];
+    R = find_rect_max_xyz(rect);
     for i = 1:3
         if abs(focus(i))>R(i)
             R(i) = abs(focus(i));

@@ -44,12 +44,12 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
     kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type);
     
     % Define source
-    [source.p_mask, ijk] = rect_to_mask(kgrid, rect, Dimensions, type);
+    [source.p_mask, ijk, focus] = rect_to_mask(kgrid, rect, Dimensions, type);
     
     source.p = define_source_excitation(ijk, kgrid, delays, fo, magnitude,Dimensions);
       
     % Define a sensor mask 
-    sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimensions);
+    sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimensions, rect);
     
     disp("-------------------------------------")
     disp("  Model Defined, Running Simulation  ")
@@ -57,7 +57,7 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
    
     % Run the simulation
     if Dimensions == 2
-        kgrid = define_kgrid(rect,focus, kerf, fs,2, c);
+        kgrid = define_kgrid(rect,focus, kerf, fs,2, c,type);
         % Define the medium properties   
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]

@@ -1,4 +1,4 @@
-function [mask,ijk] = rect_to_mask(kgrid, rect,Dimensions, type)
+function [mask,ijk, focus] = rect_to_mask(kgrid, rect,Dimensions, type, focus)
     mask=zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
     
     if ~strcmp(type,'horizontal')
@@ -6,6 +6,7 @@ function [mask,ijk] = rect_to_mask(kgrid, rect,Dimensions, type)
         mv = max(rect(end,:));
         shift_z = -(mv-kgrid.z_vec(end-2));
         rect = translate_rect([0,0,shift_z]', rect);
+        focus(3) = focus(3)+shiftz;
     end
     
     ijk = struct();

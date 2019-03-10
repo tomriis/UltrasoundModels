@@ -22,8 +22,12 @@ function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
                         members = ismember(rectn2d,[i,k],'rows');
                         if any(members==1)
                             rect_n = ii;
-                            phi = 2*pi*fo*delays(rect_n);
-                            excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+                            if rect_n == 25
+                                phi = 2*pi*fo*delays(rect_n);
+                                excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+                            else
+                                excitation = 0;
+                            end
                             p(count, time_index) = excitation;
                             count = count + 1;
                             continue;

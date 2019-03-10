@@ -1,9 +1,9 @@
-n_r = 51;
-n_y = 1;
+n_elements_r = 51;
+n_elements_y = 1;
 a = 120;
 b = 120;
 D = [6,8];
-R_focus = A;
+R_focus = a;
 slice = 'xy';
 type = 'concave';
 f_x = 0;
