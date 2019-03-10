@@ -1,7 +1,7 @@
 n_r = 51;
 n_y = 1;
-A = 120;
-B = 120;
+a = 120;
+b = 120;
 D = [6,8];
 R_focus = A;
 slice = 'xy';
@@ -11,5 +11,5 @@ f_y = 0;
 f_z = 0;
 
 
-[kgrid, medium, source, sensor,ijk] = kwave_simulation(n_r, n_y,A,B,D,[f_x,f_y,f_z],'R_focus',R_focus,...,
+[sensor_data, kgrid, medium, source, sensor,ijk] = kwave_simulation(n_r, n_y,A,B,D,[f_x,f_y,f_z],'R_focus',R_focus,...,
     'Slice',slice,'Dim',2,'type',type);

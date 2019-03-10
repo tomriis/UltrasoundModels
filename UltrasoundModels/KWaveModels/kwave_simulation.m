@@ -1,6 +1,6 @@
 
-function [kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
-    
+function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
+   %[sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin) 
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
     addRequired(p,'n_elements_y', @(x) isnumeric(x));
@@ -20,38 +20,33 @@ function [kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
     magnitude = 0.5; %[Pa]
     fo = 650e3;
     fs=20*fo;
-    
-    c = 1490; % Speed of sound in water
-    % create the computational grid
-    kgrid = define_kgrid(fs,3);
 
     % Define the source
-    a = p.Results.a; %mm
-    b = p.Results.b;
+    a = p.Results.a/1000; %m
+    b = p.Results.b/1000;
     n_elements_r = p.Results.n_elements_r;  %number of physical elements in X.
     n_elements_y = p.Results.n_elements_y;  %number of physical elements in Y.
-    kerf = p.Results.kerf;
-    D = p.Results.D; %Diameter, width, and length of element (mm)
-    R_focus = p.Results.R_focus;
+    kerf = p.Results.kerf/1000;
+    D = p.Results.D/1000; %Diameter, width, and length of element (m)
+    R_focus = p.Results.R_focus/1000;
     type = p.Results.type;
     focus = p.Results.focal_point/1000; %(m)
     slice = p.Results.Slice;
     
-    [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf/1000,...,
-        D/1000, R_focus/1000,a/1000,b/1000,type);
+    [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf,...,
+        D, R_focus, a, b,type);
     
-    % Adjust rect to grid
-    mv = max(rect(end,:));
-    shift_z = -(mv-kgrid.z_vec(end-2));
-    rect = translate_rect([0,0,shift_z]', rect);
-    focus(3) = focus(3)+shift_z;
-    
+    c = 1540; % Speed of sound in water
     % Compute delays
     delays = compute_delays(rect, focus, c);
     
+    % create the computational grid
+    kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type);
+    
     % Define source
-    [source.p_mask, ijk] = rect_to_mask(kgrid, rect, Dimensions);
-    source.p = define_source_excitation(ijk,kgrid,delays, fo, magnitude,Dimensions);
+    [source.p_mask, ijk] = rect_to_mask(kgrid, rect, Dimensions, type);
+    
+    source.p = define_source_excitation(ijk, kgrid, delays, fo, magnitude,Dimensions);
       
     % Define a sensor mask 
     sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimensions);
@@ -62,7 +57,7 @@ function [kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
    
     % Run the simulation
     if Dimensions == 2
-        kgrid = define_kgrid(fs, Dimensions);
+        kgrid = define_kgrid(rect,focus, kerf, fs,2, c);
         % Define the medium properties   
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]
@@ -73,5 +68,5 @@ function [kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
         %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
     end
     txfield = 0;
-    sensor_data=0;
 end
+

@@ -1,6 +1,15 @@
-function [mask,ijk] = rect_to_mask(kgrid, rect,Dimensions)
+function [mask,ijk] = rect_to_mask(kgrid, rect,Dimensions, type)
     mask=zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
+    
+    if ~strcmp(type,'horizontal')
+        %    Adjust rect to grid
+        mv = max(rect(end,:));
+        shift_z = -(mv-kgrid.z_vec(end-2));
+        rect = translate_rect([0,0,shift_z]', rect);
+    end
+    
     ijk = struct();
+    
     for k = 1:size(rect,2)
         corners = get_corners_from_rect(rect(:,k));
         points = get_points_on_rect(corners,kgrid);

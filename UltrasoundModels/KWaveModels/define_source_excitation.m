@@ -35,9 +35,9 @@ function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
         end
     elseif Dimension == 3
         p=zeros(size(ijk_all,1),length(time_index));
-        for i = 1:kgrid.Nx
+        for k = 1:kgrid.Nz
             for j = 1:kgrid.Ny
-                for k = 1:kgrid.Nz
+                for i = 1:kgrid.Nx
                     members = ismember(ijk_all,[i,j,k],'rows');
                     if any(members==1)
                         for ii = 1:length(f)
