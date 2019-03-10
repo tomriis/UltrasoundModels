@@ -44,12 +44,14 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
     kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type);
     
     % Define source
-    [source.p_mask, ijk, focus] = rect_to_mask(kgrid, rect, Dimensions, type);
-    
+    [source.p_mask, ijk, sensor_focus] = rect_to_mask(kgrid, rect, Dimensions, type, focus);
+    disp("Running define_source_excitation");
+    tic
     source.p = define_source_excitation(ijk, kgrid, delays, fo, magnitude,Dimensions);
-      
+    elapsedTime = toc;
+    disp(strcat("define_source_excitation took ", num2str(elapsedTime)," seconds"));
     % Define a sensor mask 
-    sensor.mask = define_sensor_mask(kgrid,focus,slice,Dimensions, rect);
+    sensor.mask = define_sensor_mask(kgrid,sensor_focus,slice,Dimensions);
     
     disp("-------------------------------------")
     disp("  Model Defined, Running Simulation  ")
@@ -65,8 +67,7 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
         sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor,'DataCast', 'single');
     else
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
-        %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
+        sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
     end
-    txfield = 0;
 end
 
