@@ -43,6 +43,7 @@ function [mask,ijk, focus] = rect_to_mask(kgrid, rect,Dimensions, type, focus,eq
             [~,si]=sort(ijk.(d_field));
             ijk.(t_field) = t_ijk(:,si(1:min_length));
         end
+        t_ijk = ijk.(t_field);
         for kk = 1:min_length
             if Dimensions == 2
                 mask(t_ijk(1,kk),t_ijk(2,kk))=1;

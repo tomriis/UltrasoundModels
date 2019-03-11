@@ -8,14 +8,10 @@ function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
     end
     ijk_all = ijk_all';
     
-   
-    mask = zeros(kgrid.Nx,kgrid.Nz);
-    count2 = 1;
     if Dimension == 2
         p=zeros(size(ijk_all,1),length(time_index));
         for k = 1: kgrid.Nz
                 row_inds = ijk_all(:,2)== k;
-                
                 if any(row_inds==1)
                     coordinates = ijk_all(row_inds,:);
                     [~,ia] = sort(coordinates(:,1));
@@ -25,16 +21,9 @@ function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
                             rectn2d=ijk.(f{ii})';
                             members = ismember(rectn2d,coordinates(i,:),'rows');
                             if any(members==1)
-                                rect_n = ii;
-                                if rect_n == 20 || rect_n == 15
-                                   
-                                    c= coordinates(i,:);
-                                    mask(c(1),c(2)) = 1;
-                                    phi = 2*pi*fo*delays(rect_n);
-                                    excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
-                                else
-                                    excitation = 0;
-                                end
+                                rect_n = ii;                      
+                                phi = 2*pi*fo*delays(rect_n);
+                                excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
                                 p(count, time_index) = excitation;
                                 count = count + 1;
                                 continue;
