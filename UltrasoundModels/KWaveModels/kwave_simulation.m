@@ -17,7 +17,7 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
     
     Dimensions = p.Results.Dim;
     % Define excitation
-    magnitude = 0.5*5; %[Pa]
+    magnitude = 0.5; %[Pa]
     fo = 650e3;
     fs=20*fo;
 
@@ -64,10 +64,12 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]
  
-        sensor_data = kspaceFirstOrder2D(kgrid, medium, source, sensor,'DataCast', 'single');
+        sensor_data = kspaceFirstOrder2D(kgrid, medium, source,...,
+            sensor,'DataCast', 'gpuArray-single');
     else
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
         sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
+        %kspaceFirstOrder3D-CUDA
     end
 end
 

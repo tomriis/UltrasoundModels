@@ -6,7 +6,7 @@ function kgrid = define_kgrid(rect,focus, kerf, fs,Dimensions, c, type)
         end
     end
         
-    padding = 10;
+    padding = 100;
     scaling = 2;
     dx = kerf/scaling;
     dy = dx;
@@ -21,7 +21,7 @@ function kgrid = define_kgrid(rect,focus, kerf, fs,Dimensions, c, type)
         if focus(3) < 0
             R(3)= R(3)+abs(focus(3));
         end
-        Nz = ceil(R(3)/dz)+padding;
+        Nz = ceil(2*R(3)/dz)+padding;
     end
     if Dimensions == 2
         kgrid = makeGrid(Nx, dx, Nz,dz);
@@ -29,7 +29,7 @@ function kgrid = define_kgrid(rect,focus, kerf, fs,Dimensions, c, type)
         kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
     end
     
-    tmax = Nz*dz/c;
+    tmax = (Nz+padding)*dz/c;
     kgrid.dt = 1/fs;
     kgrid.t_array = 0:kgrid.dt:tmax;
 end

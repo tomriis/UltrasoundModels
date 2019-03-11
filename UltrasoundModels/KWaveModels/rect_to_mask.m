@@ -8,7 +8,7 @@ function [mask,ijk, focus] = rect_to_mask(kgrid, rect,Dimensions, type, focus,eq
     if ~strcmp(type,'horizontal')
         %    Adjust rect to grid
         mv = max(rect(end,:));
-        shift_z = -(mv-kgrid.z_vec(end-4));
+        shift_z = -(mv-kgrid.z_vec(end-30));
         rect = translate_rect([0,0,shift_z]', rect);
         focus(3) = focus(3)+shift_z;
     end
