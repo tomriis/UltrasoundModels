@@ -17,7 +17,7 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
     
     Dimensions = p.Results.Dim;
     % Define excitation
-    magnitude = 0.5; %[Pa]
+    magnitude = 0.5*5; %[Pa]
     fo = 650e3;
     fs=20*fo;
 
@@ -44,7 +44,7 @@ function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(vara
     kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type);
     
     % Define source
-    [source.p_mask, ijk, sensor_focus] = rect_to_mask(kgrid, rect, Dimensions, type, focus);
+    [source.p_mask, ijk, sensor_focus] = rect_to_mask(kgrid, rect, Dimensions, type, focus,1);
     disp("Running define_source_excitation");
     tic
     source.p = define_source_excitation(ijk, kgrid, delays, fo, magnitude,Dimensions);
