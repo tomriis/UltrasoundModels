@@ -1,4 +1,4 @@
-function [mask,ijk_skull] = skull_to_mask(filename,kgrid)
+function [mask,ijk_skull] = skull_to_mask(filename,kgrid, type)
    ijk_skull = [];
    
    info = niftiinfo(filename);
@@ -14,7 +14,7 @@ function [mask,ijk_skull] = skull_to_mask(filename,kgrid)
        % Assumes voxels are equal dimension for kgrid
        scale(i) = floor((info.PixelDimensions(i)/(1000*kgrid.dx))/2);
    end
-   threshold = 1434;
+   threshold = 1500; %1628
    V(1:88,:,:) = 0; % Left limit of skull side
    V(394:end,:,:) = 0; % Right limit of skull side
    V(:,1:64,:) = 0; % % X limit of back of skull
@@ -22,14 +22,30 @@ function [mask,ijk_skull] = skull_to_mask(filename,kgrid)
    V = V > threshold;
    
    if kgrid.dim == 2
-       V2 = reshape(V(:,256,:),[size(V,1),size(V,3)]);
+       if strcmp(type, 'coronal')
+            V2 = reshape(V(:,256,:),[size(V,2),size(V,3)]);
+            scale_x = scale(1);
+            scale_y = scale(3);
+            y_i = 3;
+       else
+           V2 = reshape(V(:,:,floor(size(V,3)/2)),[size(V,1),size(V,2)]);
+           V2(322:end,1:84) = 0;
+           V2(362:end, 1:118) = 0;
+           V2(1:168,1:91) = 0;
+           V2(1:144,1:116) = 0;
+           scale_x = scale(1);
+           scale_y = scale(2);
+           y_i = 2;
+       end
        [row,column] = find(V2 == 1);
        mask = zeros(kgrid.Nx,kgrid.Ny);
        for ii = 1:length(row)
            i = row(ii); j = column(ii);
-           [ijk,~]=coordinates_to_index(kgrid, [rvec{1}(i),rvec{3}(j),0]);
-           x = (ijk(1)-scale(1)):(ijk(1)+scale(1));
-           y = (ijk(3)-scale(3)):(ijk(3)+scale(3));
+           [ijk,~]=coordinates_to_index(kgrid, [rvec{1}(i),rvec{y_i}(j),0]);
+           x = (ijk(1)-scale_x):(ijk(1)+scale_x);
+           y = (ijk(2)-scale_y):(ijk(2)+scale_y+1);
+           x= x(and(x>=1, x <= kgrid.Nx));
+           y= y(and(y>=1, y <= kgrid.Ny));
            [A,B] = meshgrid(x,y);
             c=cat(2,A',B');
             ij = reshape(c,[],2);
