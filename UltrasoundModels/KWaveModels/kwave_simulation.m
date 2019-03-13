@@ -1,5 +1,5 @@
 
-function [sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin)
+function [sensor_data,kgrid, medium, source, sensor] = kwave_simulation(varargin)
    %[sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin) 
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
