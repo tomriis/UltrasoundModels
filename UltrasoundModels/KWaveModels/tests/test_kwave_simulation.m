@@ -7,6 +7,7 @@ R_focus = a;
 slice = 'xz';
 type = 'concave';
 f_x = 20;
+
 f_y = 0;
 f_z = 0;
 Dimensions = 2;
