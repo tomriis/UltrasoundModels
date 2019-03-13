@@ -1,4 +1,4 @@
-function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
+function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
     f = fieldnames(ijk);
     time_index =1:length(kgrid.t_array);
     count = 1;
@@ -37,8 +37,8 @@ function [p] = define_source_excitation(ijk,kgrid,delays, fo, Mag, Dimension)
     elseif Dimension == 3
         p=zeros(size(ijk_all,1),length(time_index));
         for k = 1:kgrid.Nz
-            z_ijk_all = ijk_all(:,:,3) == k
-            if 
+            z_ijk_all = ijk_all(:,3) == k;
+           
             for j = 1:kgrid.Ny
                 row_inds = ijk_all(:,2)== j;
                 
