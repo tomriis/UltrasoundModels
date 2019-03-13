@@ -55,7 +55,7 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
                             rectn2d=ijk.(f{ii})';
                             members = ismember(rectn2d,coordinates(i,:),'rows');
                             if any(members==1)
-                                rect_n = ii;                      
+                                rect_n = ii;   
                                 phi = 2*pi*fo*delays(rect_n);
                                 excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
                                 p(count, time_index) = excitation;
