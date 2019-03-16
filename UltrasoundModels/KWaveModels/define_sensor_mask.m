@@ -20,6 +20,7 @@ function [mask] = define_sensor_mask(kgrid, focus, plane, Dimension)
             y = (-limit : limit)*1e-3;
             z = (-limit : limit)*1e-3;
     end
+    
     [ijk] = coordinates_to_index(kgrid, [x(1),y(1),z(1)]);
     [ijkend] = coordinates_to_index(kgrid, [x(end),y(end),z(end)]);
     x=ijk(1):ijkend(1); y = ijk(2):ijkend(2); z = ijk(3):ijkend(3);

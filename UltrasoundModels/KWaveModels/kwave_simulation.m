@@ -68,8 +68,9 @@ function [sensor_data,kgrid, medium, source, sensor] = kwave_simulation(varargin
             sensor,'DataCast', 'gpuArray-single');
     else
         medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
-        sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','single');
-        %kspaceFirstOrder3D-CUDA
+        medium.density = 1040;
+        %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','gpuArray-single');
+        sensor_data = kspaceFirstOrder3DG(kgrid,medium,source,sensor);
     end
 end
 

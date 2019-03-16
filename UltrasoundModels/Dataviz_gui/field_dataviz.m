@@ -33,7 +33,7 @@ f = waitbar(0, 'Loading Data File');
 handles.filename = p.Results.datafile;
 handles.data = matfile(handles.filename);
 handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
-handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
+handles.axes2 = axes('Position',[0.40 0.05 0.45 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
 waitbar(1/2,f,'Load Complete');
 handles.NX_NY_coupled = p.Results.NX_NY_coupled;
