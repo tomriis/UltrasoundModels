@@ -1,6 +1,6 @@
 function [fieldname]=fieldname_from_params(s)
 
-n_r = s.NR; n_z=s.NZ; A = s.A; B = s.B; 
+n_r = s.NR; n_z=s.NY; A = s.A; B = s.B; 
 slice = s.Slice; R_focus = s.Ro; ElGeo = s.ElGeo;
 
 try

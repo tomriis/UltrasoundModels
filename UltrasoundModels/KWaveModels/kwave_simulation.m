@@ -1,6 +1,5 @@
 
-function [sensor_data,kgrid, medium, source, sensor] = kwave_simulation(varargin)
-   %[sensor_data,kgrid, medium, source, sensor,ijk] = kwave_simulation(varargin) 
+function [sensor_data] = kwave_simulation(varargin) 
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
     addRequired(p,'n_elements_y', @(x) isnumeric(x));
@@ -61,16 +60,16 @@ function [sensor_data,kgrid, medium, source, sensor] = kwave_simulation(varargin
     if Dimensions == 2
         kgrid = define_kgrid(rect,focus, kerf, fs,2, c,type);
         % Define the medium properties   
-        medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny); % [m/s]
+        medium.sound_speed = c;%*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]
  
         sensor_data = kspaceFirstOrder2D(kgrid, medium, source,...,
-            sensor,'DataCast', 'gpuArray-single');
+            sensor,'DataCast', 'single');
     else
-        medium.sound_speed = c*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
+        medium.sound_speed = c;%*ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
         medium.density = 1040;
         %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','gpuArray-single');
-        sensor_data = kspaceFirstOrder3DG(kgrid,medium,source,sensor);
+        sensor_data = kspaceFirstOrder3DC(kgrid,medium,source,sensor);
     end
 end
 

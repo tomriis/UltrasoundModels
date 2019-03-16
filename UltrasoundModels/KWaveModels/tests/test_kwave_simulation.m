@@ -13,6 +13,7 @@ f_z = 0;
 Dimensions = 3;
 focus = [f_x,f_y,f_z];
 
-[sensor_data, kgrid, medium, source, sensor] = kwave_simulation(n_elements_r,...,
+[sensor_data] = kwave_simulation(n_elements_r,...,
     n_elements_y, a, b, D,focus,'R_focus',R_focus,...,
     'Slice',slice,'Dim',Dimensions,'type',type);
+

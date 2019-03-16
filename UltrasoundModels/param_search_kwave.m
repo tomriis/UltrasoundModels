@@ -1,31 +1,38 @@
-outfile = './param_search_256fine0.mat';
+outfile = './concaveR41Y6F40.mat';
 
-n_elements_r = 51;
-n_elements_y = 1;
+n_elements_r = 41;
+n_elements_y = 6;
 a = 120;
 b = 120;
 D = [6,8];
 R_focus = a;
-slice = 'xz';
+slice = 'xy';
 type = 'concave';
-f_x = 20;
 
+f_x = 40;
 f_y = 0;
 f_z = 0;
-Dimensions = 2;
+focus = [f_x,f_y,f_z];
+Dimensions = 3;
 
-[sensor_data, kgrid, medium, source, sensor] = kwave_simulation(n_elements_r,...,
-    n_elements_y, a, b, D,[f_x,f_y,f_z],'R_focus',R_focus,...,
-    'Slice',slice,'Dim',2,'type',type);
+s = struct();
+s.NR = n_elements_r; s.NY = n_elements_y; s.A=a; s.B=b; s.D = D;
+s.Slice='xz'; s.Ro=R_focus; s.FX = f_x; s.FY = f_y; s.FZ = f_z;
+if strcmp(type, 'concave')
+    s.ElGeo = 1;
+elseif strcmp(type,'horizontal')
+    s.ElGeo= 2;
+end
+data = struct();
 
-
-A = gather(sensor_data);
-
+[sensor_data] = kwave_simulation(n_elements_r,...,
+    n_elements_y, a, b, D, focus,'R_focus',R_focus,...,
+    'Slice',slice,'Dim',Dimensions,'type',type);
 
 fname = fieldname_from_params(s);
 
-s.(fname) = A;
+data.(fname) = sensor_data;
 
-save(outfile,'-struct','s');
+save(outfile,'-struct','data');
 
 

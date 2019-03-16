@@ -3,7 +3,7 @@ function [mask] = define_sensor_mask(kgrid, focus, plane, Dimension)
     if Dimension == 2
         mask=zeros(kgrid.Nx,kgrid.Nz);
     else 
-        mask = zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
+        mask = zeros(kgrid.Nx, kgrid.Ny, kgrid.Nz);
     end
 
     switch plane
