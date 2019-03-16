@@ -5,15 +5,12 @@ function [mask,ijk_skull] = skull_to_mask(filename,kgrid, type)
    V = niftiread(filename);
    scale = zeros([1,3]);
    f = {'x_vec','y_vec','z_vec'};
-   %target = 
+
    for i = 1:3
-       %shift = kgrid.(f{i});
        rvec{i} = ((1:size(V,i))-size(V,i)/2)*info.PixelDimensions(i)/1000;
-       %rvec{i} = rvec{i} - shift(end-3);
-       
-       % Assumes voxels are equal dimension for kgrid
        scale(i) = floor((info.PixelDimensions(i)/(1000*kgrid.dx))/2);
    end
+  
    threshold = 1500; %1628
    V(1:88,:,:) = 0; % Left limit of skull side
    V(394:end,:,:) = 0; % Right limit of skull side
@@ -52,10 +49,37 @@ function [mask,ijk_skull] = skull_to_mask(filename,kgrid, type)
             ijk_skull = vertcat(ijk_skull, ij);
        end
        
+   else
+       mask = zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
+       scale_x = scale(1);
+       scale_y = scale(2);
+       scale_z = scale(3);
+       for k = 1:size(V,3)
+           disp(strcat("On row ",num2str(k)," of ",num2str(size(V,3))));
+           [row,column] = find(V(:,:,k)==1);
+           for ii = 1:length(row)
+               i = row(ii); j = column(ii);
+               [ijk,~]=coordinates_to_index(kgrid, [rvec{1}(i),rvec{2}(j),rvec{3}(k)]);
+               x = (ijk(1)-scale_x):(ijk(1)+scale_x);
+               y = (ijk(2)-scale_y):(ijk(2)+scale_y+1);
+               z = (ijk(3)-scale_z):(ijk(3)+scale_z);
+               x= x(and(x>=1, x <= kgrid.Nx));
+               y= y(and(y>=1, y <= kgrid.Ny));
+               z= z(and(z>=1, z<=kgrid.Nz));
+              [ca, cb, cc] = ndgrid(x, y, z);
+               combs = [ca(:), cb(:), cc(:)];
+               combs = unique(combs,'rows');
+               ijk_skull = vertcat(ijk_skull, combs);
+           end
+       end
    end
    ijk_skull=unique(ijk_skull,'rows');
    for i = 1:length(ijk_skull)
-       mask(ijk_skull(i,1),ijk_skull(i,2))= 1;
+       if kgrid.dim == 2
+            mask(ijk_skull(i,1),ijk_skull(i,2))= 1;
+       else
+           mask(ijk_skull(i,1),ijk_skull(i,2),ijk_skull(i,3))=1;
+       end
    end
 
    
