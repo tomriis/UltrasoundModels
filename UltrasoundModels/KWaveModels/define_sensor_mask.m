@@ -1,4 +1,4 @@
-function [mask] = define_sensor_mask(kgrid, focus, plane, Dimension)
+function [mask, sensor_size] = define_sensor_mask(kgrid, focus, plane, Dimension)
     limit = 55; %[mm]
     if Dimension == 2
         mask=zeros(kgrid.Nx,kgrid.Nz);
@@ -35,4 +35,13 @@ function [mask] = define_sensor_mask(kgrid, focus, plane, Dimension)
             end
         end
     end
+    switch plane
+        case 'xy'
+            sensor_size = [length(x),length(y)];
+        case 'xz'
+            sensor_size = [length(x), length(z)];
+        case 'yz'
+            sensor_size = [length(y), length(z)];
+    end
+            
 end

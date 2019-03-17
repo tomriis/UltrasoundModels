@@ -1,5 +1,5 @@
 
-function [sensor_data] = kwave_simulation(varargin) 
+function [sensor_data, kgrid] = kwave_simulation(varargin) 
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
     addRequired(p,'n_elements_y', @(x) isnumeric(x));
@@ -50,7 +50,7 @@ function [sensor_data] = kwave_simulation(varargin)
     elapsedTime = toc;
     disp(strcat("define_source_excitation took ", num2str(elapsedTime)," seconds"));
     % Define a sensor mask 
-    sensor.mask = define_sensor_mask(kgrid,sensor_focus,slice,Dimensions);
+    [sensor.mask, sensor_size] = define_sensor_mask(kgrid,sensor_focus,slice,Dimensions);
     
     disp("-------------------------------------")
     disp("  Model Defined, Running Simulation  ")
@@ -71,5 +71,7 @@ function [sensor_data] = kwave_simulation(varargin)
         %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','gpuArray-single');
         sensor_data = kspaceFirstOrder3DC(kgrid,medium,source,sensor);
     end
+    sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
+        length(kgrid.t_array)]);
 end
 

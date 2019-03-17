@@ -70,18 +70,10 @@ function [data,data_error]=param_search_horizontal()
     s.Slice = slice; s.Ro = R_focus; s.T = total_elements;
     
     fname = fieldname_from_params(s);
-<<<<<<< HEAD
+
     try
     [txfield, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
             'R_focus',R_focus,'Slice',slice,'vis_output',false);
-=======
-%     
-%         [txfield, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
-%             'R_focus',R_focus,'Slice',slice,'vis_output',false);
-
-[txfield, xdc_data] = human_array_simulation(n_r, n_z,A,...,
-D,focus,'R_focus',R_focus,'Slice','xy', 'visualize_output',false);
->>>>>>> f51a5980c9a941c06ac3aa8abb5728f0db659f52
     
         data.(fname) = txfield;
         k = strfind(fname,'Slice_');
