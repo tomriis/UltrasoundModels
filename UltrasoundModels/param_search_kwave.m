@@ -1,4 +1,4 @@
-outfile = './concaveR41Y6F40.mat';
+outfile = './concaveR41Y6FX30xzdx02.mat';
 
 n_elements_r = 41;
 n_elements_y = 6;
@@ -6,10 +6,10 @@ a = 120;
 b = 120;
 D = [6,8];
 R_focus = a;
-slice = 'xy';
+slice = 'xz';
 type = 'concave';
 
-f_x = 40;
+f_x = 30;
 f_y = 0;
 f_z = 0;
 focus = [f_x, f_y, f_z];
@@ -31,8 +31,15 @@ data = struct();
 
 fname = fieldname_from_params(s);
 
-data.(fname) = sensor_data;
-data.kgrid = kgrid;
+data.(fname) = max(sensor_data,[],3);
+data.kgrid.Nx = kgrid.Nx;
+data.kgrid.Ny = kgrid.Ny;
+data.kgrid.Nz = kgrid.Nz;
+data.kgrid.dx = kgrid.dx;
+data.kgrid.dy = kgrid.dy;
+data.kgrid.dz = kgrid.dx;
+data.kgrid.t_array = kgrid.t_array;
+
 
 save(outfile,'-struct','data');
 

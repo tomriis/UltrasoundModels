@@ -8,13 +8,13 @@ function kgrid = define_kgrid(rect,focus, kerf, fs,Dimensions, c, type)
         
     padding = 100;
     scaling = 2;
-    dx = 0.3e-3;%kerf/scaling;
+    dx = kerf/scaling;
     dy = dx;
     dz = dx;
     
-    Nx = 825;%ceil(2*R(1)/dx)+padding;
-    Ny = ceil(2*R(2)/dy)+padding;
-    Nz = 945;%ceil(2*R(3)/dz)+padding;
+    Nx = 1200;%ceil(2*R(1)/dx)+padding;
+    Ny = 350;%ceil(2*R(2)/dy)+padding;
+    Nz = 1300;%ceil(2*R(3)/dz)+padding;
     
     if Dimensions == 2
         kgrid = makeGrid(Nx, dx, Nz,dz);

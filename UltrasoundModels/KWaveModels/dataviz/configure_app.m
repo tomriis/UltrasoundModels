@@ -8,6 +8,6 @@ function app = configure_app(app)
     
     app.XSlider.Limits = [app.x(1), app.x(end)]; 
     app.YSlider.Limits = [app.y(1), app.y(end)];
-    
+    app.TimeSliderLabel.Text = 'Time (ms)';
     
 end
