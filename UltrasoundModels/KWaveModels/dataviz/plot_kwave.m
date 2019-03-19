@@ -27,7 +27,7 @@ function plot_kwave(app,varargin)
     
     
     plot(app.UIAxes_2,x_axis, profile);
-    
+    ylim(app.UIAxes_2,[app.min_p, app.max_p]);
     ylabel(app.UIAxes_2, 'Pressure (Pa)')
             
     imagesc(app.UIAxes, app.x,app.y,txfield);
