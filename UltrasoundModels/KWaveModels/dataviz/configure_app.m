@@ -10,5 +10,4 @@ function app = configure_app(app)
     
     app.max_p = max(app.data,[],'all');
     app.min_p = min(app.data,[],'all');
-    
 end

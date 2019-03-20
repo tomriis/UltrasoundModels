@@ -1,7 +1,7 @@
 function app = find_data(app)
     fname = fieldname_from_params(app.current_params);
     try 
-        app.data = app.(fname);
+        app.data = app.kwave_struct.(fname);
         app.WarningLabel.Visible='off';
         configure_app(app);
         disp(size(app.data))
