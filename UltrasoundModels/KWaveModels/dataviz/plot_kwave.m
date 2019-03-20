@@ -1,12 +1,14 @@
 function plot_kwave(app,varargin)
-    if ~isempty(varargin)
-        t_value = varargin{1};
-    else
-        t_value = app.TimeSlider.Value;
-    end
-    [~, t_index] = min(abs(app.kgrid.t_array*1000 - t_value));
     
-    txfield = app.data(:,:,t_index)';
+    find_data(app);
+    
+    if strcmp(app.UnitsDropDown.Value, 'dB')
+        disp('check');
+        txfield = db(app.data/app.max_p)';
+    elseif strcmp(app.Units.DropDown.Value,'Pressure')
+        disp('pressure');
+        txfield = app.data;
+    end
     
     
     
