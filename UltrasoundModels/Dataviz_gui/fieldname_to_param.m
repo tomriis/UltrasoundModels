@@ -6,6 +6,7 @@ function [params] = fieldname_to_param(fieldname)
     k_ElGeo = strfind(fieldname,'ElGeo');
     k_NR = strfind(fieldname,'NR');
     k_NZ = strfind(fieldname,'NZ');
+    k_NY = strfind(fieldname,'NY');
     k_A = strfind(fieldname,'A');
     k_B = strfind(fieldname,'B');
     k_W = strfind(fieldname,'W');
@@ -14,10 +15,12 @@ function [params] = fieldname_to_param(fieldname)
     k_Ro = strfind(fieldname,'Ro');
     k_Slice = strfind(fieldname,'Slice_');
     k_T = strfind(fieldname,'T');
-    
+    if ~isempty(k_NZ) && isempty(k_NY)
+        k_NY = k_NZ;
+    end
     params.ElGeo = str2double(fieldname(k_ElGeo+5));
-    params.NR = str2double(fieldname(k_NR+2:k_NZ-1));
-    params.NZ = str2double(fieldname(k_NZ+2:k_A-1));
+    params.NR = str2double(fieldname(k_NR+2:k_NY-1));
+    params.NY = str2double(fieldname(k_NY+2:k_A-1));
     params.A = str2double(fieldname(k_A+1:k_B-1));
     params.B = str2double(fieldname(k_B+1:k_W-1));
     if params.A ~=params.B
