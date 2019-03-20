@@ -4,7 +4,6 @@ function app = find_data(app)
         app.data = app.kwave_struct.(fname);
         app.WarningLabel.Visible='off';
         configure_app(app);
-        disp(size(app.data))
     catch e
         % Check if angle of extent is too large, if so dont plot
         str = sprintf('Current parameters not found in struture \n \n');
