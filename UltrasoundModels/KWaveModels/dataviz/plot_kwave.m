@@ -1,9 +1,10 @@
 function plot_kwave(app,varargin)
     find_data(app);
+    resetplotview(app.UIAxes,'InitializeCurrentView');
+    resetplotview(app.UIAxes_2,'InitializeCurrentView');
     
     if strcmp(app.UnitsDropDown.Value, 'dB')
         txfield = db(app.data./app.max_p);
-        y_limit = [-40, 1];
         y_axis_label = 'Intensity (dB)';
     elseif strcmp(app.UnitsDropDown.Value,'Pressure')
         txfield = app.data;
@@ -36,6 +37,10 @@ function plot_kwave(app,varargin)
         end
     end
     
+    if strcmp(app.UnitsDropDown.Value, 'dB')
+        y_limit = [min(profile),0.2];
+    end
+    
     plot(app.UIAxes_2, x_axis, profile); hold(app.UIAxes_2, 'on');
     ylim(app.UIAxes_2, y_limit);
     yticks(app.UIAxes_2, round(linspace(y_limit(1), y_limit(2), (y_limit(2)-y_limit(1))/6+1)));
@@ -43,6 +48,7 @@ function plot_kwave(app,varargin)
     ylabel(app.UIAxes_2, y_axis_label)
     xlabel(app.UIAxes_2, x_axis_label);
     if strcmp(app.UnitsDropDown.Value, 'dB')
+        y_limit = [min(profile), 1];
         plot(app.UIAxes_2, [x_axis(1), x_axis(end)], [-6 -6], 'k--', 'linewidth', 2);
         ind = find(profile>-6);
         if length(ind>=2)
