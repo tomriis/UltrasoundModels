@@ -21,15 +21,23 @@ function [params] = fieldname_to_param(fieldname)
     params.ElGeo = str2double(fieldname(k_ElGeo+5));
     params.NR = str2double(fieldname(k_NR+2:k_NY-1));
     params.NY = str2double(fieldname(k_NY+2:k_A-1));
-    params.A = str2double(fieldname(k_A+1:k_B-1));
-    params.B = str2double(fieldname(k_B+1:k_W-1));
-    if params.A ~=params.B
-        params.B = 135/170*params.A;
-        strnum=fieldname(k_B+1:k_W-1);
-        b_test1 = str2double(strcat(strnum(1:2),'.',strnum(2:end)));
-        b_test2 = str2double(strcat(strnum(1:3),'.',strnum(2:end)));
-        if params.B - b_test1 > 1 && params.B - b_test2 > 1
-            warning('Likely not the correct B value in fieldname_to_param');
+    
+        
+    
+    if isempty(k_B)
+        params.B = [];
+        params.A = str2double(fieldname(k_A+1:k_W-1));
+    else
+        params.A = str2double(fieldname(k_A+1:k_B-1));
+        params.B = str2double(fieldname(k_B+1:k_W-1));
+        if params.A ~=params.B
+            params.B = 135/170*params.A;
+            strnum=fieldname(k_B+1:k_W-1);
+            b_test1 = str2double(strcat(strnum(1:2),'.',strnum(2:end)));
+            b_test2 = str2double(strcat(strnum(1:3),'.',strnum(2:end)));
+            if params.B - b_test1 > 1 && params.B - b_test2 > 1
+                warning('Likely not the correct B value in fieldname_to_param');
+            end
         end
     end
     params.W = get_param_decimal(fieldname, k_W+1,k_H-1);
@@ -54,7 +62,12 @@ function [focus] = get_focus_from_string(fstring)
     focus=[];
     focus(1)=str2double(fstring(1:inds(1)-1));
     focus(2) = str2double(fstring(inds(1)+1:inds(2)-1));
-    focus(3) = str2double(fstring(inds(2)+1:end));
+    focus_z = fstring(inds(2)+1:end);
+    if strcmp(focus_z(1),'_')
+        focus(3) = -1*str2double(fstring(inds(2)+2:end));
+    else
+        focus(3) = str2double(focus_z);
+    end
 end
 
 function [par] = get_param_decimal(fieldname, k_start, endpoint)

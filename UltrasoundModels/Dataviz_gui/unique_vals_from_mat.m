@@ -8,13 +8,15 @@ function [data] = unique_vals_from_mat(Matfile)
     for i = 1:length(fields_cell)
         f = fields_cell(i);
         field_string = f{:};
-        if ~strcmp(field_string,'Properties') && strcmp(field_string(1),'E')
+        if ~strcmp(field_string,'Properties') && ~strcmp(field_string(1),'G')
             params = fieldname_to_param(field_string);
             data.ElGeo(count) = params.ElGeo;
             data.NR(count) = params.NR;
             data.NY(count) = params.NY;
             data.A(count) = params.A;
-            data.B(count) = params.B;
+            if ~isempty(params.B)
+                data.B(count) = params.B;
+            end
             data.W(count) = params.W;
             data.H(count) = params.H;
             data.FX(count) = params.FX;

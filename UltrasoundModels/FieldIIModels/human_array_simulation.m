@@ -66,11 +66,11 @@ xdc_impulse(Tx,impulse_response);
 % plot(t*1e6, impulse_response); grid on; xlabel('t (\musec)');
 
 %% Driving waveform
-excitation = 1;  % driving signel; 1 = simple pulse
+%excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-%cycles = 100; amplitude = 1;
-%excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+cycles = 200; amplitude = 1;
+excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
 %
 xdc_excitation(Tx, excitation);
 
@@ -125,12 +125,12 @@ if p.Results.visualize_output
             ylabel('y (mm)');
             ch = colorbar; ylabel(ch, 'dB'); 
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-%             figure;
-%             XL = min(x)*1e3;
-%             XH = max(x)*1e3;
-%             plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
-%             xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
-%             xlabel('x (mm)');
+            figure;
+            XL = min(x)*1e3;
+            XH = max(x)*1e3;
+            plot(x*1e3, txfielddb(round(length(txfielddb) / 2), :)); 
+            xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
+            xlabel('x (mm)');
         case 'xz'
             imagesc(x*1e3, z*1e3, txfielddb); colorbar;
             xlabel('x (mm)');
