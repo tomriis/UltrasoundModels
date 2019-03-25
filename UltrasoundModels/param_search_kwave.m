@@ -43,7 +43,6 @@ end
     'Slice',slice,'Dim',Dimensions,'type',type);
 
 fname = fieldname_from_params(s);
-data.(fname) = 1;
 data.(fname) = max(sensor_data,[],3);
 data.kgrid.Nx = kgrid.Nx;
 data.kgrid.Ny = kgrid.Ny;
@@ -53,7 +52,7 @@ data.kgrid.dy = kgrid.dy;
 data.kgrid.dz = kgrid.dx;
 data.kgrid.t_array = kgrid.t_array;
 clear sensor_data
-
+clear kgrid
         end
     end
 end
