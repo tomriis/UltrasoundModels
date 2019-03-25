@@ -15,7 +15,7 @@ if nargout
 else
     gui_mainfcn(gui_State, varargin{:});
 end
-% End initialization code - DO NOT EDIT
+
 
 
 % --- Executes just before field_dataviz is made visible.
@@ -33,7 +33,7 @@ f = waitbar(0, 'Loading Data File');
 handles.filename = p.Results.datafile;
 handles.data = matfile(handles.filename);
 handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
-handles.axes2 = axes('Position',[0.40 0.05 0.50 0.44]);
+handles.axes2 = axes('Position',[0.40 0.05 0.45 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
 waitbar(1/2,f,'Load Complete');
 handles.NX_NY_coupled = p.Results.NX_NY_coupled;
@@ -41,7 +41,7 @@ handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'T','A','W','H','FX','FY','ElGeo','NZ','Slice','FZ','B'};
+field_slider_map={'T','A','W','H','FX','FY','ElGeo','NY','Slice','FZ','B'};
 for i =1:length(field_slider_map)
         sl = handles.(strcat('slider',field_slider_map{i}));
         if field_slider_map{i} == 'B'
@@ -92,7 +92,7 @@ waitbar(1/2+0.5*7/numSliders,f);
 sliderElGeo_Callback(handles.sliderElGeo, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*8/numSliders,f);
-sliderNZ_Callback(handles.sliderNZ, eventdata,handles);
+sliderNY_Callback(handles.sliderNY, eventdata,handles);
 handles=guidata(hObject); 
 waitbar(1/2+0.5*9/numSliders,f);
 sliderFZ_Callback(handles.sliderFZ, eventdata,handles);
@@ -119,7 +119,7 @@ function sliderT_Callback(hObject, ~, handles)
     caption = sprintf('N Total ~ %.2f', value);
     set(handles.textNTotal, 'String', caption);
     handles.current_params.T = value;
-    handles = NZ_Callback(handles);
+    handles = NY_Callback(handles);
     handles = find_params_in_data(handles);
     guidata(hObject, handles);
     if handles.plot_flag
@@ -158,15 +158,15 @@ function sliderA_CreateFcn(hObject, ~, ~)
     end
 
     
-function sliderNZ_Callback(hObject, eventdata, handles)
-    handles = NZ_Callback(handles);
+function sliderNY_Callback(hObject, eventdata, handles)
+    handles = NY_Callback(handles);
     guidata(hObject, handles);
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
 
     
-function sliderNZ_CreateFcn(hObject, eventdata, handles)
+function sliderNY_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end

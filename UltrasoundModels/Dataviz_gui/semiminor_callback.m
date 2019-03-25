@@ -5,5 +5,5 @@ function [handles] = semiminor_callback(handles)
     caption = sprintf('Minor Axis: %.2f (mm)', value);
     set(handles.textMinorAxis, 'String', caption);
     handles.current_params.B = value;
-    handles = NZ_Callback(handles);
+    handles = NY_Callback(handles);
 end

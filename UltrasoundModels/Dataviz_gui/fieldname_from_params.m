@@ -1,6 +1,6 @@
 function [fieldname]=fieldname_from_params(s)
 
-n_r = s.NR; n_z=s.NZ; A = s.A; B = s.B; 
+n_r = s.NR; n_z=s.NY; A = s.A; B = s.B; 
 slice = s.Slice; R_focus = s.Ro; ElGeo = s.ElGeo;
 
 try
@@ -13,6 +13,11 @@ catch
     else
         focus = zeros(1,3);
     end
+end
+if focus(3) < 0
+    FZ = strcat('_',num2str(abs(focus(3))));
+else
+    FZ = num2str(focus(3));
 end
 try
     D = s.D;
@@ -30,13 +35,19 @@ catch
     T = 256;
 end
 
-%returns txt field from params
+if isempty(B)
     runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,
-        'NZ',num2str(n_z),'A',num2str(A),'B',num2str(B),'W',num2str(D(2)),...,
+        'NY',num2str(n_z),'A',num2str(A), 'W',num2str(D(2)),...,
 'H',num2str(D(1)),'Ro',num2str(R_focus),'Slice_',slice,'F',...,
 strcat(num2str(focus(1)),'_',num2str(focus(2)),'_',num2str(focus(3))),...,
 'T',num2str(T));
-
+else
+    runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,
+        'NY',num2str(n_z),'A',num2str(A),'B',num2str(B),'W',num2str(D(2)),...,
+'H',num2str(D(1)),'Ro',num2str(R_focus),'Slice_',slice,'F',...,
+strcat(num2str(focus(1)),'_',num2str(focus(2)),'_',FZ),...,
+'T',num2str(T));
+end
     fieldname = split(runstring,'.');
     fieldname = strcat(fieldname{:});
 end
