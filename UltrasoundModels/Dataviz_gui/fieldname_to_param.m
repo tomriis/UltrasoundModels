@@ -15,15 +15,14 @@ function [params] = fieldname_to_param(fieldname)
     k_Ro = strfind(fieldname,'Ro');
     k_Slice = strfind(fieldname,'Slice_');
     k_T = strfind(fieldname,'T');
+    k_EX = strfind(fieldname,'EX');
+    k_SUM = strfind(fieldname,'SUM');
     if ~isempty(k_NZ) && isempty(k_NY)
         k_NY = k_NZ;
     end
     params.ElGeo = str2double(fieldname(k_ElGeo+5));
     params.NR = str2double(fieldname(k_NR+2:k_NY-1));
-    params.NY = str2double(fieldname(k_NY+2:k_A-1));
-    
-        
-    
+    params.NY = str2double(fieldname(k_NY+2:k_A-1));    
     if isempty(k_B)
         params.B = [];
         params.A = str2double(fieldname(k_A+1:k_W-1));
@@ -53,7 +52,9 @@ function [params] = fieldname_to_param(fieldname)
     else
         params.Slice = fieldname(k_Slice+6:k_Slice+7);
     end  
-    params.T = str2double(fieldname(k_T+1:end));
+    params.T = str2double(fieldname(k_T+1:k_T+3));
+    params.EX = fieldname(k_EX+2);
+    params.SUM = fieldname(k_SUM+3:end);
 end
 
 function [focus] = get_focus_from_string(fstring)

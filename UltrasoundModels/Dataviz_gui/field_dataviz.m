@@ -100,6 +100,32 @@ handles=guidata(hObject);
 sliderSlice_Callback(handles.sliderSlice, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*10/numSliders,f);
+try
+    handles.current_params.EX = handles.parameters.EX{1};
+    handles.current_params.SUM = handles.parameters.SUM{1};
+    if strcmp(handles.current_params.EX,'g')
+        handles.gaussian_pulse_button.Value = 1;
+    else
+        handles.sine_wave_button.Value =1;
+        handles.current_params.EX = 's';
+    end
+    switch handles.current_params.SUM
+        case 'ms'
+            handles.max_button.Value = 1;
+        case 'ma'
+            handles.max_abs_button.Value = 1;
+        case 'mh'
+            handles.max_hilbert_button.Value = 1;
+        otherwise 'sh'
+            handles.sum_hilbert_button.Value = 1;
+            handles.current_params.SUM = 'sh';
+    end
+catch
+field_sum_group_SelectionChangedFcn(handles.field_sum_group,eventdata, handles);
+handles = guidata(hObject);
+excitation_group_SelectionChangedFcn(handles.excitation_group,eventdata,handles);
+handles = guidata(hObject);
+end
 handles.plot_flag = true;
 sliderB_Callback(handles.sliderB, eventdata, handles);
 handles=guidata(hObject);
@@ -383,3 +409,36 @@ function sliderB_CreateFcn(hObject, eventdata, handles)
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
 end
+
+
+% --- Executes when selected object is changed in excitation_group.
+function excitation_group_SelectionChangedFcn(hObject, ~, handles)
+    if handles.gaussian_pulse_button.Value
+        handles.current_params.EX = 'g';
+    else
+        handles.current_params.EX = 's';
+    end
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+    
+
+
+% --- Executes when selected object is changed in field_sum_group.
+function field_sum_group_SelectionChangedFcn(hObject, ~, handles)
+    if handles.max_button.Value
+        handles.current_params.SUM= 'ms';
+    elseif handles.max_abs_button.Value
+        handles.current_params.SUM = 'ma';
+    elseif handles.max_hilbert_button.Value
+        handles.current_params.SUM = 'mh';
+    else
+        handles.current_params.SUM = 'sh';
+    end
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end

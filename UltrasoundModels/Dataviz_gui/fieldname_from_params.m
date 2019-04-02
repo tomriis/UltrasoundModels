@@ -34,6 +34,16 @@ try
 catch
     T = 256;
 end
+try 
+    EX = s.EX;
+catch
+    EX = 'g';
+end
+try 
+    SUM = s.SUM;
+catch
+    SUM = 'MS';
+end
 
 if isempty(B)
     runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,
@@ -46,7 +56,7 @@ else
         'NY',num2str(n_z),'A',num2str(A),'B',num2str(B),'W',num2str(D(2)),...,
 'H',num2str(D(1)),'Ro',num2str(R_focus),'Slice_',slice,'F',...,
 strcat(num2str(focus(1)),'_',num2str(focus(2)),'_',FZ),...,
-'T',num2str(T));
+'T',num2str(T),'EX',EX,'SUM',SUM);
 end
     fieldname = split(runstring,'.');
     fieldname = strcat(fieldname{:});
