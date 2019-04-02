@@ -6,6 +6,8 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
         ijk_all = horzcat(ijk_all, ijk.(f{i}));
     end
     ijk_all = ijk_all';
+    delays = delays-min(delays);
+   
     if Dimension == 2
         p=zeros(size(ijk_all,1),length(time_index));
         for rect_n = 1:length(f)
@@ -18,7 +20,9 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
                 x_terms = sum(ijk_x < coordinates(1));
                 count = count+ y_terms+x_terms; 
                 phi = 2*pi*fo*delays(rect_n);
-                excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+                excitation = zeros([1,length(kgrid.t_array)]);
+                inds = find(kgrid.t_array > delays(rect_n));
+                excitation(inds(1):inds(1)+10) = Mag;%*sin(2*pi*fo*kgrid.t_array(1:40)+phi);
                 p(count, time_index) = excitation;
             end
         end
@@ -36,8 +40,11 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
                 ijk_x = ijk_xy(coordinates(2) == ijk_xy(:,2),1);
                 x_terms = sum(ijk_x < coordinates(1));
                 count = count + z_terms + y_terms + x_terms; 
-                phi = 2*pi*fo*delays(rect_n);
-                excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+%                 phi = 2*pi*fo*delays(rect_n);
+%                 excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+                excitation = zeros([1,length(kgrid.t_array)]);
+                inds = find(kgrid.t_array > delays(rect_n));
+                excitation(inds(1):inds(1)+10) = Mag;
                 p(count, time_index) = excitation;
             end
         end

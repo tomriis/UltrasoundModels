@@ -38,9 +38,9 @@ function [sensor_data, kgrid] = kwave_simulation(varargin)
     c = 1540; % Speed of sound in water
     % Compute delays
     delays = compute_delays(rect, focus, c);
-    
+    delays = delays-min(delays);
     % create the computational grid
-    kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type);
+    kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type,delays);
     
     % Define source
     [source.p_mask, ijk, sensor_focus] = rect_to_mask(kgrid, rect, Dimensions, type, focus,1);
@@ -58,7 +58,7 @@ function [sensor_data, kgrid] = kwave_simulation(varargin)
    
     % Run the simulation
     if Dimensions == 2
-        kgrid = define_kgrid(rect,focus, kerf, fs,2, c,type);
+        kgrid = define_kgrid(rect,focus, kerf, fs,2, c,type,delays);
         % Define the medium properties   
         medium.sound_speed = c;%*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]

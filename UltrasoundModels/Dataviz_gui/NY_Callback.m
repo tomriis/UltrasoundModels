@@ -5,7 +5,7 @@ function [handles] = NY_Callback(handles)
     handles.current_params.NY = value;
     if handles.NX_NY_coupled
         handles.current_params.NR = find_NR_from_geo(handles.current_params.T,...,
-            handles.current_params.NY,handles.current_params.A,...,
+           handles.current_params.NY,handles.current_params.A,...,
             handles.current_params.B, handles.current_params.H);
         
         caption = sprintf('NR: %d', handles.current_params.NR);

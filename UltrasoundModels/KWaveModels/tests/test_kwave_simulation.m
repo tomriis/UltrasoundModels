@@ -1,16 +1,16 @@
 n_elements_r = 42;
-n_elements_y = 6;
-a = 120;
-b = 120;
-D = [6,8];
+n_elements_y = 1;
+a = 90;
+b = 75;
+D = [4, 6];
 R_focus = a;
 slice = 'xy';
-type = 'concave';
+type = 'horizontal';
 f_x = 25;
 
 f_y = 0;
 f_z = 0;
-Dimensions = 3;
+Dimensions = 2;
 focus = [f_x,f_y,f_z];
 
 [sensor_data] = kwave_simulation(n_elements_r,...,

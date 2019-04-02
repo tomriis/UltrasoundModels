@@ -13,6 +13,6 @@ f_z = 0;
 Dimensions = 3;
 focus = [f_x,f_y,f_z];
 
-[txfeilddb, xdc_data] = human_array_simulation(n_elements_r, n_elements_y,a,...,
+[txfeild, xdc_data] = horizontal_array_simulation(n_elements_r, n_elements_y,a,b,...,
 D,focus,'R_focus',R_focus,...,
-'Slice',slice, 'visualize_output',true);
+'Slice',slice, 'visualize_out',false);

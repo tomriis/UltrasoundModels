@@ -1,4 +1,4 @@
-function [txfield, xdc_data]=human_array_simulation(varargin)
+function [txfield,tx_max_hilbert,tx_sum_hilbert, xdc_data]=human_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_x', @(x) isnumeric(x));
@@ -98,23 +98,22 @@ pos = [xv(:), yv(:), zv(:)];
 
 xdc_data = xdc_get(Tx,'rect');
 %% Plot the emitted field
-%txfield = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
+try
+tx_sum_hilbert = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
+size(tx_sum_hilbert)
+tx_sum_hilbert = reshape(tx_sum_hilbert, [276, 276]);
 %of the propagating pulse; summing it is a dirty way to approximate the amplitude of the signal regardless of the time it occurs at 
-txfield = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
+tx_max = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
+tx_max = reshape(tx_max, [276, 276]);
 %reshape the output for 2D plotting
-switch plane
-    case 'xy'
-        txfield = reshape(txfield, length(x), length(y));
-        txfield = fliplr(txfield); %flip the x coordinate for proper orientation
-    case 'xz'
-        txfield = reshape(txfield, length(x), length(z));
-        txfield = fliplr(txfield'); %flip the z coordinate for proper orientation
-    case 'yz'
-        txfield = reshape(txfield, length(y), length(z));
-        txfield = txfield'; %flip the z coordinate for proper orientation
+tx_max_hilbert = max(abs(hilbert(hp)));
+tx_max_hilbert = reshape(tx_max_hilbert, [276, 276]);
+txfield = tx_max;
+catch
+    tx_max = 0;
+    tx_max_hilbert = 0;
+    tx_sum_hilbert = 0;
 end
-txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
-
 if p.Results.visualize_output
     figure;
     switch plane

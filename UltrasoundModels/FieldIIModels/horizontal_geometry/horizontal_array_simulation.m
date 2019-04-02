@@ -1,4 +1,4 @@
-function [txfield, xdc_data]=horizontal_array_simulation(varargin)
+function [max_hp, sum_hilbert,max_hilbert, max_abs_hp, xdc_data]=horizontal_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_r', @(x) isnumeric(x));
@@ -10,8 +10,8 @@ addRequired(p, 'focal_point');
 addOptional(p, 'kerf',0.4);
 addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
 
-addOptional(p,'vis_transducer',false);
-addOptional(p,'vis_output',true);
+addOptional(p,'visualize_transducer',false);
+addOptional(p,'visualize_output',true);
 addOptional(p,'Slice','xy');
 parse(p, varargin{:})
 
@@ -22,19 +22,14 @@ y_to_z_transform = [1 0 0; 0 0 1; 0 1 0];
 
 
 %% Parameters to vary in this exercise
-visualize_transducer = p.Results.vis_transducer;
+visualize_transducer = p.Results.visualize_transducer;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
 if size(focal_point,2) == 1
     focal_point = focal_point';
 end
 %focal_point = (y_to_z_transform*focal_point)';
 plane = p.Results.Slice; %('xy' or 'xz'); the plane within which we visualize the pressure field
-% switch plane
-%     case 'xy'
-%         plane = 'xz';
-%     case 'xz'
-%         plane = 'xy';
-% end
+
 %% Initialize Field II:
 field_init(-1);
 
@@ -79,17 +74,17 @@ xdc_impulse(Tx,impulse_response);
 % plot(t*1e6, impulse_response); grid on; xlabel('t (\musec)');
 
 %% Driving waveform
-excitation = 1;  % driving signel; 1 = simple pulse
+%excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-%cycles = 100; amplitude = 1;
-%excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+cycles = 250; amplitude = 1;
+excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
 %
 xdc_excitation(Tx, excitation);
 
 %% Set focal point
 focus = focal_point * 1e-3;  %(m)
-disp(focus)
+
 %delays = compute_delays(Tx, focus, c, n_elements, Nx, Ny); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 
@@ -110,24 +105,25 @@ pos = [xv(:), yv(:), zv(:)];
 
 xdc_data = xdc_get(Tx,'rect');
 %% Plot the emitted field
-%txfield = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
+
+sum_hilbert = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
 %of the propagating pulse; summing it is a dirty way to approximate the amplitude of the signal regardless of the time it occurs at 
-txfield = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
+max_hp = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
+max_hilbert = max(abs(hilbert(hp)));
+
+max_abs_hp=max(abs(hp));
+size(sum_hilbert)
+length(x)
+length(y)
+sum_hilbert = reshape(sum_hilbert, 276, 276);
+max_hilbert = reshape(max_hilbert, 276, 276);
+max_hp = reshape(max_hp, 276, 276);
+max_abs_hp = reshape(max_abs_hp, 276, 276);
 %reshape the output for 2D plotting
-switch plane
-    case 'xy'
-        txfield = reshape(txfield, length(x), length(y));
-        %txfield = fliplr(txfield); %flip the x coordinate for proper orientation
-    case 'xz'
-        txfield = reshape(txfield, length(x), length(z));
-        %txfield = fliplr(txfield); %flip the z coordinate for proper orientation
-    case 'yz'
-        txfield = reshape(txfield, length(y), length(z));
-        %txfield = txfield'; %flip the z coordinate for proper orientation
-end
-txfielddb = db(txfield./max(max(txfield))); %convert to dB (Voltage i.e. 20 log_10 (txfield/MAX) )
+
+   
 try
-if p.Results.vis_output
+if p.Results.visualize_output
     figure;
     switch plane
         case 'xy'
