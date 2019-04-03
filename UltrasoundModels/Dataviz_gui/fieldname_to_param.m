@@ -30,12 +30,15 @@ function [params] = fieldname_to_param(fieldname)
         params.A = str2double(fieldname(k_A+1:k_B-1));
         params.B = str2double(fieldname(k_B+1:k_W-1));
         if params.A ~=params.B
-            params.B = 135/170*params.A;
+            params.B = (75/90)*params.A;
             strnum=fieldname(k_B+1:k_W-1);
+            try
             b_test1 = str2double(strcat(strnum(1:2),'.',strnum(2:end)));
-            b_test2 = str2double(strcat(strnum(1:3),'.',strnum(2:end)));
+            b_test2 = str2double(strcat(strnum(1:3),'.',strnum(3:end)));
             if params.B - b_test1 > 1 && params.B - b_test2 > 1
                 warning('Likely not the correct B value in fieldname_to_param');
+            end
+            catch
             end
         end
     end
