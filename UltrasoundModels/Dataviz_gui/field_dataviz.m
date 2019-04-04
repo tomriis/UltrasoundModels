@@ -335,8 +335,15 @@ function pushbutton1_Callback(hObject, ~, handles)
         handles.xdc_geometry = handles.data.(strcat('G_',fname));
         handles.plot_geo_flag = true;
     catch
-        set(handles.text10,'String',strcat(fname,sprintf('\n Geometry not available')));
-        handles.plot_geo_flag = false;
+        
+        try
+            fname = strcat(fname,'EX',handles.current_params.EX,'SUM',handles.current_params.SUM);
+            handles.xdc_geometry = handles.data.(strcat('G_',fname));
+            handles.plot_geo_flag = true;
+        catch
+            set(handles.text10,'String',strcat(fname,sprintf('\n Geometry not available')));
+            handles.plot_geo_flag = false;
+        end
     end
     if handles.plot_geo_flag
         disp('Plotting transducers...')
