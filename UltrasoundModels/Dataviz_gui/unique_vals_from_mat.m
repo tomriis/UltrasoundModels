@@ -3,8 +3,8 @@ function [data] = unique_vals_from_mat(Matfile)
     data = struct('NR',[],'NY',[],'A',[],'B',[],'W',[],'H',[],...,
         'ElGeo',[],'Ro',[],'FX',[],'FY',[],'FZ',[],'T',[]);
     data.Slice={};
-    data.EX = {};
-    data.SUM = {};
+    %data.EX = {};
+    %data.SUM = {};
     fields_cell = fieldnames(Matfile);
     count = 1;
     for i = 1:length(fields_cell)

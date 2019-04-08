@@ -6,13 +6,13 @@ a = 90;
 b = 75;
 D = [4, 6];
 R_focus = a;
-Slice = {'xy','xz'};
+Slice = {'xy','xz','yz'};
 
 type = 'horizontal';
 
-FX = [0, 20, 40];
-FY = [0, 20];
-FZ = [0];
+FX = [0, 20, 30, 40];
+FY = [0];
+FZ = [0, 20];
 
 Dimensions = 3;
 count = 1;
@@ -63,7 +63,7 @@ count = count +1;
 end
 end
 
-save('h_kwave_max.mat','-struct','data');
-save('h_kwave_max_hilbert.mat','-struct','data1');
-save('h_kwave_sum_hilbert.mat','-struct','data2');
+save('s_h_kwave_max.mat','-struct','data');
+save('s_h_kwave_max_hilbert.mat','-struct','data1');
+save('s_h_kwave_sum_hilbert.mat','-struct','data2');
 

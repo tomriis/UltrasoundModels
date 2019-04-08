@@ -24,7 +24,7 @@ function kgrid = define_kgrid(rect,focus, kerf, fs,Dimensions, c, type,delays)
         kgrid = makeGrid(Nx, dx, Ny, dy, Nz, dz);
     end
     
-    tmax = max(delays)+(2/3)*Nz*dz/c;
+    tmax = (2/3)*Nz*dz/c; %max(delays)+
     kgrid.dt = 1/fs;
     kgrid.t_array = 0:kgrid.dt:tmax;
 end

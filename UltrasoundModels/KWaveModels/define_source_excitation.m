@@ -40,11 +40,11 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
                 ijk_x = ijk_xy(coordinates(2) == ijk_xy(:,2),1);
                 x_terms = sum(ijk_x < coordinates(1));
                 count = count + z_terms + y_terms + x_terms; 
-%                 phi = 2*pi*fo*delays(rect_n);
-%                 excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
-                excitation = zeros([1,length(kgrid.t_array)]);
-                inds = find(kgrid.t_array > delays(rect_n));
-                excitation(inds(1):inds(1)+10) = Mag;
+                 phi = 2*pi*fo*delays(rect_n);
+                 excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+                %excitation = zeros([1,length(kgrid.t_array)]);
+                %inds = find(kgrid.t_array > delays(rect_n));
+                %excitation(inds(1):inds(1)+10) = Mag;
                 p(count, time_index) = excitation;
             end
         end
