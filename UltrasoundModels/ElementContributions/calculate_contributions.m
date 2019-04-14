@@ -30,3 +30,6 @@ function [power] = calculate_power(D, lambda, x_norm, z_norm)
     power = abs(sinc(D*x_norm/(lambda*z_norm)));
 
 end
+
+
+    
