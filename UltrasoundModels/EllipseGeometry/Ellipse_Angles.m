@@ -1,4 +1,4 @@
-function [focus]=Ellipse_Angles(handles)
+function [focus_point]=Ellipse_Angles(handles)
     try 
         pos = handles.focus.Position;
     catch

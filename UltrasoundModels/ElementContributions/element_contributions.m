@@ -1,4 +1,4 @@
-function [] = element_contributions(varargin)
+function [contributions, rect] = element_contributions(varargin)
     p = inputParser;
     addRequired(p,'n_elements_r', @(x) isnumeric(x));
     addRequired(p,'n_elements_y', @(x) isnumeric(x));
@@ -18,7 +18,7 @@ function [] = element_contributions(varargin)
     magnitude = 0.5; %[Pa]
     fo = 650e3;
     fs=20*fo;
-
+    c = 1540; % Speed of sound in water
     % Define the source
     a = p.Results.a/1000; %m
     b = p.Results.b/1000;
@@ -34,9 +34,11 @@ function [] = element_contributions(varargin)
     [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf,...,
         D, R_focus, a, b,type);
     
-    contributions = calculate_contributions(rect,focus);
+    
+    lambda = c/fo;
+    contributions = calculate_contributions(rect,focus, lambda);
         
     
-    c = 1540; % Speed of sound in water
+    
     
 end
