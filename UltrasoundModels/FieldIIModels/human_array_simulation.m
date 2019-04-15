@@ -69,9 +69,20 @@ xdc_impulse(Tx,impulse_response);
 %excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-cycles = 200; amplitude = 1;
-excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
-%
+total_cycles = 200; amplitude = 1;
+%Excitation
+set_cycles;
+df = 100000;
+frequency = [f0-df, f0,f0+df];
+count = 1;
+excitation = [];
+
+for i =1:floor(total_cycles/set_cycles)
+    
+    k = mod(i, length(frequency))+1;
+    ex = amplitude * sin(2*pi*frequency(k)*(0 : (1/fs) : (set_cycles/frequency(k))));
+    excitation = horzcat(excitation,ex);
+end
 xdc_excitation(Tx, excitation);
 
 %% Set focal point

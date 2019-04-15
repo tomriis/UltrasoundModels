@@ -1,4 +1,4 @@
-function [max_hp, sum_hilbert,max_hilbert, max_abs_hp, xdc_data]=horizontal_array_simulation(varargin)
+function [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_r', @(x) isnumeric(x));
@@ -74,11 +74,13 @@ xdc_impulse(Tx,impulse_response);
 % plot(t*1e6, impulse_response); grid on; xlabel('t (\musec)');
 
 %% Driving waveform
-%excitation = 1;  % driving signel; 1 = simple pulse
+excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-cycles = 250; amplitude = 1;
+cycles = 200; amplitude = 1;
 excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
+
 %
 xdc_excitation(Tx, excitation);
 
@@ -127,6 +129,7 @@ if p.Results.visualize_output
     figure;
     switch plane
         case 'xy'
+            txfielddb = db(max_hp./max(max(max_hp)));
             imagesc(x*1e3, y*1e3, txfielddb);
             axis equal tight;
             xlabel('x (mm)');

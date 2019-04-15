@@ -42,7 +42,7 @@ end
 try 
     SUM = s.SUM;
 catch
-    SUM = 'MS';
+    SUM = 'ms';
 end
 
 if isempty(B)
