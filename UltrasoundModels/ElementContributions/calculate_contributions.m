@@ -27,8 +27,11 @@ end
 
 
 function [power] = calculate_power(D, lambda, x_norm, z_norm)
-    power = abs(sinc(D*x_norm/(lambda*z_norm)));
-
+    if x_norm > lambda*z_norm/D
+        power = 0;
+    else
+        power = sinc(D*x_norm/(lambda*z_norm));
+    end
 end
 
 
