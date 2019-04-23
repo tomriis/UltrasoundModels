@@ -7,7 +7,6 @@ fs = 20*f0;
 for i = 1:iterations
     curr= mod(i,length(frequencies))+1;
     f0 = frequencies(curr);
-    disp(num2str(f0));
     ex_on = sin(2*pi*f0*(0 : (1/fs) : (number_of_cycles/f0)));
     excitation=horzcat(excitation, ex_on);
 end

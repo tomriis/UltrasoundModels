@@ -1,22 +1,22 @@
 function []=param_search_horizontal()
     % Transducer Geometry
     kerf = 0.4;
-    r_width = [4, 6];
-    z_width = [4, 6];
+    r_width = [4];
+    z_width = [6];
     
     %Array Geometry
-    N_Elements_Z = [4, 6];%[4 5 6];
+    N_Elements_Z = [6];%[4 5 6];
     %Nx * Nz = [256, 512];
     total_elements = 256;
     Semi_Major_Axis = 180/2;
     % 1. circular 2. elliptical 
     Semi_Minor_Axis_Ratio = [1, 75/90];
-    R_Focus_Ratio = 1; %[1 , 1e10];
+    R_Focus_Ratio = [1 , 1e12];
     % Steering
-    Slice_XYZ = {'xy','xz','yz'};
-    X = -40 : 20 : 40;
+    Slice_XYZ = {'xy'};
+    X = 0 : 20 : 40;
     Y = [0,20,30];
-    Z = 0 : 20 : 40;
+    Z =0;% 0 : 20 : 40;
     
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...

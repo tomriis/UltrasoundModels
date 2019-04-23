@@ -1,4 +1,4 @@
-function [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(varargin)
+function [hp,max_hp, sum_hilbert, xdc_data,y]=horizontal_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_r', @(x) isnumeric(x));
@@ -13,6 +13,8 @@ addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
 addOptional(p,'visualize_transducer',false);
 addOptional(p,'visualize_output',true);
 addOptional(p,'Slice','xy');
+addOptional(p,'excitation',-1);
+addOptional(p,'f0',650000)
 parse(p, varargin{:})
 
 %% Due to memory issue, must define transducer in vertical direction
@@ -35,7 +37,7 @@ field_init(-1);
 
 %% Set up medium & simulation:
 c = 1500;  %(m/s) global speed of sound in medium
-f0 = 650e3;  %(Hz) center frequency of the transducer
+f0 = p.Results.f0;  %(Hz) center frequency of the transducer
 fs = f0 * 20;  %(Hz) sampling frequency of the simulation; 20 times the transducer frequency is enough
 alpha = 0.5 * 100 / 1e6;  %(dB/m/Hz) attenuation of ultrasound in the brain
 %
@@ -74,14 +76,32 @@ xdc_impulse(Tx,impulse_response);
 % plot(t*1e6, impulse_response); grid on; xlabel('t (\musec)');
 
 %% Driving waveform
-excitation = 1;  % driving signel; 1 = simple pulse
+if p.Results.excitation == -1
+    excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-cycles = 200; amplitude = 1;
-excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
-excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
-
+%cycles = 1; amplitude = 1;
+%excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+%excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
+else    
+    excitation = p.Results.excitation;
+%     figure; plot(excitation);
+%                      % Sampling period       
+% L = length(excitation);       % Length of s
+% Y = fft(excitation);
+% P2 = abs(Y/L);
+% P1 = P2(1:round(L/2)+1);
+% P1(2:end-1) = 2*P1(2:end-1);
+%         f = fs*(0:(L/2))/L;
+%         figure;
+% plot(f,P1) 
+% title('Single-Sided Amplitude Spectrum of X(t)')
+% xlabel('f (Hz)')
+% ylabel('|P1(f)|')
+end
 %
+% hp=0;max_hp=0; sum_hilbert=0; xdc_data=0; y=0;
+% return;
 xdc_excitation(Tx, excitation);
 
 %% Set focal point
@@ -113,14 +133,12 @@ sum_hilbert = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
 max_hp = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
 max_hilbert = max(abs(hilbert(hp)));
 
-max_abs_hp=max(abs(hp));
 size(sum_hilbert)
 length(x)
 length(y)
 sum_hilbert = reshape(sum_hilbert, 276, 276);
 max_hilbert = reshape(max_hilbert, 276, 276);
 max_hp = reshape(max_hp, 276, 276);
-max_abs_hp = reshape(max_abs_hp, 276, 276);
 %reshape the output for 2D plotting
 
    
@@ -136,13 +154,13 @@ if p.Results.visualize_output
             ylabel('y (mm)');
             ch = colorbar; ylabel(ch, 'dB'); 
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-%             figure;
-%             XL = min(x)*1e3;
-%             XH = max(x)*1e3;
-%             profile = txfielddb(round(length(txfielddb) / 2), 1:length(x));
-%             plot(x*1e3, profile); 
-%             xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
-%             xlabel('x (mm)');
+            figure;
+            XL = min(x)*1e3;
+            XH = max(x)*1e3;
+            profile = txfielddb(:, 276/2);
+            plot(x*1e3, profile); 
+            xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
+            xlabel('y (mm)');
         case 'xz'
             imagesc(x*1e3, z*1e3, txfielddb); colorbar;
             xlabel('x (mm)');
