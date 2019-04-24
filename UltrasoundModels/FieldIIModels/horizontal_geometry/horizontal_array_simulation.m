@@ -15,6 +15,7 @@ addOptional(p,'visualize_output',true);
 addOptional(p,'Slice','xy');
 addOptional(p,'excitation',-1);
 addOptional(p,'f0',650000)
+addOptional(p,'shift',0);
 parse(p, varargin{:})
 
 %% Due to memory issue, must define transducer in vertical direction
@@ -52,9 +53,9 @@ b = p.Results.b;
 n_elements_r = p.Results.n_elements_r;  %number of physical elements in X.
 n_elements_z = p.Results.n_elements_z;  %number of physical elements in Y.
 kerf = p.Results.kerf;
-D_rz = p.Results.D; %Diameter, width, and length of element (mm)
+D_rz = p.Results.D; % Diameter, width, and length of element (mm)
 R_focus = p.Results.R_focus;
-[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000);
+[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000, p.Results.shift);
 
 %Show the transducer array in 3D
 if visualize_transducer
