@@ -6,7 +6,6 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
         ijk_all = horzcat(ijk_all, ijk.(f{i}));
     end
     ijk_all = ijk_all';
-    delays = delays-min(delays);
    
     if Dimension == 2
         p=zeros(size(ijk_all,1),length(time_index));

@@ -15,10 +15,8 @@ function [sensor_data, source, kgrid] = kwave_monkeyTx_simulation(varargin)
     rect = corners_to_rect(p.Results.corners);
     
     rect = apply_affine_to_rect(M, rect);
-    
+    rect = rect/1000; % Convert from mm to meters
     show_transducer('data',rect);
-    % Convert to meters
-    rect = rect/1000;
     
     [sensor_data, source, kgrid] = kwave_simulation(rect, Dimensions, focus, plane);
     

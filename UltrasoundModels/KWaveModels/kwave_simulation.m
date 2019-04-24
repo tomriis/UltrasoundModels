@@ -6,7 +6,6 @@ function [sensor_data, source,kgrid] = kwave_simulation(rect, Dimensions, focus,
     type = '';
     % Compute delays
     delays = compute_delays(rect, focus, c);
-    delays = delays-min(delays);
     % create the computational grid
     kgrid = define_kgrid(rect,focus, fs,3, c,delays);
     
@@ -38,7 +37,8 @@ function [sensor_data, source,kgrid] = kwave_simulation(rect, Dimensions, focus,
         medium.density = 1040;
         %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','gpuArray-single');
         sensor_data = kspaceFirstOrder3DC(kgrid,medium,source,sensor);
-    end
-    sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
+        sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
         length(kgrid.t_array)]);
+    end
+    
 end
