@@ -15,7 +15,7 @@ addOptional(p,'visualize_output',true);
 addOptional(p,'Slice','xy');
 addOptional(p,'excitation',-1);
 addOptional(p,'f0',650000)
-addOptional(p,'shift',0);
+addOptional(p,'jitter',0);
 parse(p, varargin{:})
 
 %% Due to memory issue, must define transducer in vertical direction
@@ -55,7 +55,7 @@ n_elements_z = p.Results.n_elements_z;  %number of physical elements in Y.
 kerf = p.Results.kerf;
 D_rz = p.Results.D; % Diameter, width, and length of element (mm)
 R_focus = p.Results.R_focus;
-[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000, p.Results.shift);
+[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000, 0);
 
 %Show the transducer array in 3D
 if visualize_transducer
@@ -108,15 +108,23 @@ xdc_excitation(Tx, excitation);
 %% Set focal point
 focus = focal_point * 1e-3;  %(m)
 
-%delays = compute_delays(Tx, focus, c, n_elements, Nx, Ny); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
+rect = xdc_pointer_to_rect(Tx);
+delays = compute_delays(rect, focus, c, p.Results.jitter); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 
 %delays=repmat(delays,1,Nx*Ny);
 
-%ele_delay(Tx, 1, delays(1,:)); %set the delays
+%ele_delay(Tx, rect(1,:)', delays); %set the delays
 %xdc_center_focus(Tx, [0,0,0]);
-xdc_focus(Tx, 0, focus);
-%xdc_focus_times (Tx, 0, delays);
+% xdc_focus(Tx, 0, focus);
+times = (1:4:200)'*1/f0;
+all_delays = zeros([length(times), size(rect,2)]);
+for i = 1:length(times)
+    all_delays(i,:) = compute_delays(rect, focus,c, p.Results.jitter)';
+end
+    
+    
+xdc_focus_times (Tx, 0, delays');
 %% Set measurement points
 [x,y,z] = get_slice_xyz(plane, focus);
 %create all individual x, y, z points within the above ranges
@@ -148,7 +156,7 @@ if p.Results.visualize_output
     figure;
     switch plane
         case 'xy'
-            txfielddb = db(max_hp./max(max(max_hp)));
+            txfielddb = db(sum_hilbert./max(max(sum_hilbert)));
             imagesc(x*1e3, y*1e3, txfielddb);
             axis equal tight;
             xlabel('x (mm)');
