@@ -5,5 +5,6 @@ function delays = compute_delays(rect, focus, c)
  deltas = centers - ones(length(centers), 1) * focus;
  delays = 1/c * sqrt(sum(deltas .* deltas, 2));
  delays = max(delays) - delays;
+
 end
  

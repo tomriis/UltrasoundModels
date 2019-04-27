@@ -1,46 +1,13 @@
-
-function [sensor_data, kgrid] = kwave_simulation(varargin) 
-    p = inputParser;
-    addRequired(p,'n_elements_r', @(x) isnumeric(x));
-    addRequired(p,'n_elements_y', @(x) isnumeric(x));
-    addRequired(p,'a', @(x) isnumeric(x));
-    addRequired(p,'b', @(x) isnumeric(x));
-    addRequired(p,'D');
-    addRequired(p, 'focal_point');
-    addOptional(p, 'Dim',2);
-    addOptional(p,'type','horizontal');
-    addOptional(p, 'kerf',0.4);
-    addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
-    addOptional(p,'Slice','xy');
-    parse(p, varargin{:})
-    
-    Dimensions = p.Results.Dim;
-    % Define excitation
+function [sensor_data, source,kgrid] = kwave_simulation(rect, Dimensions, focus, plane)
+    c = 1540; % Speed of sound in water
     magnitude = 0.5; %[Pa]
     fo = 650e3;
     fs=20*fo;
-
-    % Define the source
-    a = p.Results.a/1000; %m
-    b = p.Results.b/1000;
-    n_elements_r = p.Results.n_elements_r;  %number of physical elements in X.
-    n_elements_y = p.Results.n_elements_y;  %number of physical elements in Y.
-    kerf = p.Results.kerf/1000;
-    D = p.Results.D/1000; %Diameter, width, and length of element (m)
-    R_focus = p.Results.R_focus/1000;
-    type = p.Results.type;
-    focus = p.Results.focal_point/1000; %(m)
-    slice = p.Results.Slice;
-    
-    [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf,...,
-        D, R_focus, a, b,type);
-    
-    c = 1540; % Speed of sound in water
+    type = '';
     % Compute delays
     delays = compute_delays(rect, focus, c);
-    delays = delays-min(delays);
     % create the computational grid
-    kgrid = define_kgrid(rect,focus, kerf, fs,3, c, type,delays);
+    kgrid = define_kgrid(rect,focus, fs,3, c,delays);
     
     % Define source
     [source.p_mask, ijk, sensor_focus] = rect_to_mask(kgrid, rect, Dimensions, type, focus,1);
@@ -50,7 +17,7 @@ function [sensor_data, kgrid] = kwave_simulation(varargin)
     elapsedTime = toc;
     disp(strcat("define_source_excitation took ", num2str(elapsedTime)," seconds"));
     % Define a sensor mask 
-    [sensor.mask, sensor_size] = define_sensor_mask(kgrid,sensor_focus,slice,Dimensions);
+    [sensor.mask, sensor_size] = define_sensor_mask(kgrid,sensor_focus,plane,Dimensions);
     
     disp("-------------------------------------")
     disp("  Model Defined, Running Simulation  ")
@@ -58,7 +25,7 @@ function [sensor_data, kgrid] = kwave_simulation(varargin)
    
     % Run the simulation
     if Dimensions == 2
-        kgrid = define_kgrid(rect,focus, kerf, fs,2, c,type,delays);
+        kgrid = define_kgrid(rect,focus, fs,2, c,delays);
         % Define the medium properties   
         medium.sound_speed = c;%*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]
@@ -70,8 +37,8 @@ function [sensor_data, kgrid] = kwave_simulation(varargin)
         medium.density = 1040;
         %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','gpuArray-single');
         sensor_data = kspaceFirstOrder3DC(kgrid,medium,source,sensor);
-    end
-    sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
+        sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
         length(kgrid.t_array)]);
+    end
+    
 end
-

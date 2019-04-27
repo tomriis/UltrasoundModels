@@ -1,5 +1,4 @@
 function [rect] = kwave_focused_array(n_r, n_y,kerf, D, R_focus,a,b,type)
-
     field_init(-1)
     if strcmp(type,'horizontal')
         [Th] = horizontal_array(n_r, n_y, kerf, D, R_focus,a,b);

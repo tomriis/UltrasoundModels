@@ -1,32 +1,31 @@
 function []=param_search_horizontal()
     % Transducer Geometry
     kerf = 0.4;
-    r_width = [4, 6, 8];
-    z_width = [4, 6, 8];
+    r_width = [4];
+    z_width = [6];
     
     %Array Geometry
-    N_Elements_Z = 4;%[4 5 6];
+    N_Elements_Z = [6];%[4 5 6];
     %Nx * Nz = [256, 512];
     total_elements = 256;
-    Semi_Major_Axis = [180/2, 240/2];
+    Semi_Major_Axis = 180/2;
     % 1. circular 2. elliptical 
     Semi_Minor_Axis_Ratio = [1, 75/90];
-    R_Focus_Ratio = 1; %[1 , 1e10];
+    R_Focus_Ratio = [1 , 1e12];
     % Steering
-    Slice_XYZ = {'xy','xz','yz'};
+    Slice_XYZ = {'xy'};
     X = 0 : 20 : 40;
     Y = [0,20,30];
-    Z = 0 : 20 : 40;
+    Z =0;% 0 : 20 : 40;
     
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
         length(r_width)*length(z_width);
     
     data = struct();
-    data3 = struct();
+
     data1 = struct();
     data2 = struct();
-    data_error = struct();
     count = 1;
     for A_i = 1:length(Semi_Major_Axis)
         A = Semi_Major_Axis(A_i);
@@ -69,7 +68,7 @@ function []=param_search_horizontal()
         ElGeo = 1;
     end
     s.ElGeo = ElGeo; s.NR = n_r; s.NY =n_z; s.A = A; s.B = B; s.D = D; s.F=[x,y,z];
-    s.Slice = slice; s.Ro = R_focus; s.T = total_elements;
+    s.Slice = slice; s.Ro = R_focus; s.T = total_elements; s.EX = 's';
     
     fname = fieldname_from_params(s);
 
@@ -77,9 +76,11 @@ function []=param_search_horizontal()
             'R_focus',R_focus,'Slice',slice,'visualize_output',false);
     
         data.(fname) = max_hp;
+        k = strfind(fname,'SUM');
+        fname(k+3:end) = 'sh';
         data1.(fname) = sum_hilbert;
-        data2.(fname) = max_hilbert;
-        data3.(fname) = max_abs_hp;
+        fname(k+3:end) = 'mh';
+        data2.(fname) = max_hilbert;      
         k = strfind(fname,'Slice_');
         gname = fname(1:k-1);
         data.(strcat('G_',gname)) = xdc_data;
@@ -96,13 +97,12 @@ function []=param_search_horizontal()
     end
     end
     end
-    save('s_hor_max_hp4.mat','-struct','data');
-    save('s_hor_max_hilbert4.mat','-struct','data2');
-    save('s_hor_sum_hilbert4.mat','-struct','data1');
-    save('s_hor_max_abs_hp4.mat','-struct','data3');
+    save('jitter_max_hp.mat','-struct','data');
+    save('jitter_max_hilbert.mat','-struct','data2');
+    save('jitter_sum_hilbert.mat','-struct','data1');
     try
-        sendmail('tomriis11@gmail.com','Code Finished Ese4', ...
-        ['Done with ps_256_RoY30_.mat' 10 'Set up K Wave 2D']);
+        sendmail('tomriis11@gmail.com','Code DC 33', ...
+        ['focus_outward_.mat' 10 'Set up 2d scans and mounting skull']);
     catch
         disp('Email Failed');
     end

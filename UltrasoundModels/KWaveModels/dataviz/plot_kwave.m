@@ -38,7 +38,7 @@ function plot_kwave(app,varargin)
     end
     
     if strcmp(app.UnitsDropDown.Value, 'dB')
-        y_limit = [min(profile),0.2];
+        y_limit = [-49,0.2];%[min(profile),0.2];
     end
     
     plot(app.UIAxes_2, x_axis, profile); hold(app.UIAxes_2, 'on');
