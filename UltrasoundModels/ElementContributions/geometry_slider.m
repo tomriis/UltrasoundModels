@@ -9,6 +9,9 @@ function [app] = geometry_slider(app, slider_name,parameter, allowed_values)
     else
         app.(parameter) = allowed_values(i);
     end
-    app.rect = kwave_focused_array(app.n_elements_r,app.n_elements_y,...,
+    app.rect2D = kwave_focused_array(app.n_elements_r,1,...,
+    app.kerf, app.D, app.R_focus, app.a, app.b, app.type);
+
+    app.rect3D = kwave_focused_array(app.n_elements_r,app.n_elements_y,...,
     app.kerf, app.D, app.R_focus, app.a, app.b, app.type);
 end

@@ -1,7 +1,9 @@
 function [] = plot_transducers_field(app)
     line_width = 3;
-    rect = app.rect;
+    
+    rect = app.rect2D;
     lambda = 1540/app.fo;
+    app.lambda = lambda;
     plot(app.UIAxes, app.focus(1), app.focus(3), '+','LineWidth',3);
     hold(app.UIAxes,'on')
     for i = 1:size(rect,2)
@@ -41,5 +43,14 @@ function [] = plot_transducers_field(app)
         end
     end 
     hold(app.UIAxes_2,'off');
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % THIRD AXIS 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    field = calculate_model_field(app);
+    txfielddb = db(field./max(max(field)));
+    
+    imagesc(app.UIFieldAxes, app.x*1e3, app.y*1e3, txfielddb);
     
 end
