@@ -55,7 +55,7 @@ n_elements_z = p.Results.n_elements_z;  %number of physical elements in Y.
 kerf = p.Results.kerf;
 D_rz = p.Results.D; % Diameter, width, and length of element (mm)
 R_focus = p.Results.R_focus;
-[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000, 0);
+[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf/1000, D_rz/1000, R_focus/1000, a/1000, b/1000);
 
 %Show the transducer array in 3D
 if visualize_transducer

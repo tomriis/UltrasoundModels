@@ -1,4 +1,4 @@
-function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,shift)
+function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b)
     
     len_z = (D(2)+kerf)*n_elements_z;
     AngExtent_z = len_z/ R_focus;
@@ -7,7 +7,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     angle_z = index_z* angle_inc_z;
     
 
-    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r,shift);
+    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
    
 %     AngExtent_z = 2*pi;
 %     angle_inc_z = AngExtent_z/n_elements_r;
