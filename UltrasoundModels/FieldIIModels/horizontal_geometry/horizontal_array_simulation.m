@@ -81,24 +81,11 @@ if p.Results.excitation == -1
     excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-%  cycles = 50; amplitude = 1;
-%  excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
-%excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
+% cycles = 50; amplitude = 1;
+% excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+% excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
 else    
     excitation = p.Results.excitation;
-%     figure; plot(excitation);
-%                      % Sampling period       
-% L = length(excitation);       % Length of s
-% Y = fft(excitation);
-% P2 = abs(Y/L);
-% P1 = P2(1:round(L/2)+1);
-% P1(2:end-1) = 2*P1(2:end-1);
-%         f = fs*(0:(L/2))/L;
-%         figure;
-% plot(f,P1) 
-% title('Single-Sided Amplitude Spectrum of X(t)')
-% xlabel('f (Hz)')
-% ylabel('|P1(f)|')
 end
 %
 % hp=0;max_hp=0; sum_hilbert=0; xdc_data=0; y=0;

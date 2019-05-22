@@ -41,7 +41,7 @@ handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'T','A','W','H','FX','FY','ElGeo','NY','Slice','FZ','B'};
+field_slider_map={'A','W','H','FX','FY','ElGeo','NY','Slice','FZ','B','K'};
 for i =1:length(field_slider_map)
         sl = handles.(strcat('slider',field_slider_map{i}));
         if field_slider_map{i} == 'B'
@@ -61,9 +61,7 @@ for i =1:length(field_slider_map)
         set(sl, 'Visible','off');
     end
 end
-if handles.NX_NY_coupled
-    set(handles.sliderT, 'Visible','off');
-end
+ 
 % Initialize Pop Up Menu
 handles.txfield_norm='dB';
 set(handles.popupmenu1,'String',{'dB','Normalize'});
@@ -71,8 +69,8 @@ set(handles.popupmenu1,'String',{'dB','Normalize'});
 handles.plot_flag = false;
 numSliders = 10;
 waitbar(1/2+0.5*1/numSliders,f,'Initializing GUI');
-sliderT_Callback(handles.sliderT, eventdata,handles);
-handles=guidata(hObject);
+handles.current_params.T = 256;
+handles = NY_Callback(handles);
 waitbar(1/2+0.5*2/numSliders,f);
 sliderA_Callback(handles.sliderA, eventdata,handles);
 handles=guidata(hObject);
@@ -98,6 +96,8 @@ waitbar(1/2+0.5*9/numSliders,f);
 sliderFZ_Callback(handles.sliderFZ, eventdata,handles);
 handles=guidata(hObject);
 sliderSlice_Callback(handles.sliderSlice, eventdata,handles);
+handles=guidata(hObject);
+sliderK_Callback(handles.sliderK, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*10/numSliders,f);
 try
@@ -167,9 +167,9 @@ function sliderA_Callback(hObject, eventdata, handles)
     handles.current_params.A = value;
     
     if handles.current_params.ElGeo == 2
-        caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
-        set(handles.text8,'String',caption);
-        handles.current_params.Ro = handles.current_params.A;
+%         caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
+%         set(handles.text8,'String',caption);
+%         handles.current_params.Ro = handles.current_params.A;
     end
     handles = semiminor_callback(handles);
     guidata(hObject, handles);
@@ -449,3 +449,53 @@ function field_sum_group_SelectionChangedFcn(hObject, ~, handles)
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
     end
+
+
+% --- Executes on slider movement.
+function sliderRFocus_Callback(hObject, eventdata, handles)
+    value = handles.parameters.Ro(int16(get(handles.sliderRFocus,'Value')));
+    caption = sprintf('Ro: %.2f (mm)', value);
+    set(handles.RFocusText, 'String', caption);
+    handles.current_params.Ro = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderRFocus_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderRFocus (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function sliderK_Callback(hObject, eventdata, handles)
+    value = handles.parameters.K(int16(get(handles.sliderK,'Value')));
+     caption = sprintf('Kerf: %.2f (mm)', value);
+     set(handles.KerfText, 'String', caption);
+    handles.current_params.K = value;
+    handles = find_params_in_data(handles);
+    guidata(hObject, handles);
+    if handles.plot_flag
+        plot_xyplane_and_ypeaks(handles);
+    end
+
+
+% --- Executes during object creation, after setting all properties.
+function sliderK_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to sliderK (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end

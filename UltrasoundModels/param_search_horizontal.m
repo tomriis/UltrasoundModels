@@ -1,8 +1,8 @@
 function []=param_search_horizontal()
     % Transducer Geometry
-    kerf = 0.4;
-    r_width = [5, 6];
-    z_width = [5, 6];
+    kerf = [0.4,0.8,1.2,1.6,2.1,2.4,4.8];
+    r_width = [6];
+    z_width = 6;%[5, 6, 7];
     
     %Array Geometry
     N_Elements_Z = [6];%[4 5 6];
@@ -10,8 +10,9 @@ function []=param_search_horizontal()
     total_elements = 256;
     Semi_Major_Axis = 118;
     % 1. circular 2. elliptical 
-    Semi_Minor_Axis_Ratio = [1 90/118];
+    Semi_Minor_Axis_Ratio = [90/118];
     R_Focus_Ratio = [1];%, 1e12];
+    R_foci = 118;%[105,110,115,118,120,125,130,260,999];
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = [0, 20, 30, 40];
@@ -31,8 +32,9 @@ function []=param_search_horizontal()
         A = Semi_Major_Axis(A_i);
     for B_i = 1:length(Semi_Minor_Axis_Ratio)
         B = A*Semi_Minor_Axis_Ratio(B_i);
-    for R_focus_i = 1:length(R_Focus_Ratio)
-        R_focus = A*R_Focus_Ratio(R_focus_i);
+    for k_i = 1:length(kerf)
+        K = kerf(k_i);
+        R_focus = A;%R_foci(R_focus_i);
     for r_width_i = 1:length(r_width)
         D = zeros(1,2);
         D(1) = r_width(r_width_i);
@@ -40,11 +42,11 @@ function []=param_search_horizontal()
         D(2) = z_width(z_width_i);
     for nz_i = 1:length(N_Elements_Z)
         n_z = N_Elements_Z(nz_i);
-        n_r = 42;%floor(total_elements/n_z);
+        n_r = 43;%floor(total_elements/n_z);
         p = ellipse_perimeter(A,B);
-        if n_r*(D(1)+kerf) > p
-            n_r = floor(p/(D(1)+kerf));
-        end
+%         if n_r*(D(1)+kerf) > p
+%             n_r = floor(p/(D(1)+kerf));
+%         end
     for slice_i = 1:length(Slice_XYZ)
         slice = Slice_XYZ{slice_i};
     for x_i = 1:length(X)
@@ -68,15 +70,16 @@ function []=param_search_horizontal()
         ElGeo = 1;
     end
     s.ElGeo = ElGeo; s.NR = n_r; s.NY =n_z; s.A = A; s.B = B; s.D = D; s.F=[x,y,z];
-    s.Slice = slice; s.Ro = R_focus; s.T = total_elements; s.EX = 'g';
+    s.Slice = slice; s.Ro = R_focus; s.T = total_elements; s.EX = 'g'; s.K = K;
     
     fname = fieldname_from_params(s);
 
     [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
-            'R_focus',R_focus,'Slice',slice,'visualize_output',false);
-    
+            'R_focus',R_focus,'Slice',slice,'kerf',K,'visualize_output',false);
+    title(num2str(D(1)));
         data.(fname) = max_hp;
         k = strfind(fname,'SUM');
+        
         fname(k+3:end) = 'sh';
         data1.(fname) = sum_hilbert;
 %         fname(k+3:end) = 'mh';
@@ -97,12 +100,12 @@ function []=param_search_horizontal()
     end
     end
     end
-    save('g_42_geo_max_hp.mat','-struct','data');
-    save('g_42_geo_sum_hilbert.mat','-struct','data1');
-    try
-        sendmail('tomriis11@gmail.com','Code DC 33', ...
-        ['focus_outward_.mat' 10 'Finish Filters']);
-    catch
-        disp('Email Failed');
-    end
+    save('g_k_scan_max_hp.mat','-struct','data');
+    save('g_k_scan_sum_hilbert.mat','-struct','data1');
+%     try
+%         sendmail('tomriis11@gmail.com','Code g', ...
+%         ['focus_outward_.mat' 10 'Finish Filters']);
+%     catch
+%         disp('Email Failed');
+%     end
 end

@@ -24,7 +24,8 @@ function handles=find_params_in_data_helper(fname, handles)
     set(handles.text10, 'String', '');
     k_Ro = strfind(fname, 'Ro');
     k_Slice = strfind(fname,'Slice');
-    caption = sprintf('R Focus: %s (mm)', fname(k_Ro+2:k_Slice-1));
+    k_K = strfind(fname,'K');
+    caption = sprintf('R Focus: %s (mm)', fname(k_Ro+2:k_K-1));
     set(handles.text8,'String',caption);
     set(handles.textMaxPressure, 'String',sprintf('Max Pressure: %d',handles.maxtxfield));
 end

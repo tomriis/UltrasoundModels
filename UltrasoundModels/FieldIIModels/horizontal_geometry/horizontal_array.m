@@ -19,11 +19,11 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     for i = 1:length(angle_r)
             focused_rectangles = [];
             for k=1:length(angle_z)
-%                 if i == 1
-%                     if k == 1 || k == 6
-%                         continue
-%                     end
-%                 end
+                if i == 1
+                    if k == 1 || k == 6
+                        continue
+                    end
+                end
                 x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];
                 rect = [i x(1)  y(1)  z(1)  x(2)  y(1)  z(1)  x(2)  y(2)  z(2)  x(1)  y(2)  z(2)  1  D(1)  D(2)  0  0  0];
                 rect = rect';
@@ -75,6 +75,6 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     focus = [0,0,0];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
-    rectangles(1,:) = 1:(n_elements_r*n_elements_z);
+    rectangles(1,:) = 1:256;%(n_elements_r*n_elements_z);
     Th = xdc_rectangles(rectangles', cent', focus);
 end
