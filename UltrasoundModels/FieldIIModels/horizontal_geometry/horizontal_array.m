@@ -1,13 +1,12 @@
-function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,shift)
+function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b)
     
     len_z = (D(2)+kerf)*n_elements_z;
     AngExtent_z = len_z/ R_focus;
     angle_inc_z = AngExtent_z/n_elements_z;
-    index_z = -n_elements_z/2+0.5: n_elements_z/2-0.5;
+    index_z = -n_elements_z/2+0.5:n_elements_z/2-0.5; %-1+0.5:5-0.5;%-n_elements_z+0.9:0;
     angle_z = index_z* angle_inc_z;
-    
 
-    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r,shift);
+    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
    
 %     AngExtent_z = 2*pi;
 %     angle_inc_z = AngExtent_z/n_elements_r;
@@ -19,11 +18,6 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     for i = 1:length(angle_r)
             focused_rectangles = [];
             for k=1:length(angle_z)
-                if i == 1
-                    if k == 1 || k == 6
-                        continue
-                    end
-                end
                 x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];
                 rect = [i x(1)  y(1)  z(1)  x(2)  y(1)  z(1)  x(2)  y(2)  z(2)  x(1)  y(2)  z(2)  1  D(1)  D(2)  0  0  0];
                 rect = rect';
@@ -64,6 +58,10 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
             rect([17,18,19],j) = mean(points,2);
         end
     % Append to transducer geometry
+%         if i == 10
+%             rect(:,1)=[];
+%             rect(:,end)=[];
+%         end
         rectangles = horzcat(rectangles, rect);
     end
     
@@ -75,6 +73,6 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     focus = [0,0,0];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
-    rectangles(1,:) = 1:256;%(n_elements_r*n_elements_z);
+    rectangles(1,:) = 1:(n_elements_r*n_elements_z);
     Th = xdc_rectangles(rectangles', cent', focus);
 end

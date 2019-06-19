@@ -78,11 +78,12 @@ xdc_impulse(Tx,impulse_response);
 
 %% Driving waveform
 if p.Results.excitation == -1
-    excitation = 1;  % driving signel; 1 = simple pulse
+ %   excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-% cycles = 50; amplitude = 1;
-% excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+cycles = 50; amplitude = 1;
+excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+
 % excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
 else    
     excitation = p.Results.excitation;
@@ -142,7 +143,7 @@ if p.Results.visualize_output
     figure;
     switch plane
         case 'xy'
-            txfielddb = db(sum_hilbert./max(max(sum_hilbert)));
+            txfielddb = db(max_hp./max(max(max_hp)));
             imagesc(x*1e3, y*1e3, txfielddb);
             axis equal tight;
             xlabel('x (mm)');
@@ -152,7 +153,7 @@ if p.Results.visualize_output
             figure;
             XL = min(x)*1e3;
             XH = max(x)*1e3;
-            profile = txfielddb(:, 276/2);
+            profile = txfielddb(276/2, :);
             plot(x*1e3, profile); 
             xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
             xlabel('y (mm)');

@@ -1,6 +1,6 @@
 function []=param_search_horizontal()
     % Transducer Geometry
-    kerf = [0.4,0.8,1.2,1.6,2.1,2.4,4.8];
+    kerf = [0.4, 1.2, 2.4, 3.2, 4.0, 4.8, 5.6, 6.4];
     r_width = [6];
     z_width = 6;%[5, 6, 7];
     
@@ -10,23 +10,23 @@ function []=param_search_horizontal()
     total_elements = 256;
     Semi_Major_Axis = 118;
     % 1. circular 2. elliptical 
-    Semi_Minor_Axis_Ratio = [90/118];
+    Semi_Minor_Axis_Ratio = [90/118,1];
     R_Focus_Ratio = [1];%, 1e12];
     R_foci = 118;%[105,110,115,118,120,125,130,260,999];
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = [0, 20, 30, 40];
     Y = [0,15,30];
-    Z = 0 : 20 : 40;
+    Z = [-10,0,10];
     
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
-        length(r_width)*length(z_width);
+        length(r_width)*length(z_width)*length(kerf);
     
     data = struct();
 
     data1 = struct();
-    data2 = struct();
+  
     count = 1;
     for A_i = 1:length(Semi_Major_Axis)
         A = Semi_Major_Axis(A_i);
@@ -77,16 +77,14 @@ function []=param_search_horizontal()
     [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
             'R_focus',R_focus,'Slice',slice,'kerf',K,'visualize_output',false);
     title(num2str(D(1)));
-        data.(fname) = max_hp;
-        k = strfind(fname,'SUM');
-        
-        fname(k+3:end) = 'sh';
-        data1.(fname) = sum_hilbert;
-%         fname(k+3:end) = 'mh';
-%         data2.(fname) = max_hilbert;      
-        k = strfind(fname,'Slice_');
-        gname = fname(1:k-1);
-        data.(strcat('G_',gname)) = xdc_data;
+    data.(fname) = max_hp;
+    k = strfind(fname,'SUM');
+
+    fname(k+3:end) = 'sh';
+    data1.(fname) = sum_hilbert;     
+    k = strfind(fname,'Slice_');
+    gname = fname(1:k-1);
+    data.(strcat('G_',gname)) = xdc_data;
 
     
     
@@ -100,12 +98,12 @@ function []=param_search_horizontal()
     end
     end
     end
-    save('g_k_scan_max_hp.mat','-struct','data');
-    save('g_k_scan_sum_hilbert.mat','-struct','data1');
-%     try
-%         sendmail('tomriis11@gmail.com','Code g', ...
-%         ['focus_outward_.mat' 10 'Finish Filters']);
-%     catch
-%         disp('Email Failed');
-%     end
+    save('s_1_under_max_hp.mat','-struct','data');
+    save('s_1_under_sum_hilbert.mat','-struct','data1');
+    try
+        sendmail('tomriis11@gmail.com','Code g', ...
+        ['dome.mat' 10 'Solder Procedure']);
+    catch
+        disp('Email Failed');
+    end
 end

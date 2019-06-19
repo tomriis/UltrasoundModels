@@ -36,8 +36,7 @@ disp(DC);
 %figure; plot(excitation);
 [max_hp, sum_hilbert, xdc_data]=...
 horizontal_array_simulation(n_elements_r,n_elements_y, a*1000,...,
-b*1000,D*1000,focus*1000,'R_focus',a*1000,'visualize_output',false,...,
-'excitation', excitation,'f0',f0);
+b*1000,D*1000,focus*1000,'R_focus',a*1000,'visualize_transducer',true);
 %  title(strcat(["On Cycles: ", num2str(on_cycles)]));
 
 subplot(2,4,count)
