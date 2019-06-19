@@ -6,7 +6,7 @@ function [x,y,z] = get_slice_xyz(plane, focus,varargin)
         stepSize = 0.4;
     end
     stepSize = 0.4;
-    limit = 45;
+    limit = 55;
     switch plane
         case 'xy'
             x = (-limit : stepSize : limit)*1e-3;

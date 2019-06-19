@@ -1,4 +1,4 @@
-function [focus_point]=Ellipse_Angles(handles)
+function [focus]=Ellipse_Angles(handles)
     try 
         pos = handles.focus.Position;
     catch
@@ -8,7 +8,7 @@ function [focus_point]=Ellipse_Angles(handles)
     N_Elem = 50;
     % Skull and Horizontal geometry ellipse parameters respectively
     a =135/2; b = 170/2;
-    a_out = 120; b_out = 120;
+    a_out = 118; b_out = 90;
     % Degree at which US is reflected and we color ray red
     reflection_threshold = 20; % Degrees
     % Plot geometries
@@ -57,5 +57,5 @@ function [focus_point]=Ellipse_Angles(handles)
     end
     hold off;
     axis square
-
+    
 end
