@@ -1,4 +1,4 @@
-function [hp,max_hp, sum_hilbert, xdc_data,y]=horizontal_array_simulation(varargin)
+function [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_r', @(x) isnumeric(x));
@@ -81,24 +81,11 @@ if p.Results.excitation == -1
     excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-%cycles = 1; amplitude = 1;
-%excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
-%excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
+% cycles = 50; amplitude = 1;
+% excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+% excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
 else    
     excitation = p.Results.excitation;
-%     figure; plot(excitation);
-%                      % Sampling period       
-% L = length(excitation);       % Length of s
-% Y = fft(excitation);
-% P2 = abs(Y/L);
-% P1 = P2(1:round(L/2)+1);
-% P1(2:end-1) = 2*P1(2:end-1);
-%         f = fs*(0:(L/2))/L;
-%         figure;
-% plot(f,P1) 
-% title('Single-Sided Amplitude Spectrum of X(t)')
-% xlabel('f (Hz)')
-% ylabel('|P1(f)|')
 end
 %
 % hp=0;max_hp=0; sum_hilbert=0; xdc_data=0; y=0;
@@ -109,22 +96,22 @@ xdc_excitation(Tx, excitation);
 focus = focal_point * 1e-3;  %(m)
 
 rect = xdc_pointer_to_rect(Tx);
-delays = compute_delays(rect, focus, c, p.Results.jitter); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
+delays = compute_delays(rect, focus, c); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 
 %delays=repmat(delays,1,Nx*Ny);
 
 %ele_delay(Tx, rect(1,:)', delays); %set the delays
 %xdc_center_focus(Tx, [0,0,0]);
-% xdc_focus(Tx, 0, focus);
-times = (1:4:200)'*1/f0;
-all_delays = zeros([length(times), size(rect,2)]);
-for i = 1:length(times)
-    all_delays(i,:) = compute_delays(rect, focus,c, p.Results.jitter)';
-end
+xdc_focus(Tx, 0, focus);
+% times = (1:4:200)'*1/f0;
+% all_delays = zeros([length(times), size(rect,2)]);
+% for i = 1:length(times)
+%     all_delays(i,:) = compute_delays(rect, focus,c, p.Results.jitter)';
+% end
     
     
-xdc_focus_times (Tx, 0, delays');
+%xdc_focus_times (Tx, 0, delays');
 %% Set measurement points
 [x,y,z] = get_slice_xyz(plane, focus);
 %create all individual x, y, z points within the above ranges
@@ -141,7 +128,6 @@ sum_hilbert = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
 %of the propagating pulse; summing it is a dirty way to approximate the amplitude of the signal regardless of the time it occurs at 
 max_hp = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
 max_hilbert = max(abs(hilbert(hp)));
-
 size(sum_hilbert)
 length(x)
 length(y)

@@ -17,6 +17,7 @@ function [params] = fieldname_to_param(fieldname)
     k_T = strfind(fieldname,'T');
     k_EX = strfind(fieldname,'EX');
     k_SUM = strfind(fieldname,'SUM');
+    k_K = strfind(fieldname,'K');
     if ~isempty(k_NZ) && isempty(k_NY)
         k_NY = k_NZ;
     end
@@ -44,7 +45,7 @@ function [params] = fieldname_to_param(fieldname)
     end
     params.W = get_param_decimal(fieldname, k_W+1,k_H-1);
     params.H = str2double(fieldname(k_H+1:k_Ro-1));
-    
+    params.K = get_param_decimal(fieldname, k_K+1, k_K+2);
     params.Ro = str2double(fieldname(k_Ro+2:k_Slice-1));
     focus = get_focus_from_string(fieldname(k_F+1:k_T-1));
     params.FX = focus(1); params.FY = focus(2); params.FZ = focus(3);

@@ -38,9 +38,9 @@ if p.Results.fast
  hold on
 else
     for i=1:M
-      x=[data(2,i), data(11,i); data(5,i), data(8,i)]*1000;
-      y=[data(3,i), data(12,i); data(6,i), data(9,i)]*1000;
-      z=[data(4,i), data(13,i); data(7,i), data(10,i)]*1000;
+      x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
+      y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
+      z=[data(13,i), data(22,i); data(16,i), data(19,i)]*1000;
       c=data(5,i)*ones(2,2);
       surf(x,y,z,c)
       hold on
