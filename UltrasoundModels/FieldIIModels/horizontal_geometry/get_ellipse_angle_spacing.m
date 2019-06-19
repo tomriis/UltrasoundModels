@@ -3,6 +3,7 @@ function angles_r = get_ellipse_angle_spacing(a,b, N)
         res = 30000;
         arc_length = p/N;
         X = linspace(-pi+0.0748,pi+0.0748,res);
+
         Y = sqrt(a^2*sin(X).^2 + b^2*cos(X).^2);
         
         Y = zeros(length(X),1);

@@ -11,8 +11,10 @@ function [field, c_mat, t_mat] = calculate_model_field(app)
     total = length(x)*length(y);
     t_mat = zeros([252,length(x),length(y)]);
     c_mat = zeros([252,length(x),length(y)]);
+    
     for i = 1:length(x)
         for j = 1:length(y)
+            
             if mod(count, 1000)== 0
                 disp(['On ', num2str(count), ' of ',num2str(total)]);
             end

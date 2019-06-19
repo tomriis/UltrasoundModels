@@ -43,14 +43,4 @@ function [] = plot_transducers_field(app)
         end
     end 
     hold(app.UIAxes_2,'off');
-    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % THIRD AXIS 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
-    field = calculate_model_field(app);
-    txfielddb = db(field./max(max(field)));
-    
-    imagesc(app.UIFieldAxes, app.x*1e3, app.y*1e3, txfielddb);
-    
 end
