@@ -23,7 +23,7 @@ data_fields = struct();
 figure;
 for i = 1:length(on_cycles_list)
     on_cycles = on_cycles_list(i);
-        for ofi = 1:length(off_cycles_list)
+        for ofi = 1:1%length(off_cycles_list)
             off_cycles = on_cycles * off_cycles_list(ofi);
             excitation = duty_cycle_jitter_excitation(total_cycles,...,
                             on_cycles, off_cycles, frequencies);
@@ -39,23 +39,23 @@ horizontal_array_simulation(n_elements_r,n_elements_y, a*1000,...,
 b*1000,D*1000,focus*1000,'R_focus',a*1000,'visualize_transducer',true);
 %  title(strcat(["On Cycles: ", num2str(on_cycles)]));
 
-subplot(2,4,count)
-txfielddb = db(sum_hilbert./max(max(sum_hilbert)));
-            imagesc(x*1e3, y*1e3, txfielddb);
-            axis equal tight;
-%             xlabel('x (mm)');
-%             ylabel('y (mm)');
-            ch = colorbar; %ylabel(ch, 'dB'); 
-            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-            title(strcat(["DC: ", num2str(DC)]));
-            subplot(2,4,count+4)
-            XL = min(x)*1e3;
-            XH = max(x)*1e3;
-            profile = txfielddb(:, 276/2);
-            plot(x*1e3, profile); 
-            xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
-            xlabel('y (mm)');
-            hold on;
+% subplot(2,4,count)
+% txfielddb = db(sum_hilbert./max(max(sum_hilbert)));
+%             imagesc(x*1e3, y*1e3, txfielddb);
+%             axis equal tight;
+% %             xlabel('x (mm)');
+% %             ylabel('y (mm)');
+%             ch = colorbar; %ylabel(ch, 'dB'); 
+%             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
+%             title(strcat(["DC: ", num2str(DC)]));
+%             subplot(2,4,count+4)
+%             XL = min(x)*1e3;
+%             XH = max(x)*1e3;
+%             profile = txfielddb(:, 276/2);
+%             plot(x*1e3, profile); 
+%             xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
+%             xlabel('y (mm)');
+%             hold on;
 % % 
 % [pks,locs] = findpeaks(profile(length(profile)/2:end));
 % 

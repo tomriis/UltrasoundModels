@@ -1,8 +1,8 @@
 function []=param_search_horizontal()
     % Transducer Geometry
-    kerf = [0.4, 1.2, 2.4, 3.2, 4.0, 4.8, 5.6, 6.4];
-    r_width = [6];
-    z_width = 6;%[5, 6, 7];
+    kerf = [0.4, 2.0, 4.0, 6.0, 8.0, 10.0];
+    r_width = [6, 8];
+    z_width = [6, 8];%[5, 6, 7];
     
     %Array Geometry
     N_Elements_Z = [6];%[4 5 6];
@@ -10,14 +10,14 @@ function []=param_search_horizontal()
     total_elements = 256;
     Semi_Major_Axis = 118;
     % 1. circular 2. elliptical 
-    Semi_Minor_Axis_Ratio = [90/118,1];
+    Semi_Minor_Axis_Ratio = [90/118];
     R_Focus_Ratio = [1];%, 1e12];
     R_foci = 118;%[105,110,115,118,120,125,130,260,999];
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
     X = [0, 20, 30, 40];
-    Y = [0,15,30];
-    Z = [-10,0,10];
+    Z = [0,15,30];
+    Y = [-10,0,10];
     
     total = length(X)*length(Z)*length(Y)*length(Slice_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
@@ -98,8 +98,8 @@ function []=param_search_horizontal()
     end
     end
     end
-    save('s_1_under_max_hp.mat','-struct','data');
-    save('s_1_under_sum_hilbert.mat','-struct','data1');
+    save('g_1_under_max_hp.mat','-struct','data');
+    save('g_1_under_sum_hilbert.mat','-struct','data1');
     try
         sendmail('tomriis11@gmail.com','Code g', ...
         ['dome.mat' 10 'Solder Procedure']);

@@ -78,11 +78,11 @@ xdc_impulse(Tx,impulse_response);
 
 %% Driving waveform
 if p.Results.excitation == -1
- %   excitation = 1;  % driving signel; 1 = simple pulse
+   excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-cycles = 50; amplitude = 1;
-excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
+% cycles = 50; amplitude = 1;
+% excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
 
 % excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
 else    

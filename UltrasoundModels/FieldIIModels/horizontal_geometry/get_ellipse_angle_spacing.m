@@ -1,4 +1,4 @@
-function angles_r = get_ellipse_angle_spacing(a,b, N)
+function angles_r  = get_ellipse_angle_spacing(a,b, N)
         p = ellipse_perimeter(a,b);
         res = 30000;
         arc_length = p/N;
