@@ -3,7 +3,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     len_z = (D(2)+kerf)*n_elements_z;
     AngExtent_z = len_z/ R_focus;
     angle_inc_z = AngExtent_z/n_elements_z;
-    index_z = -1+0.5:5-0.5;%-n_elements_z+0.9:0;
+    index_z = -1*(-1+0.5:5-0.5);%-n_elements_z+0.9:0;
     angle_z = index_z* angle_inc_z;
 
     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
@@ -27,7 +27,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     %           Append to transducer geometry
                 focused_rectangles = horzcat(focused_rectangles, positioned_rect);
             end
-            mv = min(focused_rectangles(end,:));
+            mv = R_focus;
             focused_rectangles([4,7,10,13,19],:) = focused_rectangles([4,7,10,13,19],:) - mv;
             cent = focused_rectangles(end-2:end,:);
             Th = xdc_rectangles(focused_rectangles', cent', [0,0,0]);

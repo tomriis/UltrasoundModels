@@ -165,11 +165,11 @@ function sliderA_Callback(hObject, eventdata, handles)
     caption = sprintf('Major Axis: %d (mm)', value);
     set(handles.text3, 'String', caption);
     handles.current_params.A = value;
-    
+
     if handles.current_params.ElGeo == 2
-%         caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
-%         set(handles.text8,'String',caption);
-%         handles.current_params.Ro = handles.current_params.A;
+        caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
+        set(handles.text8,'String',caption);
+        handles.current_params.Ro = handles.current_params.A;
     end
     handles = semiminor_callback(handles);
     guidata(hObject, handles);
@@ -453,7 +453,7 @@ function field_sum_group_SelectionChangedFcn(hObject, ~, handles)
 
 % --- Executes on slider movement.
 function sliderRFocus_Callback(hObject, eventdata, handles)
-    value = handles.parameters.Ro(int16(get(handles.sliderRFocus,'Value')));
+    value = handles.current_params.A;%(int16(get(handles.sliderRFocus,'Value')));
     caption = sprintf('Ro: %.2f (mm)', value);
     set(handles.RFocusText, 'String', caption);
     handles.current_params.Ro = value;

@@ -18,6 +18,7 @@ function [params] = fieldname_to_param(fieldname)
     k_EX = strfind(fieldname,'EX');
     k_SUM = strfind(fieldname,'SUM');
     k_K = strfind(fieldname,'K');
+%     k_K = k_Slice;
     if ~isempty(k_NZ) && isempty(k_NY)
         k_NY = k_NZ;
     end

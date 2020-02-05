@@ -13,6 +13,7 @@ function show_transducer(varargin)
 
 %  Do it for the rectangular elements
 p = inputParser;
+addRequired(p,'d');
 addOptional(p,'Th', -1);
 addOptional(p,'data',[]);
 addOptional(p, 'fast',false);
@@ -28,7 +29,13 @@ else
 end
 
 [~,M]=size(data);
-figure;
+h= figure;
+d = p.Results.d;
+max_hp = d.max_hp;
+x = d.x;
+z = d.z;
+txfielddb = db(max_hp./max(max(max_hp)));
+imagesc(x*1e3, z*1e3, txfielddb');hold on;
 
 if p.Results.fast
        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
@@ -39,8 +46,8 @@ if p.Results.fast
 else
     for i=1:M
       x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
-      y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
-      z=[data(13,i), data(22,i); data(16,i), data(19,i)]*1000;
+      z=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
+      y=[data(13,i), data(22,i); data(16,i), data(19,i)]*1000;
       c=data(5,i)*ones(2,2);
       surf(x,y,z,c)
       hold on
@@ -52,16 +59,18 @@ end
 %  Put some axis legends on
 
 % Hc = colorbar;
-colormap(cool(128));
+
 %view(3)
 xlabel('x [mm] (Lateral)')
-ylabel('y [mm] (Elevation)')
-zlabel('z [mm] (Axial)')
+ylabel('y [mm] (Axial)')
+zlabel('z [mm] (Elevation)')
 grid
 axis('image')
 hold off
-view([90, 90, 90]);  
-%axis square tight
+view([-90, 90, 90]);  
+axis equal
+
+makeFigureBig(h);
 end
 
 function show_skull_space(center_z)

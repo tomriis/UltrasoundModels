@@ -11,7 +11,7 @@ addOptional(p, 'kerf',0.4);
 addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
 
 addOptional(p,'visualize_transducer',false);
-addOptional(p,'visualize_output',true);
+addOptional(p,'visualize_output',false);
 addOptional(p,'Slice','xy');
 addOptional(p,'excitation',-1);
 addOptional(p,'f0',650000)
@@ -60,8 +60,10 @@ R_focus = p.Results.R_focus;
 %Show the transducer array in 3D
 if visualize_transducer
     xdc_data = xdc_get(Tx,'rect');
-    show_transducer('data',xdc_data);
+    show_xdc(Tx);
     txfield = 0;
+    max_hp = 0;
+    sum_hilbert = 0;
     return
 end
 %xdc_show(Tx); %this displays the coordinates of each element within the array
@@ -129,21 +131,19 @@ sum_hilbert = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
 %of the propagating pulse; summing it is a dirty way to approximate the amplitude of the signal regardless of the time it occurs at 
 max_hp = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
 max_hilbert = max(abs(hilbert(hp)));
-size(sum_hilbert)
-length(x)
-length(y)
-sum_hilbert = reshape(sum_hilbert, 276, 276);
-max_hilbert = reshape(max_hilbert, 276, 276);
-max_hp = reshape(max_hp, 276, 276);
+size(sum_hilbert);
+sum_hilbert = reshape(sum_hilbert, length(x), length(z));
+max_hilbert = reshape(max_hilbert, length(x), length(z));
+max_hp = reshape(max_hp,length(x), length(z));
 %reshape the output for 2D plotting
 
    
 try
 if p.Results.visualize_output
     figure;
+    txfielddb = db(max_hp./max(max(max_hp)));
     switch plane
         case 'xy'
-            txfielddb = db(max_hp./max(max(max_hp)));
             imagesc(x*1e3, y*1e3, txfielddb);
             axis equal tight;
             xlabel('x (mm)');
@@ -164,7 +164,9 @@ if p.Results.visualize_output
             ch = colorbar; ylabel(ch, 'dB');        
             set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
             figure;
-            ZL1 = min(z)*1000; ZL2 = max(z)*1000; plot(z*1e3, txfielddb(:, (x==focus(1)))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
+            ZL1 = min(z)*1000; ZL2 = max(z)*1000;
+            plot(z*1e3, txfielddb(:, (x==focus(1)))); xlim([ZL1 ZL2]); hold on;
+            plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
             xlabel('z (mm)');
         case 'yz' 
             imagesc(y*1e3, z*1e3, txfielddb); colorbar;

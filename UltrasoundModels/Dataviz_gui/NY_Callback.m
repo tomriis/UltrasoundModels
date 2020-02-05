@@ -3,6 +3,7 @@ function [handles] = NY_Callback(handles)
     caption = sprintf('NY: %d', value);
     set(handles.text7, 'String', caption);
     handles.current_params.NY = value;
+    handles.current_params.NR = 42;
     if handles.NX_NY_coupled
         handles.current_params.NR = find_NR_from_geo(handles.current_params.T,...,
            handles.current_params.NY,handles.current_params.A,...,

@@ -57,13 +57,13 @@ end
 if isempty(B)
     runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,
         'NY',num2str(n_z),'A',num2str(A), 'W',num2str(D(2)),...,
-'H',num2str(D(1)),'Ro',num2str(R_focus), 'K',num2str(K),'Slice_',slice,'F',...,
+'H',num2str(D(1)),'Ro',num2str(R_focus),'K',num2str(s.K),'Slice_',slice,'F',...,
 strcat(num2str(focus(1)),'_',num2str(focus(2)),'_',num2str(focus(3))),...,
 'T',num2str(T));
 else
     runstring = strcat('ElGeo',num2str(ElGeo),'NR',num2str(n_r),...,
         'NY',num2str(n_z),'A',num2str(A),'B',num2str(B),'W',num2str(D(2)),...,
-'H',num2str(D(1)),'Ro',num2str(R_focus), 'K',num2str(K), 'Slice_',slice,'F',...,
+'H',num2str(D(1)),'Ro',num2str(R_focus),'K',num2str(s.K), 'Slice_',slice,'F',...,
 strcat(num2str(focus(1)),'_',FY,'_',FZ),...,
 'T',num2str(T),'EX',EX,'SUM',SUM);
 end
