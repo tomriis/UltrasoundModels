@@ -28,7 +28,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
                 focused_rectangles = horzcat(focused_rectangles, positioned_rect);
             end
             mv = min(focused_rectangles(end,:));
-            focused_rectangles([4,7,10,13,19],:) = focused_rectangles([4,7,10,13,19],:) - mv;
+            focused_rectangles([4,7,10,13,19],:) = focused_rectangles([4,7,10,13,19],:) - R_focus;
             cent = focused_rectangles(end-2:end,:);
             Th = xdc_rectangles(focused_rectangles', cent', [0,0,0]);
             rect = xdc_pointer_to_rect(Th);
