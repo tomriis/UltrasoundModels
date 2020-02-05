@@ -23,4 +23,8 @@ horizontal_array_simulation(n_elements_r,n_elements_y, a*1000,...,
 b*1000,D*1000,focus*1000,'R_focus',a*1000,'kerf',6,...,
 'Slice','xz','excitation', excitation,'visualize_transducer',false);
 
-datag.tx= max_hp./(max(max_hp,[],'all'));
+datag.max_hp= max_hp./(max(max_hp,[],'all'));
+datag.xdc_data = xdc_data;
+datag.x = x;
+datag.y = y;
+datag.z = z;

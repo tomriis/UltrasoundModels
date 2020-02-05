@@ -11,7 +11,7 @@ set_field('fs', fs);
 set_field('att', alpha);
 
 h1 = figure;
-for i = 1:length(planes)
+for i = 1:3
 
 D = [6, 6]*1e-3;
 x = [-D(1)/2 D(1)/2]; y = [-D(2)/2 D(2)/2]; z = [0,0];

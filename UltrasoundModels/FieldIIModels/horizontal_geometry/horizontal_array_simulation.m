@@ -9,20 +9,11 @@ addRequired(p,'D');
 addRequired(p, 'focal_point');
 addOptional(p, 'kerf',0.4);
 addOptional(p, 'R_focus', 1e15, @(x) isnumeric(x));
-
 addOptional(p,'visualize_transducer',false);
-addOptional(p,'visualize_output',false);
 addOptional(p,'Slice','xy');
 addOptional(p,'excitation',-1);
 addOptional(p,'f0',650000)
-addOptional(p,'jitter',0);
 parse(p, varargin{:})
-
-%% Due to memory issue, must define transducer in vertical direction
-%% and transform focus and measurement plane to horizontal direction
-
-y_to_z_transform = [1 0 0; 0 0 1; 0 1 0];
-
 
 %% Parameters to vary in this exercise
 visualize_transducer = p.Results.visualize_transducer;
@@ -30,7 +21,7 @@ focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to
 if size(focal_point,2) == 1
     focal_point = focal_point';
 end
-%focal_point = (y_to_z_transform*focal_point)';
+
 plane = p.Results.Slice; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
 %% Initialize Field II:
@@ -69,7 +60,7 @@ end
 %xdc_show(Tx); %this displays the coordinates of each element within the array
 
 %% Impulse response of a transducer (= acoustic pressure response emitted by a transducer when subjected to an electric dirac driving pulse)
-fracBW = .50;  %fractional bandwidth of the xducer
+fracBW = .250;  %fractional bandwidth of the xducer
 tc = gauspuls('cutoff', f0, fracBW, -6, -40);  %cutoff time at -40dB, fracBW @ -6dB
 t = -tc : 1/fs : tc;  %(s) time vector centered about t=0
 impulse_response = gauspuls(t,f0,fracBW);
@@ -81,18 +72,10 @@ xdc_impulse(Tx,impulse_response);
 %% Driving waveform
 if p.Results.excitation == -1
    excitation = 1;  % driving signel; 1 = simple pulse
-%
-% if want to drive with a sine, use e.g.:
-% cycles = 50; amplitude = 1;
-% excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
-
-% excitation = duty_cycle_excitation(total_cycles, number_of_cycles, duty_cycle);
 else    
     excitation = p.Results.excitation;
 end
-%
-% hp=0;max_hp=0; sum_hilbert=0; xdc_data=0; y=0;
-% return;
+
 xdc_excitation(Tx, excitation);
 
 %% Set focal point
@@ -124,66 +107,22 @@ pos = [xv(:), yv(:), zv(:)];
 %% Calculate the emitted field at those points
 [hp, ~] = calc_hp(Tx, pos); %this is where the simulation happens
 
-xdc_data = xdc_get(Tx,'rect');
+xdc_data = xdc_get(Tx, 'rect');
 %% Plot the emitted field
-
 sum_hilbert = sum(abs(hilbert(hp)), 1); %Hilbert transform finds the envelop
 %of the propagating pulse; summing it is a dirty way to approximate the amplitude of the signal regardless of the time it occurs at 
-max_hp = max(hp); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
-max_hilbert = max(abs(hilbert(hp)));
+max_hp = max(abs(hp)); %take the maximal value of the propagating pulse, and this way not have to worry about at which time point the pulse arrived to the given location
 size(sum_hilbert);
-sum_hilbert = reshape(sum_hilbert, length(x), length(z));
-max_hilbert = reshape(max_hilbert, length(x), length(z));
-max_hp = reshape(max_hp,length(x), length(z));
-%reshape the output for 2D plotting
 
-   
-try
-if p.Results.visualize_output
-    figure;
-    txfielddb = db(max_hp./max(max(max_hp)));
-    switch plane
-        case 'xy'
-            imagesc(x*1e3, y*1e3, txfielddb);
-            axis equal tight;
-            xlabel('x (mm)');
-            ylabel('y (mm)');
-            ch = colorbar; ylabel(ch, 'dB'); 
-            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-            figure;
-            XL = min(x)*1e3;
-            XH = max(x)*1e3;
-            profile = txfielddb(276/2, :);
-            plot(x*1e3, profile); 
-            xlim([XL XH]); hold on; plot([XL, XH], [-6 -6], 'k--', 'linewidth', 2);
-            xlabel('y (mm)');
-        case 'xz'
-            imagesc(x*1e3, z*1e3, txfielddb); colorbar;
-            xlabel('x (mm)');
-            ylabel('z (mm)');
-            ch = colorbar; ylabel(ch, 'dB');        
-            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-            figure;
-            ZL1 = min(z)*1000; ZL2 = max(z)*1000;
-            plot(z*1e3, txfielddb(:, (x==focus(1)))); xlim([ZL1 ZL2]); hold on;
-            plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
-            xlabel('z (mm)');
-        case 'yz' 
-            imagesc(y*1e3, z*1e3, txfielddb); colorbar;
-            xlabel('y (mm)');
-            ylabel('z (mm)');
-            ch = colorbar; ylabel(ch, 'dB');        
-            set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
-            figure;
-            %Adjust for changing focus in x and y direction . map to
-            %indexes
-            ZL1 = min(z)*1000; ZL2 = max(z)*1000; plot(z*1e3, txfielddb(:, round(length(txfielddb) / 2))); xlim([ZL1 ZL2]); hold on; plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
-            xlabel('z (mm)');
-    end
-    ylabel('Pressure (dB)');
-    set(gca, 'color', 'none', 'box', 'off', 'fontsize', 20);
+if length(x) == 1
+    x = y; 
+elseif length(y) == 1
+    y = x;
+elseif length(z) == 1
+    z = y;
 end
-catch 
-end
+sum_hilbert = reshape(sum_hilbert, length(x), length(z));
+max_hp = reshape(max_hp,length(x), length(z));
+
 %% Terminate Field II
 field_end();
