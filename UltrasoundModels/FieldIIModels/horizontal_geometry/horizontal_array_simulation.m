@@ -31,11 +31,17 @@ field_init(-1);
 c = 1500;  %(m/s) global speed of sound in medium
 f0 = p.Results.f0;  %(Hz) center frequency of the transducer
 fs = f0 * 20;  %(Hz) sampling frequency of the simulation; 20 times the transducer frequency is enough
-alpha = 0.5 * 100 / 1e6;  %(dB/m/Hz) attenuation of ultrasound in the brain
+att = 0.5 * 100 / 1e6;  %(dB/m/Hz) attenuation of ultrasound in the brain
 %
 set_field('c', c);
 set_field('fs', fs);
-set_field('att', alpha);
+Freq_att = 0.5*100/1e6;
+att_f0 = 0.5e6;
+att = Freq_att*att_f0;
+% set_field('att',att);
+% set_field('Freq_att',Freq_att);
+% set_field('att_f0',att_f0);
+set_field('use_att',0);
 
 %% Linear concave array
 
@@ -82,7 +88,7 @@ xdc_excitation(Tx, excitation);
 focus = focal_point * 1e-3;  %(m)
 
 rect = xdc_pointer_to_rect(Tx);
-delays = compute_delays(rect, focus, c); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
+%delays = compute_delays(rect, focus, c); %(s) The delay within which the ultrasound is fired from each of the array elements such as to achieve the desired focal point
 %(could also use xdc_center_focus(Tx,[0 0 0]); xdc_focus(Tx, 0, focus) for physical element designs (e.g., dome tiled with xdc_rectangles()), instead of the mathematical xdc_concave)
 
 %delays=repmat(delays,1,Nx*Ny);
@@ -97,7 +103,7 @@ xdc_focus(Tx, 0, focus);
 % end
     
     
-%xdc_focus_times (Tx, 0, delays');
+% xdc_focus_times (Tx, 0, delays);
 %% Set measurement points
 [x,y,z] = get_slice_xyz(plane, focus);
 %create all individual x, y, z points within the above ranges

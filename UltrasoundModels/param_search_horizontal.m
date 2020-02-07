@@ -1,4 +1,4 @@
-function []=param_search_horizontal()
+% function []=param_search_horizontal()
     % Transducer Geometry
     kerf = [2.0, 4.0, 6.0,];
     r_width = [6];
@@ -66,7 +66,7 @@ function []=param_search_horizontal()
     count = count + 1;    
 
     [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
-            'R_focus',R_focus,'Slice',slice,'kerf',K);
+            'R_focus',R_focus,'Slice',slice,'kerf',K,'excitation', excitation);
     
     data(count).xdrData = xdc_data;
     data(count).max_hp = max_hp;
@@ -92,12 +92,11 @@ function []=param_search_horizontal()
     end
     end
     end
-    save('PowerScan.mat','-struct','data');
+    save('PowerScan.mat','data');
 
     try
-        sendmail('tomriis11@gmail.com','Code Power Scan', ...
-        ['dome.mat' 10 'its done']);
+        sendmail('tomriis11@gmail.com','Code Power Scan');
     catch
         disp('Email Failed');
     end
-end
+% end

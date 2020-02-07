@@ -13,7 +13,6 @@ function show_transducer(varargin)
 
 %  Do it for the rectangular elements
 p = inputParser;
-addRequired(p,'d');
 addOptional(p,'Th', -1);
 addOptional(p,'data',[]);
 addOptional(p, 'fast',false);
@@ -30,12 +29,12 @@ end
 
 [~,M]=size(data);
 h= figure;
-d = p.Results.d;
-max_hp = d.max_hp;
-x = d.x;
-z = d.z;
-txfielddb = db(max_hp./max(max(max_hp)));
-imagesc(x*1e3, z*1e3, txfielddb');hold on;
+% d = p.Results.d;
+% max_hp = d.max_hp;
+% x = d.x;
+% z = d.z;
+% txfielddb = db(max_hp./max(max(max_hp)));
+% imagesc(x*1e3, z*1e3, txfielddb');hold on;
 
 if p.Results.fast
        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;

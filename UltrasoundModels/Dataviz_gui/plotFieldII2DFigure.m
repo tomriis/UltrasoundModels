@@ -21,21 +21,20 @@ function plotFieldII2DFigure(data, focus, x, y)
     
     originalSize1 = get(gca, 'Position');
     cb=colorbar;
-    ylabel(cb, 'dB'); 
+    ylabel(cb, 'Pressure (Mpa)'); 
     set(gca,'fontSize',fontSize)
     
     h2 = subplot(2,1,2);
     ZL1 = min(y)*1000; ZL2 = max(y)*1000;
     plot(y*1e3, data(round(length(x)/2), :)); 
-    xlim([ZL1 ZL2]); hold on;
-    plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
+%     xlim([ZL1 ZL2]); hold on;
+%     plot([ZL1 ZL2], [-6 -6], 'k--', 'linewidth', 2);        
     xlabel('X (mm)');
 
-    ylabel('Pressure (dB)');
+    ylabel('Pressure (Mpa)');
     axis square
     set(gca,'fontSize',fontSize)
     originalSize2 = get(gca, 'Position');
-    originalSize2
     originalSize1(2)=0.52;
     %set(gcf, 'units','normalized','outerposition',[0 0 1 1]); % Maximize figure.
     set(h1, 'Position', originalSize1);
