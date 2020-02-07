@@ -1,4 +1,5 @@
 function [] = plot_xyplane_and_ypeaks(handles)
+        try
         axes1=handles.axes1;axes2=handles.axes2;txfielddb = handles.txfielddb;
         focus = [handles.current_params.FX,handles.current_params.FY,handles.current_params.FZ]*1e-3;
         [x,y,z] = get_slice_xyz(handles.current_params.Slice, focus,size(txfielddb,1));
@@ -157,6 +158,18 @@ function [] = plot_xyplane_and_ypeaks(handles)
         field_space_ticksx = round(linspace(XL,XH, (XH-XL)/10+1));
         xticks(axes2,field_space_ticksx);
         yticks(axes2,round(linspace(YLimLower, YLimUpper, (YLimUpper-YLimLower)/6+1)));
+        
+        originalSize2 = get(axes2, 'Position');
         axis square tight
         hold off;
+                originalSize1(2)=0.52;%originalSize2(2);
+        set(axes1, 'Position', originalSize1);
+    newSize2 =originalSize2;
+    newSize2(3)=originalSize1(3);
+    %newSize(2)= 0.3;
+    set(axes2, 'Position', newSize2);
+        catch
+            disp('fail');
+        end
+
 end

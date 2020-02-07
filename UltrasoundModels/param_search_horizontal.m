@@ -1,6 +1,6 @@
 function []=param_search_horizontal()
     % Transducer Geometry
-    kerf = [2.0, 4.0, 6.0,];
+    kerf = [2.0, 4.0];
     r_width = [6];
     z_width = [6];%[5, 6, 7];
     
@@ -15,9 +15,9 @@ function []=param_search_horizontal()
     R_foci = 118;%[105,110,115,118,120,125,130,260,999];
     % Steering
     Slice_XYZ = {'xy','xz','yz'};
-    X = [0, 15, 30, 40];
-    Z = [0,15,30];
-    Y = [-10,0,10];
+    X = [0, 15, 30];
+    Z = [0];
+    Y = [0];
     %% Define the excitation
     f0= 650000; fs = 20*f0;
     cycles = 5; amplitude = 300000000;
@@ -94,10 +94,10 @@ function []=param_search_horizontal()
     end
     save('PowerScan.mat','-struct','data');
 
-    try
-        sendmail('tomriis11@gmail.com','Code Power Scan', ...
-        ['dome.mat' 10 'its done']);
-    catch
-        disp('Email Failed');
-    end
+%     try
+%         sendmail('tomriis11@gmail.com','Code Power Scan', ...
+%         ['dome.mat' 10 'its done']);
+%     catch
+%         disp('Email Failed');
+%     end
 end

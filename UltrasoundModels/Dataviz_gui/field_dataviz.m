@@ -26,12 +26,13 @@ function field_dataviz_OpeningFcn(hObject, eventdata, handles, varargin)
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to field_dataviz (see VARARGIN)
 p = inputParser;
-addRequired(p,'datafile')
+addRequired(p,'data')
 addOptional(p,'NX_NY_coupled',true);
 parse(p, varargin{:})
 f = waitbar(0, 'Loading Data File');
-handles.filename = p.Results.datafile;
-handles.data = matfile(handles.filename);
+% handles.filename = p.Results.datafile;
+% tmp = load(handles.filename);
+handles.data = p.Results.data; %tmp.data;
 handles.axes1 = axes('Position',[0.40 0.55 0.50 0.44]);
 handles.axes2 = axes('Position',[0.40 0.05 0.45 0.44]);
 handles.parameters = unique_vals_from_mat(handles.data);
@@ -41,7 +42,7 @@ handles.NX_NY_coupled = p.Results.NX_NY_coupled;
 field = fieldnames(handles.parameters);
 % Copy the parameters structure
 handles.current_params = cell2struct(cell(length(field),1),field);
-field_slider_map={'A','W','H','FX','FY','ElGeo','NY','Slice','FZ','B','K'};
+field_slider_map={'A','W','H','FX','FY','NY','Slice','FZ','B','K'};
 for i =1:length(field_slider_map)
         sl = handles.(strcat('slider',field_slider_map{i}));
         if field_slider_map{i} == 'B'
@@ -70,7 +71,6 @@ handles.plot_flag = false;
 numSliders = 10;
 waitbar(1/2+0.5*1/numSliders,f,'Initializing GUI');
 handles.current_params.T = 256;
-handles = NY_Callback(handles);
 waitbar(1/2+0.5*2/numSliders,f);
 sliderA_Callback(handles.sliderA, eventdata,handles);
 handles=guidata(hObject);
@@ -87,8 +87,8 @@ waitbar(1/2+0.5*6/numSliders,f);
 sliderFY_Callback(handles.sliderFY, eventdata,handles);
 handles=guidata(hObject);
 waitbar(1/2+0.5*7/numSliders,f);
-sliderElGeo_Callback(handles.sliderElGeo, eventdata,handles);
-handles=guidata(hObject);
+% sliderElGeo_Callback(handles.sliderElGeo, eventdata,handles);
+% handles=guidata(hObject);
 waitbar(1/2+0.5*8/numSliders,f);
 sliderNY_Callback(handles.sliderNY, eventdata,handles);
 handles=guidata(hObject); 
@@ -121,10 +121,10 @@ try
             handles.current_params.SUM = 'sh';
     end
 catch
-field_sum_group_SelectionChangedFcn(handles.field_sum_group,eventdata, handles);
-handles = guidata(hObject);
-excitation_group_SelectionChangedFcn(handles.excitation_group,eventdata,handles);
-handles = guidata(hObject);
+% field_sum_group_SelectionChangedFcn(handles.field_sum_group,eventdata, handles);
+% handles = guidata(hObject);
+% excitation_group_SelectionChangedFcn(handles.excitation_group,eventdata,handles);
+% handles = guidata(hObject);
 end
 handles.plot_flag = true;
 sliderB_Callback(handles.sliderB, eventdata, handles);
@@ -165,13 +165,6 @@ function sliderA_Callback(hObject, eventdata, handles)
     caption = sprintf('Major Axis: %d (mm)', value);
     set(handles.text3, 'String', caption);
     handles.current_params.A = value;
-
-    if handles.current_params.ElGeo == 2
-        caption = sprintf('R Focus: %s (mm)', num2str(handles.current_params.A));
-        set(handles.text8,'String',caption);
-        handles.current_params.Ro = handles.current_params.A;
-    end
-    handles = semiminor_callback(handles);
     guidata(hObject, handles);
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
@@ -185,7 +178,9 @@ function sliderA_CreateFcn(hObject, ~, ~)
 
     
 function sliderNY_Callback(hObject, eventdata, handles)
-    handles = NY_Callback(handles);
+    %handles = NY_Callback(handles);
+    value = handles.parameters.NY(int16(get(hObject,'Value')));
+    handles.current_params.NY = value;
     guidata(hObject, handles);
     if handles.plot_flag
         plot_xyplane_and_ypeaks(handles);
