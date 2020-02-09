@@ -1,12 +1,18 @@
-function kgrid = define_kgrid(rect,focus, fs,Dimensions, c,delays)
-    R = find_rect_max_xyz(rect);
+function kgrid = define_kgrid(rect,focus, fs,Dimensions, c,delays, varargin)
+    if ~isempty(varargin)
+        R = varargin{1};
+        padding = 0;
+    else
+        R = find_rect_max_xyz(rect);
+        padding = 100;
+    end
+    
     for i = 1:3
         if abs(focus(i))>R(i)
             R(i) = abs(focus(i));
         end
     end
         
-    padding = 100;
     scaling = 2;
     dx = 0.162e-3;%kerf/scaling;
     dy = dx;
@@ -14,7 +20,7 @@ function kgrid = define_kgrid(rect,focus, fs,Dimensions, c,delays)
     
     Nx = ceil(2*R(1)/dx)+padding;
     Ny = ceil(2*R(2)/dy)+padding;
-    Nz = ceil(3/2*R(3)/dz)+padding;
+    Nz = ceil(2*R(3)/dz)+padding;
     disp(Nx)
     disp(Nz)
     

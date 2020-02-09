@@ -6,7 +6,9 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
         ijk_all = horzcat(ijk_all, ijk.(f{i}));
     end
     ijk_all = ijk_all';
-   
+    T_stim =1/fo*10;
+    t_i = kgrid.t_array<T_stim;
+    time = kgrid.t_array(t_i);
     if Dimension == 2
         p=zeros(size(ijk_all,1),length(time_index));
         for rect_n = 1:length(f)
@@ -20,7 +22,7 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
                 count = count+ y_terms+x_terms; 
                 phi = 2*pi*fo*delays(rect_n);
                 excitation = zeros([1,length(kgrid.t_array)]);
-                excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
+                excitation(t_i) = Mag*sin(2*pi*fo*kgrid.t_array(t_i)+phi);
                 p(count, time_index) = excitation;
             end
         end
@@ -40,8 +42,9 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
                 count = count + z_terms + y_terms + x_terms; 
                 
                 phi = 2*pi*fo*delays(rect_n);
+                excitation = zeros([1,length(kgrid.t_array)]);
+                excitation(t_i) = Mag*sin(2*pi*fo*kgrid.t_array(t_i)+phi);
                 
-                excitation = Mag*sin(2*pi*fo*kgrid.t_array+phi);
                 p(count, time_index) = excitation;
             end
         end

@@ -1,13 +1,13 @@
-function [sensor_data, source,kgrid] = kwave_simulation(rect, Dimensions, focus, plane)
-    c = 1540; % Speed of sound in water
-    magnitude = 0.5; %[Pa]
+function [sensor_data, source, sensor, kgrid] = kwave_simulation(rect, Dimensions, focus, plane, gridXYZ)
+    c = 1490; % Speed of sound in water
+    magnitude = 0.0783; %[Pa]
     fo = 650e3;
     fs=20*fo;
-    type = '';
+    type = 'horizontal';
     % Compute delays
     delays = compute_delays(rect, focus, c);
     % create the computational grid
-    kgrid = define_kgrid(rect,focus, fs,3, c,delays);
+    kgrid = define_kgrid(rect,focus, fs,3, c,delays, gridXYZ);
     
     % Define source
     [source.p_mask, ijk, sensor_focus] = rect_to_mask(kgrid, rect, Dimensions, type, focus,1);
@@ -25,7 +25,7 @@ function [sensor_data, source,kgrid] = kwave_simulation(rect, Dimensions, focus,
    
     % Run the simulation
     if Dimensions == 2
-        kgrid = define_kgrid(rect,focus, fs,2, c,delays);
+        kgrid = define_kgrid(rect,focus, fs,2, c,delays,gridXYZ);
         % Define the medium properties   
         medium.sound_speed = c;%*ones(kgrid.Nx, kgrid.Ny); % [m/s]
         medium.density = 1040;                  % [kg/m^3]
@@ -37,8 +37,8 @@ function [sensor_data, source,kgrid] = kwave_simulation(rect, Dimensions, focus,
         medium.density = 1040;
         %sensor_data= kspaceFirstOrder3D(kgrid, medium, source,sensor,'DataCast','gpuArray-single');
         sensor_data = kspaceFirstOrder3DC(kgrid,medium,source,sensor);
-        sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
-        length(kgrid.t_array)]);
+%         sensor_data = reshape(sensor_data, [sensor_size(1),sensor_size(2),...,
+%         length(kgrid.t_array)]);
     end
     
 end
