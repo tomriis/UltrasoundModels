@@ -34,6 +34,7 @@ function [sensor_data, kgrid] = kwave_human_array_simulation(varargin)
     [rect]= kwave_focused_array(n_elements_r,n_elements_y, kerf,...,
             D, R_focus, a, b,type);
     
-    [sensor_data,source,kgrid]= kwave_simulation(rect,Dimensions, focus, slice);
+    gridXYZ = [0.08,0.047, 0.100];
+    [sensor_data,source,sensor, kgrid]= kwave_simulation(rect,Dimensions, focus, slice, gridXYZ);
 end
 

@@ -6,7 +6,7 @@ function [p] = define_source_excitation(ijk, kgrid,delays, fo, Mag, Dimension)
         ijk_all = horzcat(ijk_all, ijk.(f{i}));
     end
     ijk_all = ijk_all';
-    T_stim =1/fo*10;
+    T_stim =1/fo*100;
     t_i = kgrid.t_array<T_stim;
     time = kgrid.t_array(t_i);
     if Dimension == 2

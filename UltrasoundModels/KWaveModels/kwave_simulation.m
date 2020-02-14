@@ -1,6 +1,6 @@
 function [sensor_data, source, sensor, kgrid] = kwave_simulation(rect, Dimensions, focus, plane, gridXYZ)
     c = 1490; % Speed of sound in water
-    magnitude = 0.0783; %[Pa]
+    magnitude = 0.0783*1e6; %[Pa]
     fo = 650e3;
     fs=20*fo;
     type = 'horizontal';

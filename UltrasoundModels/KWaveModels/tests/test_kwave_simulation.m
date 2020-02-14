@@ -1,7 +1,7 @@
-n_elements_r = 1;
-n_elements_y = 1;
-a = 90;
-b = 75;
+n_elements_r = 43;
+n_elements_y = 6;
+a = 100;
+b = 80;
 D = [6, 6];
 R_focus = a;
 slice = 'xy';
@@ -10,7 +10,7 @@ f_x = 0;
 
 f_y = 0;
 f_z = 0;
-Dimensions = 2;
+Dimensions = 3;
 focus = [f_x,f_y,f_z];
 
 [sensor_data] = kwave_human_array_simulation(n_elements_r,...,

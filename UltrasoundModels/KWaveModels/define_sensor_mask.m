@@ -6,7 +6,12 @@ function [mask, sensor_size] = define_sensor_mask(kgrid, focus, plane, Dimension
         [~, y2] = min(abs(kgrid.y_vec-0.080));
         mask(round(size(mask,1)/2),:) = 1;
     else 
-        mask = ones(kgrid.Nx, kgrid.Ny, kgrid.Nz);
+        mask = zeros(kgrid.Nx, kgrid.Ny, kgrid.Nz);
+        x_mask = and(kgrid.x_vec<0.05,kgrid.x_vec>-0.05);
+%         y_mask = and(kgrid.y_vec<0.001,kgrid.y_vec>-0.001);
+        [~,y_point] = min(abs(kgrid.y_vec - 0));
+        z_mask = and(kgrid.z_vec<0.05,kgrid.z_vec>-0.05);
+        mask(x_mask, y_point, z_mask) = 1;
     end
 sensor_size = size(mask);
 %     switch plane
