@@ -5,13 +5,13 @@ function [mask,ijk, focus] = rect_to_mask(kgrid, rect,Dimensions, type, focus,eq
         mask=zeros(kgrid.Nx,kgrid.Ny,kgrid.Nz);
     end
     
-    if ~strcmp(type,'horizontal')
-        %    Adjust rect to grid
-        mv = max(rect(end,:));
-        shift_z = -(mv-kgrid.z_vec(end-30));
-        rect = translate_rect([0,0,shift_z]', rect);
-        focus(3) = focus(3)+shift_z;
-    end
+%     if ~strcmp(type,'horizontal')
+%         %    Adjust rect to grid
+%         mv = max(rect(end,:));
+%         shift_z = -(mv-kgrid.z_vec(end-30));
+%         rect = translate_rect([0,0,shift_z]', rect);
+%         focus(3) = focus(3)+shift_z;
+%     end
     
     ijk = struct();
     min_length = inf;
@@ -22,7 +22,7 @@ function [mask,ijk, focus] = rect_to_mask(kgrid, rect,Dimensions, type, focus,eq
         t_ijk = zeros(3,size(points,2));
         d = zeros(1,length(points));
         for j = 1:length(points)
-            [t_ijk(:,j), d(j)] = coordinates_to_index(kgrid, points(:,j));
+            [t_ijk(:,j), d(j)] = coordinates_to_index_kgrid(kgrid, points(:,j));
         end
         if Dimensions == 2
             t_ijk(2,:) = [];

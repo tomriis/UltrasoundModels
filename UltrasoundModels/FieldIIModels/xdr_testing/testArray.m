@@ -3,8 +3,8 @@ cycles = 10; amplitude = 3.1245e8; %9.9953e7;
 excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
 
 
-n_r = 22;
-n_z =  12;
+n_r = 2;
+n_z =  1;
 A = 115;
 B = 85;
 D = [6,6];
