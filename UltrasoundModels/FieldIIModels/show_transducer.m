@@ -28,7 +28,6 @@ else
 end
 
 [~,M]=size(data);
-h= figure;
 % d = p.Results.d;
 % max_hp = d.max_hp;
 % x = d.x;
@@ -68,8 +67,6 @@ axis('image')
 hold off
 view([-90, 90, 90]);  
 axis equal
-
-makeFigureBig(h);
 end
 
 function show_skull_space(center_z)

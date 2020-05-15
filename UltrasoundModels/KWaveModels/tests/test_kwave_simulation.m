@@ -1,7 +1,7 @@
 n_elements_r = 43;
 n_elements_y = 6;
-a = 100;
-b = 80;
+a = 110;
+b = 90;
 D = [6, 6];
 R_focus = a;
 slice = 'xy';

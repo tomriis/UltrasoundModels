@@ -1,4 +1,4 @@
-function [txfield,tx_max_hilbert,tx_sum_hilbert, xdc_data]=human_array_simulation(varargin)
+function [txfielddb, xdc_data,x,y,z]=human_array_simulation(varargin)
 
 p = inputParser;
 addRequired(p,'n_elements_x', @(x) isnumeric(x));
@@ -6,18 +6,18 @@ addRequired(p,'n_elements_y', @(x) isnumeric(x));
 addRequired(p,'ROC', @(x) isnumeric(x));
 addRequired(p,'D');
 addRequired(p, 'focal_point');
-addOptional(p, 'kerf',0.4);
+addOptional(p, 'kerf',[1,1]);
 addOptional(p, 'R_focus', 1e4, @(x) isnumeric(x));
 
-addOptional(p,'visualize_transducer',false);
-addOptional(p,'visualize_output',true);
+addOptional(p,'vTrans',false);
+addOptional(p,'visualize_output',false);
 addOptional(p,'Slice','xy');
 parse(p, varargin{:})
 
 
 
 %% Parameters to vary in this exercise
-visualize_transducer = p.Results.visualize_transducer;
+visualize_transducer = p.Results.vTrans;
 focal_point = p.Results.focal_point; %(mm) point of ultrasound focus relative to the top of the dome transducer array (Insightec Exablate Neuro system)
 plane = p.Results.Slice; %('xy' or 'xz'); the plane within which we visualize the pressure field
 
@@ -47,10 +47,13 @@ Tx = concave_focused_array(n_elements_x,n_elements_y, ROC/1000, kerf/1000, D/100
 %Tx=xdc_convex_array(n_elements_x, D(1)/1000,D(2)/1000,kerf/1000,ROC/1000,1,1,[0,0,-ROC]/1000);
 %Show the transducer array in 3D
 if visualize_transducer
+    h = figure;
     xdc_data = xdc_get(Tx,'rect');
     show_transducer('data',xdc_data);
+    makeFigureBig(h);
     view([90, 90, 90]);
     txfield=0; 
+    
     return;
 end
 %xdc_show(Tx); %this displays the coordinates of each element within the array
@@ -66,23 +69,23 @@ xdc_impulse(Tx,impulse_response);
 % plot(t*1e6, impulse_response); grid on; xlabel('t (\musec)');
 
 %% Driving waveform
-%excitation = 1;  % driving signel; 1 = simple pulse
+excitation = 1;  % driving signel; 1 = simple pulse
 %
 % if want to drive with a sine, use e.g.:
-total_cycles = 200; amplitude = 1;
-%Excitation
-set_cycles;
-df = 100000;
-frequency = [f0-df, f0,f0+df];
-count = 1;
-excitation = [];
-
-for i =1:floor(total_cycles/set_cycles)
-    
-    k = mod(i, length(frequency))+1;
-    ex = amplitude * sin(2*pi*frequency(k)*(0 : (1/fs) : (set_cycles/frequency(k))));
-    excitation = horzcat(excitation,ex);
-end
+% total_cycles = 200; amplitude = 1;
+% %Excitation
+% %set_cycles;
+% df = 100000;
+% frequency = [f0-df, f0,f0+df];
+% count = 1;
+% excitation = [];
+% 
+% for i =1:floor(total_cycles/set_cycles)
+%     
+%     k = mod(i, length(frequency))+1;
+%     ex = amplitude * sin(2*pi*frequency(k)*(0 : (1/fs) : (set_cycles/frequency(k))));
+%     excitation = horzcat(excitation,ex);
+% end
 xdc_excitation(Tx, excitation);
 
 %% Set focal point
@@ -120,6 +123,15 @@ tx_max = reshape(tx_max, [276, 276]);
 tx_max_hilbert = max(abs(hilbert(hp)));
 tx_max_hilbert = reshape(tx_max_hilbert, [276, 276]);
 txfield = tx_max;
+switch plane
+    case 'xy'
+        txfield = reshape(txfield, length(x), length(y));
+        txfield = fliplr(txfield); %flip the x coordinate for proper orientation
+    case 'xz'
+        txfield = reshape(txfield, length(x), length(z));
+        txfield = txfield'; %flip the z coordinate for proper orientation
+end
+txfielddb = db(txfield./max(max(txfield))); %convert to dB
 catch
     tx_max = 0;
     tx_max_hilbert = 0;

@@ -1,12 +1,12 @@
 function [Th] = concave_focused_array(n_elements_x, n_elements_y, ROC_x, kerf, D, R_focus)
     % All dimensions in meters
-    len_x = (D(1)+kerf) * n_elements_x; %arc length
+    len_x = (D(1)+kerf(2)) * n_elements_x; %arc length
     AngExtent_x =len_x / ROC_x;
     angle_inc_x = (AngExtent_x)/n_elements_x; 					
     index_x = -n_elements_x/2 + 0.5 : n_elements_x/2 - 0.5;
     angle_x = index_x*angle_inc_x;
     
-    len_y = (D(2)+kerf)*n_elements_y;
+    len_y = (D(2)+kerf(1))*n_elements_y;
     AngExtent_y = len_y/ R_focus;
     angle_inc_y = AngExtent_y/n_elements_y;
     index_y = -n_elements_y/2+0.5: n_elements_y/2-0.5;
@@ -26,7 +26,7 @@ function [Th] = concave_focused_array(n_elements_x, n_elements_y, ROC_x, kerf, D
                 focused_rectangles = horzcat(focused_rectangles, positioned_rect);
             end
             mv = min(focused_rectangles(end,:));
-            focused_rectangles([4,7,10,13,19],:) = focused_rectangles([4,7,10,13,19],:) - mv;
+            focused_rectangles([4,7,10,13,19],:) = focused_rectangles([4,7,10,13,19],:) - R_focus;
             % Place the static focus at the center of rotation
             % Convert to transducer pointer
             cent = focused_rectangles(end-2:end,:);
