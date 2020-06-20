@@ -3,14 +3,15 @@ nY = 10;
 ROC = 110;
 rFocus = 1.2*ROC;
 D = [6,6];
-kerf = [4.6,10];
+kerf = [4.6,9];
 
 slice = {'xy','xz','yz'};
 m = 3;
 n = 3;
 figure;
 focusPoint=[0,0,0];
-sim = 1;
+sim = 0;
+plane = slice{1};
 if ~sim
     vTrans = true;
     [txfielddb, xdc_data,x,y,z] = human_array_simulation(nR,nY,ROC,D,focusPoint,'kerf',kerf,...,

@@ -20,7 +20,7 @@ addOptional(p, 'show_skull',false);
 parse(p, varargin{:});
 
 if p.Results.Th > 0
-    data = xdc_get(p.Results.Th,'rect');
+    data = xdc_pointer_to_rect(p.Results.Th);
 elseif ~isempty(p.Results.data)
     data = p.Results.data;
 else
@@ -34,20 +34,26 @@ end
 % z = d.z;
 % txfielddb = db(max_hp./max(max(max_hp)));
 % imagesc(x*1e3, z*1e3, txfielddb');hold on;
-
-if p.Results.fast
+X = [2,5,8,11];
+Y = [3,6,9,12];
+Z = [4,7,10,13];
+if 0
        x=[data(11,:), data(20,:); data(14,:), data(17,:)]*1000;
        y=[data(12,:), data(21,:); data(15,:), data(18,:)]*1000;
        z=[data(13,:), data(22,:); data(16,:), data(19,:)]*1000;
  surf(x,y,z)
  hold on
 else
+    ind = [1,4,2,3];
     for i=1:M
-      x=[data(11,i), data(20,i); data(14,i), data(17,i)]*1000;
-      y=[data(12,i), data(21,i); data(15,i), data(18,i)]*1000;
-      z=[data(13,i), data(22,i); data(16,i), data(19,i)]*1000;
-      c=data(5,i)*ones(2,2);
+      x=[data(X(ind(1)),i), data(X(ind(2)),i); data(X(ind(3)),i), data(X(ind(4)),i)]*1000;
+      y=[data(Y(ind(1)),i), data(Y(ind(2)),i); data(Y(ind(3)),i), data(Y(ind(4)),i)]*1000;
+      z=[data(Z(ind(1)),i), data(Z(ind(2)),i); data(Z(ind(3)),i), data(Z(ind(4)),i)]*1000;
+      c=ones(2,2);
       surf(x,y,z,c)
+      if i == 2
+          surf(x,y,z,0.2*ones(2,2));
+      end
       hold on
     end
 end
@@ -59,14 +65,25 @@ end
 % Hc = colorbar;
 
 %view(3)
+
 xlabel('x [mm] (Lateral)')
-ylabel('y [mm] (Axial)')
-zlabel('z [mm] (Elevation)')
+ylabel('z [mm] (Axial)')
+zlabel('y [mm] (Elevation)')
 grid
 axis('image')
-hold off
-view([-90, 90, 90]);  
-axis equal
+
+view([45,45, 45]);  
+set(gcf,'color','k')
+set(gca,'visible','off')
+theta = linspace(0,2*pi,2000);
+a = 90;
+b = 70;
+y = a*sin(theta);
+x = b*cos(theta);
+z = zeros(1,length(theta));
+plot3(x,z,y,'w--','LineWidth',2.5)
+% plot3(x,y,z,'k--','LineWidth',2.5);
+
 end
 
 function show_skull_space(center_z)

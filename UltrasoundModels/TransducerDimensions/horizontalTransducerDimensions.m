@@ -4,8 +4,8 @@
 field_init(-1)
 
 
-a = 115/1000;
-b = 95/1000;
+a = 120/1000;
+b = 100/1000;
 D = [9.5,9.5]/1000;
 kerf= 1/1000;
 n_elements_r = 43;
@@ -52,13 +52,16 @@ Th = xdc_rectangles(fR', cent', [0,0,0]);
 show_xdc(Th);
 
 T = table(columnCoordinates);
-writetable(T,[filebase,'ColumnCoordinates.xlsm'],'Sheet',1,'Range','A3:F9','WriteVariableNames',0)
-%%
-
+% writetable(T,[filebase,'ColumnCoordinates.xlsm'],'Sheet',1,'Range','A3:F9','WriteVariableNames',0)
+% %%
+% 
 field_init(-1)
 [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b);
 rect = xdc_pointer_to_rect(Th);
 show_transducer('Th',Th);
+set(gca,'fontSize',11)
+% set(findall(h,'type','text'),'color','k')
+set(gcf,'color','w')
 field_end();
 % Parse rect for (X3, Z3) and (X4,Z4) of the innermost element
 columnDepth = 31;
@@ -81,6 +84,7 @@ arrayColumnCoordinates = circshift(arrayColumnCoordinates,-1*posInd,1);
 arrayColumnCoordinates = [(0:(n_elements_r-1))', zeros(n_elements_r,1),...
     arrayColumnCoordinates];
 T = table(arrayColumnCoordinates);
-writetable(T,[filebase,'ArrayColumnCoordinates.xlsm'],...
-    'Sheet',1,'Range',['A3:F',num2str(2+n_elements_r)],...
-    'WriteVariableNames',0);
+arrayColumnCoordinates(1:3,:)
+% writetable(T,[filebase,'ArrayColumnCoordinates.xlsm'],...
+%     'Sheet',1,'Range',['A3:F',num2str(2+n_elements_r)],...
+%     'WriteVariableNames',0);

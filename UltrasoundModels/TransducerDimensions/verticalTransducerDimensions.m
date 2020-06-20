@@ -2,10 +2,10 @@ n_elements_x = 26;
 n_elements_y = 10;
 ROC = 110/1000;
 rFocus = 1.2*ROC;
-D = [12.6,9.7]/1000;
-kerf = [0.85,2.4]/1000;
+D = [6,6]/1000;
+kerf = [0.85+3.7,2.4+6.6]/1000;
 simColumn = 1;
-simColumnArray = 0;
+simColumnArray = 1;
 filebase = 'C:\Users\Tom\Documents\MATLAB\UltrasoundModels\UltrasoundModels\TransducerDimensions\';
 field_init(-1)
 %% Column coordinates
@@ -36,7 +36,7 @@ if simColumn
     focused_rectangles([4,7,10,13,19],:) = focused_rectangles([4,7,10,13,19],:) - mv;
     % Place the static focus at the center of rotation
     % Convert to transducer pointer
-    offsetY = abs(min(focused_rectangles(Y,:),[],'all'))+0.018;
+    offsetY = abs(min(focused_rectangles(Y,:),[],'all'))+0.014;
     focused_rectangles([Y,18],:) = focused_rectangles([Y,18],:)+offsetY;
     fR = focused_rectangles;
     columnCoordinates = 1000*horzcat(fR(Z(1),:)', fR(Y(1),:)',fR(Z(4),:)',fR(Y(4),:)');
