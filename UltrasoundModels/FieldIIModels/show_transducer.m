@@ -17,6 +17,7 @@ addOptional(p,'Th', -1);
 addOptional(p,'data',[]);
 addOptional(p, 'fast',false);
 addOptional(p, 'show_skull',false);
+addOptional(p,'plotEl',[])
 parse(p, varargin{:});
 
 if p.Results.Th > 0
@@ -26,7 +27,7 @@ elseif ~isempty(p.Results.data)
 else
     return
 end
-
+plotEl = p.Results.plotEl;
 [~,M]=size(data);
 % d = p.Results.d;
 % max_hp = d.max_hp;
@@ -51,7 +52,7 @@ else
       z=[data(Z(ind(1)),i), data(Z(ind(2)),i); data(Z(ind(3)),i), data(Z(ind(4)),i)]*1000;
       c=ones(2,2);
       surf(x,y,z,c)
-      if i == 2
+      if ismember(i,plotEl)
           surf(x,y,z,0.2*ones(2,2));
       end
       hold on
