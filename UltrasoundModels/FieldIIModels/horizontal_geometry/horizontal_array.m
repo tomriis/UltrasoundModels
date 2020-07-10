@@ -10,7 +10,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
 %     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
     
 %     angle_r = getSymmetricAngleSpacing(a,b,N,kerf(2),D(2),start);
-    angle_r = getSymmetricAngleSpacing(a,b,[0+0.2,pi/2-0.2;pi/2+0.2,pi-0.2], [n_elements_r/4;n_elements_r/4]);
+    angle_r = getSymmetricAngleSpacing(a,b,[0+0.2,pi-0.2], [n_elements_r/2]);
 
     angle_hor = zeros(1,length(angle_r));
    
@@ -59,10 +59,6 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
             rect([17,18,19],j) = mean(points,2);
         end
     % Append to transducer geometry
-%         if i == 10
-%             rect(:,1)=[];
-%             rect(:,end)=[];
-%         end
         rectangles = horzcat(rectangles, rect);
     end
     
