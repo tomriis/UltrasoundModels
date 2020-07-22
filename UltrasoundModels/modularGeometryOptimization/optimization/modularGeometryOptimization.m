@@ -4,9 +4,9 @@ function modularGeometryOptimization(costFunction,filename)
     % Example:
     % X = modularGeometryOptimization(@costFunctionIntensityIntegral)
     %Geometry parameters [A, B, kerf, R_focus_ratio] 
-    LB = [0.110, 0.90, 0.004, 0];
-    UB = [0.130, 0.120, 0.008, 2];
-    x0 = (UB+LB)/2;
+    LB = [0.004, 0];
+    UB = [0.008, 2];
+    x0 = LB;
     options = optimset('MaxIter', 50,'Display','iter','PlotFcns',@optimplotfval);
     
     [x, fval,exitflag,output] = fminsearchbnd(costFunction, x0, LB, UB, options);

@@ -52,9 +52,9 @@ else
       z=[data(Z(ind(1)),i), data(Z(ind(2)),i); data(Z(ind(3)),i), data(Z(ind(4)),i)]*1000;
       c=ones(2,2);
       surf(x,y,z,c)
-      if ismember(i,plotEl)
-          surf(x,y,z,0.2*ones(2,2));
-      end
+%       if ismember(i,plotEl)
+%           surf(x,y,z,0.2*ones(2,2));
+%       end
       hold on
     end
 end
@@ -74,7 +74,7 @@ grid
 axis('image')
 
 view([45,45, 45]);  
-set(gcf,'color','k')
+% set(gcf,'color','k')
 set(gca,'visible','off')
 theta = linspace(0,2*pi,2000);
 a = 90;
