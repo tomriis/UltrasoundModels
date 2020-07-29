@@ -16,7 +16,7 @@ field_init(-1);
 [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b);
 data = xdc_pointer_to_rect(Th);
 
-show_transducer('data',data,'plotEl',(1:1:252));
+show_transducer('data',data,'plotEl',(1:256));
 field_end();
 % num_trials = 1;
 % data_fields = struct();

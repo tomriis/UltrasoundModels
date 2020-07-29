@@ -16,10 +16,10 @@ function angles_r  = get_ellipse_angle_spacing(a,b, N,thetaRange)
             arc_lengths(i) = q;
         end
         angles_r = zeros(N,1);
-        for i = 0:N-1
+        for i = 1:N
             len = arc_length*i;
             [~,ind] = min(abs(arc_lengths-len));
-            angles_r(i+1) = X(ind);
+            angles_r(i) = X(ind);
         end
-
+        angles_r = linspace(thetaRange(1),thetaRange(2),N)';
 end

@@ -10,8 +10,7 @@ function angles = getSymmetricAngleSpacing(a,b,thetaRanges, N)
     
     
     for i = 1:size(thetaRanges,1)
-        offset = abs(thetaRanges(i,1)-thetaRanges(i,2))/(2*N(i));
-         theta = linspace(thetaRanges(i,1),thetaRanges(i,2),N(i));
+        theta = linspace(thetaRanges(i,1),thetaRanges(i,2),N(i));
         theta = get_ellipse_angle_spacing(a,b, N(i),thetaRanges(i,:));
         angles = vertcat(angles,theta, theta+pi);
     end
