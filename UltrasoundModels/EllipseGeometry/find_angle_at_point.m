@@ -2,7 +2,7 @@ function angle_rad = find_angle_at_point(angle, point, a, b)
     % Find angle between point on ellipse and the horizontal
     
     r = sqrt(point(1)^2+point(2)^2);
-    tangent_line = get_tangent_at_point(point, a, b);
+    tangent_line = get_tangent_at_point(point, r, r);
     angle = mod(angle, 2*pi);
     if angle >= 0 && angle < pi/2
         SIGN = -1;
