@@ -66,7 +66,9 @@ grid
 axis('image')
 
 view([45,45, 45]);  
-% set(gcf,'color','k')
+% view([0,0,90]);
+% view([0,90,0]);
+set(gcf,'color','w')
 set(gca,'visible','off')
 theta = linspace(0,2*pi,2000);
 a = 90;
@@ -74,7 +76,7 @@ b = 70;
 y = a*sin(theta);
 x = b*cos(theta);
 z = zeros(1,length(theta));
-plot3(x,z,y,'w--','LineWidth',2.5)
+plot3(x,z,y,'k--','LineWidth',2.5)
 % plot3(x,y,z,'k--','LineWidth',2.5);
 
 end

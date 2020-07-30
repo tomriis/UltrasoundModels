@@ -1,16 +1,16 @@
-function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b)
+function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,varargin)
     
     len_z = (D(2)+kerf)*n_elements_z;
     AngExtent_z = len_z/ R_focus;
     angle_inc_z = AngExtent_z/n_elements_z;
-    half_n_elements_z = n_elements_z/2;
+    half_n_elements_z = 1; %n_elements_z/2;
     index_z = -1*(-half_n_elements_z+0.5:(n_elements_z-half_n_elements_z)-0.5);%-n_elements_z+0.9:0;
     angle_z = index_z* angle_inc_z;
 
-%     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
+    angle_r = get_ellipse_angle_spacing(a,b,n_elements_r,[-pi,pi]);
     
 %     angle_r = getSymmetricAngleSpacing(a,b,N,kerf(2),D(2),start);
-    angle_r = getSymmetricAngleSpacing(a,b,[0+0.8,pi-0.8], [n_elements_r/2]);
+%     angle_r = getSymmetricAngleSpacing(a,b,varargin{1}, n_elements_r/2);
 
     angle_hor = zeros(1,length(angle_r));
    
@@ -34,7 +34,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
             rect = xdc_pointer_to_rect(Th);
     
     % Position transducer
-        angle_hor(i) = find_angle_at_point(angle_r(i),[a*cos(angle_r(i)),b*sin(angle_r(i))],a,b);
+        angle_hor(i) = find_angle_at_point(angle_r(i),[a*cos(angle_r(i)),b*sin(angle_r(i))],a,b,varargin{2});
 %  angle_hor = angle_r;
         roty = makeyrotform(angle_hor(i));
         % New  CODE 
@@ -70,6 +70,6 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     focus = [0,0,0];
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
-    rectangles(1,:) = 1:(n_elements_r*n_elements_z);
+    rectangles(1,:) = 1:size(rectangles,2);
     Th = xdc_rectangles(rectangles', cent', focus);
 end

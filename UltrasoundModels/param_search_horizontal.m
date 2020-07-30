@@ -1,18 +1,18 @@
 % function []=param_search_horizontal()
     % Transducer Geometry
-    kerf = [4,5.5,7.5]/1000;
+    kerf = [4]/1000;
     r_width = [6]/1000;
     z_width = [6]/1000;
     
-    N_Elements_Z = [6]; %[4 5 6];
+    N_Elements_Z = [8]; %[4 5 6];
     
-    total_elements = 256;
-    Semi_Major_Axis = [110,120,130]/1000;
-    Semi_Minor_Axis_Ratio = [90/110, 100/120];
-    R_Focus_Ratio = [1];
+    Semi_Major_Axis = [100]/1000;
+    Semi_Minor_Axis_Ratio = [80/100];
+    R_Focus_Ratio = [1, 1.5, 2, 4, 100000];
+    xdr_angle = [0,0.5,1,2,100000];
     % Steering
     Plane_XYZ = {'xy','xz','yz'};
-    X = [0, 30]/1000;
+    X = [0];
     Z = [0];
     Y = [0];
     %% Define the excitation
@@ -22,7 +22,7 @@
     %%
     total = length(X)*length(Z)*length(Y)*length(Plane_XYZ)*length(R_Focus_Ratio)*...
         length(Semi_Minor_Axis_Ratio)*length(Semi_Major_Axis)*length(N_Elements_Z)*...
-        length(r_width)*length(z_width)*length(kerf);
+        length(r_width)*length(z_width)*length(kerf)*length(xdr_angle);
     
     data = struct();
     count = 1;
@@ -32,7 +32,6 @@
         B = A*Semi_Minor_Axis_Ratio(B_i);
     for k_i = 1:length(kerf)
         K = kerf(k_i);
-        R_focus = A;%R_foci(R_focus_i);
     for r_width_i = 1:length(r_width)
         D = zeros(1,2);
         D(1) = r_width(r_width_i);
@@ -40,7 +39,7 @@
         D(2) = z_width(z_width_i);
     for nz_i = 1:length(N_Elements_Z)
         n_z = N_Elements_Z(nz_i);
-        n_r = 42;%floor(total_elements/n_z);
+        n_r = 16;%floor(total_elements/n_z);
     for slice_i = 1:length(Plane_XYZ)
         slice = Plane_XYZ{slice_i};
     for x_i = 1:length(X)
@@ -49,19 +48,23 @@
         y = Y(y_i);
     for z_i = 1:length(Z)
         z = Z(z_i);
-    
+    for R_focus_i = 1:length(R_Focus_Ratio)
+        R_focus = R_Focus_Ratio(R_focus_i)*A;    
+    for xdr_angle_i = 1:length(xdr_angle)
+        columnAngle = xdr_angle(xdr_angle_i);
         
     disp('-----------------------------------------')
     disp('-----------------------------------------')
     disp(strcat('      ',num2str(count),' of ', num2str(total)));
     disp('-----------------------------------------')
     disp('-----------------------------------------')
-    count = count + 1;    
+      
 
     [max_hp, sum_hilbert, xdc_data]=horizontal_array_simulation(n_r, n_z,A,B,D,[x,y,z],...,
-            'kerf',K,'R_focus',R_focus,'Plane',slice,'excitation', excitation);
+            'kerf',K,'R_focus',R_focus,'Plane',slice,'excitation', excitation,...,
+            'columnAngle',columnAngle);
     
-    data(count).xdrData = xdc_data;
+    data(count).xdcData = xdc_data;
     data(count).max_hp = max_hp;
     data(count).sum_hilbert = sum_hilbert;
     data(count).NR = n_r;
@@ -74,7 +77,8 @@
     data(count).kerf = K;
     data(count).plane = slice;
     data(count).excitation = excitation;
-        
+    data(count).columnAngle = columnAngle;
+    count = count + 1;  
     end
     end
     end
@@ -85,4 +89,6 @@
     end
     end
     end
-    save('D:\modularGeometryOptimization\testCostFunctionScan1.mat','data');
+    end
+    end
+    save('D:\modularGeometryOptimization\testMethod2Geometry.mat','data');

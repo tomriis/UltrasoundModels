@@ -13,6 +13,7 @@ addOptional(p,'visualize_transducer',false);
 addOptional(p,'Plane','xy');
 addOptional(p,'excitation',-1);
 addOptional(p,'f0',650000)
+addOptional(p,'columnAngle',0)
 parse(p, varargin{:})
 
 %% Parameters to vary in this exercise
@@ -52,8 +53,9 @@ n_elements_z = p.Results.n_elements_z;  %number of physical elements in Y.
 kerf = p.Results.kerf;
 D_rz = p.Results.D; % Diameter, width, and length of element (m)
 R_focus = p.Results.R_focus;
-[Tx] = horizontal_array(n_elements_r,n_elements_z, kerf, D_rz, R_focus, a, b);
-xdc_data = xdc_get(Tx,'rect');
+% [Tx] = horizontal_array(n_elements_r,n_elements_z, kerf, D_rz, R_focus, a, b);
+[Tx] = throughTransmitArray(n_elements_r, n_elements_z, kerf, D_rz, R_focus,a,b,p.Results.columnAngle);
+xdc_data = xdc_pointer_to_rect(Tx);
 %Show the transducer array in 3D
 if visualize_transducer
     show_xdc(Tx);

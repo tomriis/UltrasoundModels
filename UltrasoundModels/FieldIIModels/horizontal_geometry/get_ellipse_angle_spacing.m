@@ -21,5 +21,5 @@ function angles_r  = get_ellipse_angle_spacing(a,b, N,thetaRange)
             [~,ind] = min(abs(arc_lengths-len));
             angles_r(i) = X(ind);
         end
-        angles_r = linspace(thetaRange(1),thetaRange(2),N)';
+       
 end
