@@ -2,27 +2,28 @@ n_elements_r = 14;
 n_elements_z = 7;
 a = 100/1000;
 b = 80/1000;
-D = [9 9]/1000;
+D = [6 6]/1000;
 focus = [30,0,0]/1000;
 [x,y,z] = get_plane_xyz('xz', focus);
 f0 = 200e3;
 fs = 20*f0;
 total_cycles = 20;
 count = 1;
-R_focus = 1.25*a;
-kerf = 1/1000;
+R_focus = a;
+kerf = 4/1000;
 
 field_init(-1);
-[Th] = horizontal_array(43, 6, kerf, D, R_focus,a,b,[0+1.24,pi-1.24],1000);
+% [Th] = horizontal_array(43, 6, kerf, D, R_focus,a,b,[0+1.24,pi-1.24],1000);
 
-% [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, 100*R_focus,a,b,[0+1.24,pi-1.24],1000);
+% [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, 2*R_focus,a,b,[0+1.24,pi-1.24],1);
 % data1 = xdc_pointer_to_rect(Th);
-% [Th] = horizontal_array([12,12], n_elements_z, kerf, D, R_focus,a,b,[0.5,1.12;pi-1.12,pi-0.5],0);
+% [Th] = horizontal_array([12,12], n_elements_z, kerf, D, 1.5*R_focus,a,b,[0.5,1.12;pi-1.12,pi-0.5],0.5);
 % data2 = xdc_pointer_to_rect(Th);
 % 
 % data = horzcat(data1, data2);
 % data(1,:) = 1:length(data);
 % [Th] = throughTransmitArray(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,1000);
+[Th] = horizontal_array(16, 8, kerf, D, 10000000*R_focus,a,b,[1.24,pi-1.24],1e6);
 data = xdc_pointer_to_rect(Th);
 figure; show_transducer('data',data,'plotEl',(1:256));
 field_end();

@@ -1,5 +1,6 @@
 function angle_rad = find_angle_at_point(angle, point, a, b, varargin)
     % Find angle between point on ellipse and the horizontal
+        tangent_line = get_tangent_at_point(point, a, b);
     if ~isempty(varargin)
         r = sqrt(point(1)^2+point(2)^2);
         a= varargin{1}*(a-r)+r;
