@@ -69,7 +69,7 @@ axis('image')
 % view([0,0,90]);
 view([0,90,0]);
 set(gcf,'color','w')
-set(gca,'visible','off')
+% set(gca,'visible','off')
 theta = linspace(0,2*pi,2000);
 a = 90;
 b = 70;

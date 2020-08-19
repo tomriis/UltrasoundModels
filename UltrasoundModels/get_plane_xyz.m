@@ -1,6 +1,6 @@
 function [x,y,z] = get_plane_xyz(plane, focus)
     stepSize = 0.25;
-    limit = 35;
+    limit = 55;
     switch plane
         case 'xy'
             x = (-limit : stepSize : limit)*1e-3;

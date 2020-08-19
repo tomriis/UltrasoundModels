@@ -1,23 +1,23 @@
 % function []=param_search_horizontal()
     % Transducer Geometry
-    kerf = [4]/1000;
-    r_width = [6]/1000;
-    z_width = [6]/1000;
+    kerf = [2.45]/1000;
+    r_width = [8]/1000;
+    z_width = [8]/1000;
     
     N_Elements_Z = [8]; %[4 5 6];
     
-    Semi_Major_Axis = [100]/1000;
-    Semi_Minor_Axis_Ratio = [80/100];
-    R_Focus_Ratio = [1, 1.5, 2, 4, 100000];
-    xdr_angle = [0,0.5,1,2,100000];
+    Semi_Major_Axis = [110]/1000;
+    Semi_Minor_Axis_Ratio = [90/110];
+    R_Focus_Ratio = [1.5];
+    xdr_angle = [0.5];
     % Steering
-    Plane_XYZ = {'xy','xz','yz'};
-    X = [0];
-    Z = [0];
-    Y = [0];
+    Plane_XYZ = {'xz'};
+    X = [0,15,30,40]/1000;
+    Z = [0]/1000;
+    Y = [0]/1000;
     %% Define the excitation
     f0= 650000; fs = 20*f0;
-    cycles = 5; amplitude = 300000000;
+    cycles = 50; amplitude = 300000000;
     excitation = amplitude * sin(2*pi*f0*(0 : (1/fs) : (cycles/f0)));
     %%
     total = length(X)*length(Z)*length(Y)*length(Plane_XYZ)*length(R_Focus_Ratio)*...
@@ -39,7 +39,7 @@
         D(2) = z_width(z_width_i);
     for nz_i = 1:length(N_Elements_Z)
         n_z = N_Elements_Z(nz_i);
-        n_r = 16;%floor(total_elements/n_z);
+        n_r = 32;%floor(total_elements/n_z);
     for slice_i = 1:length(Plane_XYZ)
         slice = Plane_XYZ{slice_i};
     for x_i = 1:length(X)
@@ -91,4 +91,4 @@
     end
     end
     end
-    save('D:\modularGeometryOptimization\testMethod2Geometry.mat','data');
+    save('D:\modularGeometryOptimization\testFinalTxRxGeometry8x8.mat','data');

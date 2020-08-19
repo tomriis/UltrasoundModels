@@ -4,9 +4,9 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     AngExtent_z = len_z/ R_focus;
     angle_inc_z = AngExtent_z/n_elements_z;
     half_n_elements_z = n_elements_z/2;
-    index_z = -1*(-half_n_elements_z+0.5:(n_elements_z-half_n_elements_z)-0.5);%-n_elements_z+0.9:0;
+    index_z = -1*(-half_n_elements_z+0.5:(n_elements_z-half_n_elements_z)-0.5);
     angle_z = index_z* angle_inc_z;
-
+    
 %     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
     
 %     angle_r = getSymmetricAngleSpacing(a,b,N,kerf(2),D(2),start);
