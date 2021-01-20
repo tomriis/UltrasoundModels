@@ -3,16 +3,16 @@ function [x,y,z] = get_plane_xyz(plane, focus)
     limit = 55;
     switch plane
         case 'xy'
-            x = (-limit : stepSize : limit)*1e-3;
-            y = (-limit : stepSize : limit)*1e-3;
+            x = (-15 : stepSize : 30)*1e-3;
+            y = (-15 : stepSize : 15)*1e-3;
             z = focus(3);
         case 'xz'
-            x = (-limit : stepSize : limit)*1e-3;
+            x = (-15 : stepSize : 30)*1e-3;
             y = focus(2);
-            z =(-limit : stepSize : limit)*1e-3;
+            z =(-15 : stepSize : 15)*1e-3;
         case 'yz'
-            x = focus(1);
-            y = (-limit : stepSize : limit)*1e-3;
-            z = (-limit : stepSize : limit)*1e-3;
+            x = (-30 : stepSize : 30)*1e-3; %focus(1);
+            y = (-30 : stepSize : 30)*1e-3;
+            z = 0;
     end
 end

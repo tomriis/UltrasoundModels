@@ -5,7 +5,7 @@ function [rect] = xdc_pointer_to_rect(Th)
     rect = zeros(19, N_elements);
     for k = 1:N_elements
         % Number of the physical element 
-        rect(1, k) = data(1, k);
+        rect(1, k) = data(1, k)+1;
         % Corners of the mathematical elements;
         rect(2:13, k) = data(11:22, k);
         % Apodization of mathmatical element

@@ -1,16 +1,16 @@
 field_init(-1)
 
 
-a = 110/1000;
-b = 90/1000;
-D = [9.55,9.55]/1000;
-kerf= 0.75/1000;
+a = 130/1000;
+b = 95/1000;
+D = [6,6]/1000; %[9.55,9.55]/1000;
+kerf= 2.1750/1000; %0.40/1000;
 n_elements_r = 32;
 n_elements_z = 8;
-R_focus = 1.5*a;
+R_focus = 1.25*a;
 filebase = 'C:\Users\Tom\Documents\MATLAB\UltrasoundModels\UltrasoundModels\TransducerDimensions\';
 
-angle_z = arrayColumnAngleZ(R_focus, kerf,D,n_elements_z,n_elements_z/2);
+angle_z = arrayColumnAngleZ(R_focus, kerf,D,n_elements_z,n_elements_z-2);
 
 rectangles=[];
 i = 1;
@@ -48,7 +48,7 @@ writetable(T,[filebase,'throughTransmitColumnCoordinates.xlsm'],'Sheet',1,'Range
 % %%
 % 
 field_init(-1)
-[Th] = throughTransmitArray(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,0.5);
+[Th] = throughTransmitArray(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,0.75);
 rect = xdc_pointer_to_rect(Th);
 show_transducer('Th',Th);
 set(gca,'fontSize',11)
@@ -78,10 +78,10 @@ rect2 = circshift(rect,circShiftInd*n_elements_z,2);
 arrayColumnCoordinates = [(0:(n_elements_r-1))', zeros(n_elements_r,1),...
     arrayColumnCoordinates];
 T = table(arrayColumnCoordinates);
-arrayColumnCoordinates(1:3,:)
-writetable(T,[filebase,'throughTransmitArrayColumnCoordinates.xlsm'],...
-    'Sheet',1,'Range',['A3:F',num2str(2+n_elements_r)],...
-    'WriteVariableNames',0);
+% arrayColumnCoordinates(1:3,:)
+% writetable(T,[filebase,'throughTransmitArrayColumnCoordinates.xlsm'],...
+%     'Sheet',1,'Range',['A3:F',num2str(2+n_elements_r)],...
+%     'WriteVariableNames',0);
 
 
 

@@ -40,9 +40,9 @@ for i=1:M
   y=[data(Y(ind(1)),i), data(Y(ind(2)),i); data(Y(ind(3)),i), data(Y(ind(4)),i)];
   z=[data(Z(ind(1)),i), data(Z(ind(2)),i); data(Z(ind(3)),i), data(Z(ind(4)),i)];
   c=ones(2,2);
-  surf(x,y,z,c)
+  surf(x,z,y,c)
   if ismember(i,plotEl)
-      surf(x,y,z,0.2*ones(2,2)); hold on;
+      surf(x,y,z,0.2*ones(2,2),'MarkerSize',20); hold on;
       element = data(:,i);
       c1 = element(2:4);
       c2 = element(5:7);
@@ -67,7 +67,7 @@ axis('image')
 
 % view([45,45, 45]);  
 % view([0,0,90]);
-view([0,90,0]);
+view([0,0,90]);
 set(gcf,'color','w')
 % set(gca,'visible','off')
 theta = linspace(0,2*pi,2000);
@@ -76,7 +76,7 @@ b = 70;
 y = a*sin(theta);
 x = b*cos(theta);
 z = zeros(1,length(theta));
-plot3(x,z,y,'k--','LineWidth',2.5)
+% plot3(x,z,y,'k--','LineWidth',2.5)
 % plot3(x,y,z,'k--','LineWidth',2.5);
 
 end
