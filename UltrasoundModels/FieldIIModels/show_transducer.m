@@ -27,7 +27,6 @@ else
 end
 data = data * 1000;
 plotEl = p.Results.plotEl;
-disp(plotEl)
 [~,M]=size(data);
 
 X = [2,5,8,11];
@@ -40,9 +39,10 @@ for i=1:M
   y=[data(Y(ind(1)),i), data(Y(ind(2)),i); data(Y(ind(3)),i), data(Y(ind(4)),i)];
   z=[data(Z(ind(1)),i), data(Z(ind(2)),i); data(Z(ind(3)),i), data(Z(ind(4)),i)];
   c=ones(2,2);
-  surf(x,z,y,c)
+  %surf(x,z,y,c)
+  surf(x,y,z,0.2*ones(2,2),'MarkerSize',20);
   if ismember(i,plotEl)
-      surf(x,y,z,0.2*ones(2,2),'MarkerSize',20); hold on;
+       hold on;
       element = data(:,i);
       c1 = element(2:4);
       c2 = element(5:7);
@@ -60,14 +60,14 @@ end
 %view(3)
 
 xlabel('x [mm] (Lateral)')
-ylabel('z [mm] (Axial)')
-zlabel('y [mm] (Elevation)')
+ylabel('y [mm] (Axial)')
+zlabel('z [mm] (Elevation)')
 grid
 axis('image')
 
-% view([45,45, 45]);  
+view([45,45, 45]);  
 % view([0,0,90]);
-view([0,0,90]);
+%view([0,90,0]);
 set(gcf,'color','w')
 % set(gca,'visible','off')
 theta = linspace(0,2*pi,2000);

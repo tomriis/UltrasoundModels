@@ -1,6 +1,6 @@
 function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,varargin)
     
-    angle_z = arrayColumnAngleZ(R_focus, kerf,D,n_elements_z,n_elements_z-2);
+    angle_z = arrayColumnAngleZ(R_focus, kerf,D,n_elements_z,n_elements_z/2);
     
 %     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
     
