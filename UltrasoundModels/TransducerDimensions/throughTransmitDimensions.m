@@ -3,8 +3,8 @@ field_init(-1)
 
 a = 110/1000;
 b = 90/1000;
-D = [9.2,9.2]/1000; %[9.55,9.55]/1000;
-kerf= 0.35/1000; %0.40/1000;
+D = [9.6,9.45]/1000; %[9.55,9.55]/1000;
+kerf= 0.25/1000; %0.40/1000;
 n_elements_r = 32;
 n_elements_z = 8;
 R_focus = 1.5*a;
@@ -44,14 +44,14 @@ cent = fR(end-2:end,:);
 Th = xdc_rectangles(fR', cent', [0,0,0]);
 figure; show_xdc(Th);
 
-% T = table(columnCoordinates);
-% writetable(T,[filebase,'throughTransmitColumnCoordinates.xlsm'],'Sheet',1,'Range','A3:F19','WriteVariableNames',0)
+T = table(columnCoordinates);
+writetable(T,[filebase,'throughTransmitColumnCoordinates.xlsm'],'Sheet',1,'Range','A3:F19','WriteVariableNames',0)
 % %%
 % 
 field_init(-1)
 [Th] = throughTransmitArray(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,columnAngle);
 rect = xdc_pointer_to_rect(Th);
-figure; show_transducer('Th',Th,'plotEl',[72-8,72]);
+figure; show_transducer('Th',Th,'plotEl',[1:128]);
 disp(sqrt(sum((rect(8:10,72-8)-rect(11:13,72)).^2))*1000);
 set(gca,'fontSize',11)
 % set(findall(h,'type','text'),'color','k')
@@ -81,9 +81,9 @@ arrayColumnCoordinates = [(0:(n_elements_r-1))', zeros(n_elements_r,1),...
     arrayColumnCoordinates];
 T = table(arrayColumnCoordinates);
 arrayColumnCoordinates(1:3,:)
-% writetable(T,[filebase,'throughTransmitArrayColumnCoordinates.xlsm'],...
-%     'Sheet',1,'Range',['A3:F',num2str(2+n_elements_r)],...
-%     'WriteVariableNames',0);
+writetable(T,[filebase,'throughTransmitArrayColumnCoordinates.xlsm'],...
+    'Sheet',1,'Range',['A3:F',num2str(2+n_elements_r)],...
+    'WriteVariableNames',0);
 
 
 
