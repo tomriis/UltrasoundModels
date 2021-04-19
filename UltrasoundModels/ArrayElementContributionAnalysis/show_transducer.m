@@ -49,7 +49,7 @@ for i=1:M
       c3 = element(8:10);
       center = element(17:19);
       n = normalVectorFrom3Points(c1,c2,c3);
-      n = n/norm(n)*220;
+      n = -n/norm(n)*220;
       quiver3(center(1), center(2), center(3),n(1),n(2),n(3)); hold on;
   end
   hold on
