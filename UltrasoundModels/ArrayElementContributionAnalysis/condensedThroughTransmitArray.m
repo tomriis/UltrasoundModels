@@ -1,4 +1,4 @@
-function rect = condensedThroughTransmitArray(Nh, Nw, Rh, Rw, D, kerf, xArrayToSagitalPlane)
+function [rect, elementMapping] = condensedThroughTransmitArray(Nh, Nw, Rh, Rw, D, kerf, xArrayToSagitalPlane)
     field_init(-1)
     angle_h = arrayColumnAngleZ(Rh, kerf,D,Nh,Nh/2);
     angle_w = arrayColumnAngleZ(Rw, kerf,D,Nw,Nw/2);
@@ -6,24 +6,28 @@ function rect = condensedThroughTransmitArray(Nh, Nw, Rh, Rw, D, kerf, xArrayToS
     focused_rectangles = [];
     X = [2,5,8,11,17];
     count = 1;
-    for i = 1:length(angle_h)
-        for k = 1:length(angle_w)
+    elementMapping = zeros(Nh, Nw);
+    for i = 1:length(angle_w)
+        for k = 1:length(angle_h)
             x = [0, 0]; y = [-D(2)/2 D(2)/2]; z = [-D(1)/2 D(1)/2];
             rect = [count x(1)  y(1)  z(1)  x(2)  y(1)  z(2)  x(2)  y(2)  z(2)  x(1)  y(2)  z(1)  1  D(1)  D(2)  0  0  0];
             rect = rect';
-            roth = makezrotform(angle_h(i));
+            
             rotw = makeyrotform(angle_w(k));
-            rect(X,:)=rect(X,:)+Rh;
-            rect = apply_affine_to_rect(roth, rect);
-            rect(X,:)=rect(X,:)-Rh;
+            roth = makezrotform(angle_h(i));
 
             rect(X,:)=rect(X,:)+Rw;
             rect = apply_affine_to_rect(rotw, rect);
             rect(X,:)=rect(X,:)-Rw;
+
+            rect(X,:)=rect(X,:)+Rh;
+            rect = apply_affine_to_rect(roth, rect);
+            rect(X,:)=rect(X,:)-Rh;
             % Position X distance from brain sagital plane
             rect(X,:)=rect(X,:)+xArrayToSagitalPlane;
 %           Append to transducer geometry
             focused_rectangles = horzcat(focused_rectangles, rect);
+            elementMapping(i,k) = count;
             count = count + 1;
         end
     end
