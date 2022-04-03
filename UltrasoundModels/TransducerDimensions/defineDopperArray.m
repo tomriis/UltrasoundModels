@@ -19,9 +19,12 @@ function array = defineDopperArray()
         xcordsi = [2, 5, 8, 11, 17]; 
         ycordsi = [3,6,9,12,18];
         zcordsi = [4,7,10,13,19];
+        xDiff = max(abs(rectangles(xcordsi,:)),[],'all')-min(abs(rectangles(xcordsi,:)),[],'all');
+        rectangles(xcordsi,:) = rectangles(xcordsi,:) + xDiff;
         % Flip 1st array
-            rectangles(zcordsi,:) = - rectangles(zcordsi,:);
-    cent(3, :) = -cent(3, :);
+        
+        rectangles(zcordsi,:) = - rectangles(zcordsi,:);
+        cent(3, :) = -cent(3, :);
 
     
 %     zcordsi = [4, 7, 10, 13, 19]; %for rectangles
