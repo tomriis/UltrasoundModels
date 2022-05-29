@@ -7,29 +7,22 @@ Nw = 14;
 Nh = 9;
 Rw = 165/1000;
 Rh = 165/1000;
-xArrayToSagitalPlane = 105/1000; 
+xArrayToSagitalPlane = 88.5/1000+6/1000; 
 kerf = 1/1000;
 K = W(1)*f/c;
 
 
 grids = {[14,9]};
-R = {[165, 165]/1000};
 focusSpots = {[0,0,0]};
 outputdims = {'xz','xy'};
-dualArrayFlag = 0;
-atsp = [100]/1000;
+dualArrayFlag = 1;
+atsp = [88.5+6]/1000;
 data = struct();
 count = 1;
-total = length(grids)*length(R)*length(focusSpots)*length(outputdims)*length(atsp);
+total = length(grids)*length(focusSpots)*length(outputdims)*length(atsp);
 for atsp_i = 1 : 1:length(atsp)
     xArrayToSagitalPlane = atsp(atsp_i);
-for R_i = 1:length(R)
-    Rpair = R{R_i};
-    Rw = Rpair(1); Rh = Rpair(2);
     
-for grid_i = 1:length(grids)
-    grid = grids{grid_i};
-    Nw = grid(1); Nh = grid(2);
 for focus_i = 1:length(focusSpots)
     focus = focusSpots{focus_i};
     for outputdim_i = 1:length(outputdims)
@@ -40,77 +33,82 @@ for focus_i = 1:length(focusSpots)
         data(count).outputdims = outputdims;
         
         
-        [allrect, txfieldmax,fieldDim] = Diadem(Nw, Nh, Rw, Rh, focus, xArrayToSagitalPlane, outputdim, dualArrayFlag);
+%         [allrect, txfieldmax,fieldDim] = Diadem(Nw, Nh, Rw, Rh, focus, xArrayToSagitalPlane, outputdim, dualArrayFlag);
         array = struct();
-        [array.rect, elementMapping] = condensedThroughTransmitArray(Nw, Nh, Rw, Rh, W, kerf, xArrayToSagitalPlane); 
-        array = calculateArrayNormalVectors(array);
+        [allrect,allcent] = diademGeometry(Nw, Nh, Rw, Rh, W, kerf, xArrayToSagitalPlane);
+        Tx = xdc_rectangles(allrect, allcent, focus);
         
+        rect = xdc_pointer_to_rect(Tx);
+        figure; show_transducer('data',rect,'plotEl',[1,127]);
+        array.rect = rect;
+        
+        
+        array = calculateArrayNormalVectors(array);
+% Element Contributions
+%Define grid
+x = linspace(-20, 20, 50)/1000; y = x; z = x;
+planesData = struct();
+planesData(1).axis = 'XY'; 
+[planesData(1).X, planesData(1).Y, planesData(1).Z] = meshgrid(x,y,0);
+planesData(2).axis = 'XZ'; 
+[planesData(2).X, planesData(2).Y, planesData(2).Z] = meshgrid(x,0,z);
+planesData(3).axis = 'YZ';
+[planesData(3).X, planesData(3).Y, planesData(3).Z] = meshgrid(0,y,z);
+for i = 1:length(planesData)
+    planesData(i).X = squeeze(planesData(i).X);
+    planesData(i).Y = squeeze(planesData(i).Y);
+    planesData(i).Z = squeeze(planesData(i).Z);
+end
 
-%% Element Contributions
-% Define grid
-% x = linspace(-40, 40, 100)/1000; y = x; z = x;
-% planesData = struct();
-% planesData(1).axis = 'XY'; 
-% [planesData(1).X, planesData(1).Y, planesData(1).Z] = meshgrid(x,y,0);
-% planesData(2).axis = 'XZ'; 
-% [planesData(2).X, planesData(2).Y, planesData(2).Z] = meshgrid(x,0,z);
-% planesData(3).axis = 'YZ';
-% [planesData(3).X, planesData(3).Y, planesData(3).Z] = meshgrid(0,y,z);
-% for i = 1:length(planesData)
-%     planesData(i).X = squeeze(planesData(i).X);
-%     planesData(i).Y = squeeze(planesData(i).Y);
-%     planesData(i).Z = squeeze(planesData(i).Z);
-% end
 
+for p = 1:length(planesData)
+    X = planesData(p).X;
+    Y = planesData(p).Y;
+    Z = planesData(p).Z;
+    planesData(p).N1 = size(X, 1); planesData(p).N2 = size(X, 2);
+    P = zeros(planesData(p).N1, planesData(p).N2, Nw, Nh);
+    Ptotal = zeros(planesData(p).N1,planesData(p).N2);
 
-% for p = 1:length(planesData)
-%     X = planesData(p).X;
-%     Y = planesData(p).Y;
-%     Z = planesData(p).Z;
-%     planesData(p).N1 = size(X, 1); planesData(p).N2 = size(X, 2);
-%     P = zeros(planesData(p).N1, planesData(p).N2, Nw, Nh);
-%     Ptotal = zeros(planesData(p).N1,planesData(p).N2);
+    for i = 1:planesData(p).N1
+        for j = 1:planesData(p).N2
+            elContribution = zeros(Nw, Nh);
+            for ew = 1:Nw
+                for eh = 1:Nh
+%                     xyz = [X(i,j), Y(i,j), Z(i,j)]';
+                    xyz = [0,0,0]';
+                    element = array.element(elementMapping(ew,eh));
+                    elementToPointV = (xyz-element.center);
+                    projectionXYZtoNormal = dot(elementToPointV,element.normalVector)*element.normalVector;
+                    de = norm(projectionXYZtoNormal);
+                    
+                    orthogXYZtoNormal = elementToPointV-projectionXYZtoNormal;
+                    re = distancePointToLine(element.normalVector, element.center, xyz);
+                    rx = norm(dot(orthogXYZtoNormal, element.xNorm));
+                    ry = norm(dot(orthogXYZtoNormal, element.yNorm));             
+%                     P(i,j,ew,eh) = 1/de * sinc(K * rx / de) * sinc(K * ry / de); %sinc(K * re / de); 
+                    elContribution(ew,eh) = 1/de * sinc(K * rx / de) * sinc(K * ry / de); %sinc(K * re / de); 
+                end
+            end
+            Ptotal(i,j) = sum(P(i, j, :, :), 'all');
+        end
+    end
+    planesData(p).P = P;
+    planesData(p).Ptotal = Ptotal;
+end
 
-%     for i = 1:planesData(p).N1
-%         for j = 1:planesData(p).N2
-%             elContribution = zeros(Nw, Nh);
-%             for ew = 1:Nw
-%                 for eh = 1:Nh
-% %                     xyz = [X(i,j), Y(i,j), Z(i,j)]';
-%                     xyz = [0,0,0]';
-%                     element = array.element(elementMapping(ew,eh));
-%                     elementToPointV = (xyz-element.center);
-%                     projectionXYZtoNormal = dot(elementToPointV,element.normalVector)*element.normalVector;
-%                     de = norm(projectionXYZtoNormal);
-%                     
-%                     orthogXYZtoNormal = elementToPointV-projectionXYZtoNormal;
-%                     re = distancePointToLine(element.normalVector, element.center, xyz);
-%                     rx = norm(dot(orthogXYZtoNormal, element.xNorm));
-%                     ry = norm(dot(orthogXYZtoNormal, element.yNorm));             
-% %                     P(i,j,ew,eh) = 1/de * sinc(K * rx / de) * sinc(K * ry / de); %sinc(K * re / de); 
-%                     elContribution(ew,eh) = 1/de * sinc(K * rx / de) * sinc(K * ry / de); %sinc(K * re / de); 
-%                 end
-%             end
-%             Ptotal(i,j) = sum(P(i, j, :, :), 'all');
-%         end
-%     end
-%     planesData(p).P = P;
-%     planesData(p).Ptotal = Ptotal;
-% end
-
-% data(count).elContribution = elContribution;
+data(count).elContribution = elContribution;
 data(count).allrect = allrect;
 data(count).elementMapping = elementMapping;
 data(count).rect = array.rect;
 data(count).txfield{focus_i,outputdim_i} = txfieldmax;
 data(count).fieldDim = fieldDim;
-end
+    end
 end
 count = count + 1;
 disp(['On : ' num2str(count), ' of ', num2str(total)]);
 end
-end
-end
+
+
 
 
 %% Visualize Contributions

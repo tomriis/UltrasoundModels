@@ -1,4 +1,4 @@
-function [rect, elementMapping] = condensedThroughTransmitArray(Nw, Nh, Rw, Rh, D, kerf, xArrayToSagitalPlane)
+function [rect, cent, elementMapping] = condensedThroughTransmitArray(Nw, Nh, Rw, Rh, D, kerf, xArrayToSagitalPlane)
     field_init(-1)
     
     angle_w = arrayColumnAngleZ(Rw, kerf,D,Nw,Nw/2);
@@ -8,6 +8,7 @@ function [rect, elementMapping] = condensedThroughTransmitArray(Nw, Nh, Rw, Rh, 
     X = [2,5,8,11,17];
     count = 1;
     elementMapping = zeros(Nw, Nh);
+    
     for i = 1:length(angle_w)
         for k = 1:length(angle_h)
             x = [0, 0]; y = [-D(2)/2 D(2)/2]; z = [-D(1)/2 D(1)/2];

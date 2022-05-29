@@ -40,6 +40,7 @@ set_field('use_att', true); set_field('att', alpha * 100 * f0/1e6);
     %first transducer
     [rectangles, cent] = concave_focused_array_rectonly(Nh, Nw, Rcurvature, kerf, [6, 6]/1000, Rfocus);
     %
+    
     translz = distanceFromSagitalPlane-Rcurvature; %optional translation in z
     rectangles(zcordsi, :) = rectangles(zcordsi, :) + translz;
     cent(3, :) = cent(3, :) + translz;
@@ -56,10 +57,24 @@ set_field('use_att', true); set_field('att', alpha * 100 * f0/1e6);
         allcent = [allcent; cent'];
     end
 %     size(allrect)
-%     inds1 = randi(126,[1,63]);
-%     inds2 = randi(126,[1,63])+126;
-%     allrect([inds1,inds2],:)=[];
-%     allcent([inds1,inds2],:)=[];
+%     m = [];
+%     y = (1:14:126);
+%     column = [7:8]-1;
+%     for i = 1:length(column);
+%         m = horzcat(m,column(i)+y);
+%     end
+%     rows = [5];
+%     x = (1:14);
+%     for j = 1:length(rows)
+%         m = horzcat(m,(rows(j)-1)*14+x);
+%     end
+% %     m = [5+y; 6+y; 7+y;8+y;9+y];
+%     inds1 = m(:);
+% %     mnot = (1:126)';
+% %     mnot(inds1) = [];
+%     inds2 =inds1+126;
+% %     inds1 = inds2 - 126;
+%     allrect([inds1;inds2],:)=[];
 %     allrect(:,1) = 1:length(allrect);
     Tx = xdc_rectangles(allrect, allcent, focus);
 

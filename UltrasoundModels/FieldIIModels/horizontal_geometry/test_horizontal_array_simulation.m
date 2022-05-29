@@ -1,7 +1,7 @@
 n_elements_r = 32;
 n_elements_z = 8;
 a = 115/1000;
-b = 95/1000;
+b = 105/1000;
 D = [6 6]/1000;
 focus = [25,0,0]/1000;
 [x,y,z] = get_plane_xyz('xz', focus);
@@ -9,7 +9,7 @@ f0 = 200e3;
 fs = 20*f0;
 total_cycles = 20;
 count = 1;
-R_focus = 1.5*a;
+R_focus = 1.15*a;
 kerf = 4.45/1000;
 
 field_init(-1);

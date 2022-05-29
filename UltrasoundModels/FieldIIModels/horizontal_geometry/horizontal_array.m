@@ -1,6 +1,6 @@
-function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,varargin)
+function [rectangles, cent] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,b,varargin)
     
-    angle_z = arrayColumnAngleZ(R_focus, kerf,D,n_elements_z,n_elements_z/2);
+    angle_z = arrayColumnAngleZ(R_focus, kerf,D,n_elements_z,0);
     
 %     angle_r = get_ellipse_angle_spacing(a,b,n_elements_r);
     
@@ -66,5 +66,7 @@ function [Th] = horizontal_array(n_elements_r, n_elements_z, kerf, D, R_focus,a,
     % Convert to transducer pointer
     cent = rectangles(end-2:end,:);
     rectangles(1,:) = 1:size(rectangles,2);
-    Th = xdc_rectangles(rectangles', cent', focus);
+    rectangles = rectangles';
+    cent = cent';
+%     Th = xdc_rectangles(rectangles, cent, focus);
 end
