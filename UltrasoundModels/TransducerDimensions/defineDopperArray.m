@@ -6,7 +6,7 @@ function array = defineDopperArray()
     Nh = 9;
     Rw = 165/1000;
     Rh = 165/1000;
-    xArrayToSagitalPlane = (171/2)/1000; 
+    xArrayToSagitalPlane = (183.7/2+2.25-(91.7-90.5))/1000; 
     kerf = 0.3/1000;
     field_init(-1);
     
@@ -57,5 +57,5 @@ function array = defineDopperArray()
     array.rect = rect;
     figure; show_transducer('data',array.rect);
 
-    save('C:\Users\Verasonics\Documents\MATLAB\UltrasoundArrays\Arrays\diadem.mat','D','Nw','Nh','kerf','Rw','Rh','array','elementMapping');
+%     save('C:\Users\Verasonics\Documents\MATLAB\UltrasoundArrays\Arrays\diadem.mat','D','Nw','Nh','kerf','Rw','Rh','array','elementMapping');
 end
