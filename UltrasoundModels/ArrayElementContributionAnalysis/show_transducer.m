@@ -27,6 +27,8 @@ if p.Results.Th > 0
     data = xdc_pointer_to_rect(p.Results.Th);
 elseif ~isempty(p.Results.data)
     data = p.Results.data;
+elseif ~isempty(array.rect)
+    data = array.rect;
 else
     return
 end
@@ -50,15 +52,15 @@ for i=1:M
   z=[data(Z(ind(1)),i), data(Z(ind(2)),i); data(Z(ind(3)),i), data(Z(ind(4)),i)];
   c=ones(2,2);
   %surf(x,z,y,c)
-  surf(x,z, -y,0.2*ones(2,2),'MarkerSize',20); %'FaceColor',2*[0.25,0.25,0.25]);
+  surf(x,y, z,0.2*ones(2,2),'MarkerSize',20); %'FaceColor',2*[0.25,0.25,0.25]);
   if ismember(i,plotEl)
       if isempty(cc) || ~ismember(i,cc(:,1))
-        surf(x,z, -y,1*ones(2,2),'MarkerSize',20);
+        surf(x,y,z,1*ones(2,2),'MarkerSize',20);
       else
          
           kk = find(i==cc(:,1));
     
-          surf(x,z, -y,1*ones(2,2), 'MarkerSize',20,'FaceColor', cc2rgb(cc(kk,2)));
+          surf(x,y, z,1*ones(2,2), 'MarkerSize',20,'FaceColor', cc2rgb(cc(kk,2)));
           text(x(1)+(x(2)-x(1))/2, y(1)+(y(2)-y(1))/2, z(1) + (z(2)-z(1))/2,num2str(i));
       end
       
@@ -71,7 +73,7 @@ for i=1:M
       n = normalVectorFrom3Points(c1,c2,c3);
       n = array.element(i).normalVector;
       n = n/norm(n)*220;
-      quiver3(center(1), center(3), -center(2),n(1),n(3),-n(2)); hold on;
+      quiver3(center(1), center(2), center(3),n(1),n(2),n(3)); hold on;
       if ~isempty(LRLine)
           L = LRLine*1000;
 
@@ -91,8 +93,8 @@ zlabel('z [mm] (Elevation)')
 grid
 axis('image')
 
-%view([45,45, 45]);  
-view([0,0,90]);
+view([45,45, 45]);  
+% view([0,0,90]);
 %view([0,90,0]);
 set(gcf,'color','w')
 axis off;
