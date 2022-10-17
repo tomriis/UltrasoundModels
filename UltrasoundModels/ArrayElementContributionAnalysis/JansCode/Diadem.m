@@ -158,16 +158,16 @@ if visualize_transducer
 end
 
 %% Set measurement points
-res = 0.25; %grid resolution in mm
+res = 0.3; %grid resolution in mm
 switch outputdim    
     case 'xy'
-        x = (-15 : res : 15)*1e-3;
+        x = (-20 : res : 20)*1e-3;
         y = (-15 : res : 15)*1e-3;
 %        y = x;
         z = focus(3);
 %         z = 60e-3;
     case 'xz'
-        x = (-15 : res : 15)*1e-3;
+        x = (-30 : res : 30)*1e-3;
         y = 0;
         z = (-15 : res : 15)*1e-3;
     case 'line'

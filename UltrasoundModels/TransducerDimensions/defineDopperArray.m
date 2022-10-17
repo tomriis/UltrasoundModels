@@ -6,7 +6,9 @@ function array = defineDopperArray()
     Nh = 9;
     Rw = 165/1000;
     Rh = 165/1000;
-    xArrayToSagitalPlane = (203/2)/1000; 
+
+    xArrayToSagitalPlane = (183.7/2+2.25-(91.7-90.5))/1000; 
+
     kerf = 0.3/1000;
     field_init(-1);
     
@@ -55,7 +57,6 @@ function array = defineDopperArray()
     Tx = xdc_rectangles(allrect, allcent, focus);
     rect = xdc_pointer_to_rect(Tx);
     array.rect = rect;
-%     figure; show_transducer('data',array.rect);
-%     save('C:\Users\Tom\Documents\MATLAB\UltrasoundArrays\Arrays\HumanArray1.mat','D','Nw','Nh','kerf','Rw','Rh','array','elementMapping');
-%     save('C:\Users\Tom\Documents\MATLAB\UltrasoundArrays\Arrays\HumanArray1.mat','D','Nw','Nh','kerf','Rw','Rh','array','elementMapping');
+    figure; show_transducer('data',array.rect);
+
 end

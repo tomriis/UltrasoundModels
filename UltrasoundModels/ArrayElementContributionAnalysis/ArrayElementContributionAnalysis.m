@@ -7,7 +7,8 @@ Nw = 14;
 Nh = 9;
 Rw = 165/1000;
 Rh = 165/1000;
-xArrayToSagitalPlane = 88.5/1000+6/1000; 
+xArrayToSagitalPlane = 93/1000; 
+
 kerf = 1/1000;
 K = W(1)*f/c;
 
