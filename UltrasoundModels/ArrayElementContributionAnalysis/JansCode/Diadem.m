@@ -1,4 +1,15 @@
-function [allrect, txfieldmax,fieldDim] = Diadem(Nw, Nh, Rw, Rh, focus, distanceFromSagitalPlane, outputdim, dualArrayFlag)
+function [allrect, txfieldmax,fieldDim] = Diadem(Nw, Nh, Rw, Rh, focus, distanceFromSagitalPlane, outputdim, dualArrayFlag,varargin)
+if isempty(varargin)
+    planeCoordinates = [0,0,0];
+    planeVolume = [[-30,30];
+                    [-30,30];
+                    [-30,30]];
+else
+    planeCoordinates = varargin{1};
+    planeVolume = varargin{2};
+    disp(planeCoordinates);
+    disp(planeVolume);
+end
 %% Parameters to vary in this exercise
 arraytype = 'pistonfocused';
 arraymodel = 'Diadem'; %'206', '173', '104', '115', 'Diadem'
@@ -161,24 +172,27 @@ end
 res = 0.25; %grid resolution in mm
 switch outputdim  
     case 'yz'
-        x = 0;
-        y = (-30: res:30)*1e-3;
-        z = (-20:res:20)*1e-3;
+        x = planeCoordinates(1);
+        y = planeCoordinates(2)+(planeVolume(2,1): res:planeVolume(2,2));
+        z = planeCoordinates(3)+(planeVolume(3,1):res:planeVolume(3,2));
     case 'xy'
-        x = (-20 : res : 20)*1e-3;
-        y = (-15 : res : 15)*1e-3;
+        x = planeCoordinates(1)+(planeVolume(1,1) : res : planeVolume(1,2));
+        y = planeCoordinates(2)+(planeVolume(2,1) : res : planeVolume(2,2));
 %        y = x;
-        z = 0;
+        z = planeCoordinates(3);
 %         z = 60e-3;
     case 'xz'
-        x = (-30 : res : 30)*1e-3;
-        y = 0;
-        z = (-20 : res : 20)*1e-3;
+        x = planeCoordinates(1)+(planeVolume(1,1) : res : planeVolume(1,2));
+        y = planeCoordinates(2);
+        z = planeCoordinates(3)+(planeVolume(3,1) : res : planeVolume(3,2));
     case 'line'
         x = focus(1);
         y = focus(2);
         z = (-55 : 0.1 : 55)*1e-3;
 end
+x = x*1e-3;
+y = y*1e-3;
+z = z*1e-3;
 %create all individual x, y, z points within the above ranges
 [xv, yv, zv] = meshgrid(x, y, z);
 pos = [xv(:), yv(:), zv(:)];
